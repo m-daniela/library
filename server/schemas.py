@@ -1,4 +1,3 @@
-import imp
 from pydantic import BaseModel
 from datetime import datetime
 
@@ -26,7 +25,7 @@ class Book(BaseModel):
         orm_mode = True
 
 
-# registration
+# registration model
 
 class RegistrationBase(BaseModel):
     email: str

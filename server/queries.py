@@ -1,6 +1,5 @@
-from xml.dom import NotFoundErr
-from sqlalchemy.orm import Session
 import datetime
+from sqlalchemy.orm import Session
 
 import models, schemas, exception
 
@@ -74,6 +73,11 @@ def update_book_stock(db: Session, book_id: int, stock: int):
 
 # registrations
 
+def get_registrations(db: Session):
+    """
+    Get all registrations
+    """
+    return db.query(models.Registration).all()
 
 def checkin_book(db: Session, email: str, book_id: int):
     """
@@ -84,16 +88,14 @@ def checkin_book(db: Session, email: str, book_id: int):
     exists?
     """
     
+    print(1)
     updated_book = update_book_stock(db, book_id, -1)
     user = get_user(db, email)
     try:
-        # add the users in the registration table
-        users = updated_book.users
-        users.append(user)
-        updated_book.users = users
-        db.add(updated_book)
+        registration = models.Registration(email=user.email, book_id=updated_book.id)
+        db.add(registration)
         db.commit()
-        # db.refresh(registration)
+        db.refresh(registration)
     except Exception as e:
         print(e)
     return {"Success": f"Book {book_id} was checked in, {updated_book.stock} remaining."}
@@ -107,14 +109,12 @@ def checkout_book(db: Session, email: str, book_id: int):
     """
     updated_book = update_book_stock(db, book_id, 1)
     user = get_user(db, email)
-    # try:
-    #     users = updated_book.users
-    #     users.append(user)
-    #     updated_book.users = users
-    #     # registration = models.registration(email=email, book_id=book_id)
-    #     db.add(updated_book)
-    #     db.commit()
-    #     # db.refresh(registration)
-    # except Exception as e:
-    #     print(e)
+    try:
+        registration = db.query(models.Registration).filter(models.Registration.email == user.email, models.Registration.book_id == updated_book.id).first()
+        registration.checkout = datetime.datetime.utcnow()
+        db.add(registration)
+        db.commit()
+        db.refresh(registration)
+    except Exception as e:
+        print(e)
     return {"Success": f"Book {book_id} was checked out, {updated_book.stock} remaining."}

@@ -1,8 +1,6 @@
-from unittest import registerResult
-from warnings import catch_warnings
-from fastapi import Depends, FastAPI, HTTPException, Body
+from fastapi import Depends, FastAPI
 from sqlalchemy.orm import Session
-import connection, models, connection, schemas, queries
+import connection, connection, schemas, queries
 
 
 # TODO: better authentication
@@ -11,7 +9,7 @@ app = FastAPI()
 
 connection.Base.metadata.create_all(bind=connection.engine)
 
-# get the database
+# get the database session
 def get_database():
     db = connection.SessionLocal()
     try: 
@@ -28,11 +26,6 @@ def get_database():
 # post /checkin
 # put /checkout
 # get /your_books
-
-
-@app.get("/")
-def home():
-    return {"a": "a"}
 
 
 @app.post("/login")
@@ -74,12 +67,6 @@ def add_book(book: schemas.Book, db: Session = Depends(get_database)):
         
 
 
-@app.get("/registrations/{email}")
-def get_registrations_for_user(email: str, db: Session = Depends(get_database)):
-
-    pass
-
-
 @app.post("/register")
 def add_user(user: schemas.UserCreate, db: Session = Depends(get_database)):
     """
@@ -94,8 +81,26 @@ def add_user(user: schemas.UserCreate, db: Session = Depends(get_database)):
         return {"Error": e}
 
 
+
+@app.get("/registrations/")
+def get_registrations_for_user(db: Session = Depends(get_database)):
+    """
+    Get the list of registrations
+    """
+    try:
+        registrations = queries.get_registrations(db)
+        return registrations
+    except Exception as e:
+        return {"Error": e}
+
+
 @app.post("/checkin")
 def checkin(registration: schemas.RegistrationBase, db: Session = Depends(get_database)):
+    """
+    Book checkin
+    The current user sends a request with the email and 
+    the id of the book they want 
+    """
     try:
         result = queries.checkin_book(db, registration.email, registration.book_id)
         return result
@@ -105,6 +110,9 @@ def checkin(registration: schemas.RegistrationBase, db: Session = Depends(get_da
 
 @app.put("/checkout")
 def checkout(registration: schemas.RegistrationBase, db: Session = Depends(get_database)):
+    """
+    Book checkout
+    """
     try:
         result = queries.checkout_book(db, registration.email, registration.book_id)
         return result
