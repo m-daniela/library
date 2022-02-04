@@ -1,0 +1,23 @@
+// {
+//     "eslint.format.enable": true,
+//     "editor.formatOnSave": false,
+//     // "editor.fontLigatures": null,
+//     "editor.codeActionsOnSave": {
+//         "source.fixAll": true,
+//         "source.fixAll.eslint": true,
+//     },
+//     "eslint.validate": [
+//         "javascript",
+//         "javascriptreact",
+//         "html",
+//         "typescriptreact"
+//     ]
+// }
+{
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    },
+    "eslint.validate": [
+        "javascript"
+    ]
+}

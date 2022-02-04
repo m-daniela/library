@@ -1,3 +1,4 @@
+from tokenize import String
 from xmlrpc.client import DateTime
 from sqlalchemy import Column, ForeignKey, Integer, String, Table, DateTime
 from sqlalchemy.orm import relationship
@@ -34,7 +35,7 @@ class User(connection.Base):
 
     email = Column(String, primary_key=True, index=True)
     password = Column(String)
-    role = Column(String)
+    role = Column(String, default="user")
     # books = relationship(
     #     "Book", 
     #     secondary=registration, 

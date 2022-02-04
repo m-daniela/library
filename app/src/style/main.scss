@@ -1,0 +1,13 @@
+
+@import "./general.scss";
+
+
+
+.app, form{
+    display: flex;
+    flex-direction: column;
+}
+
+form{
+    width: 300px;
+}

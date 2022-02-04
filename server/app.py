@@ -1,11 +1,25 @@
-from fastapi import Depends, FastAPI
+from email.quoprimime import body_check
+from fastapi import Depends, FastAPI, Body
 from sqlalchemy.orm import Session
 import connection, connection, schemas, queries
-
+from fastapi.middleware.cors import CORSMiddleware
 
 # TODO: better authentication
 
 app = FastAPI()
+
+origins = [
+    "http://localhost:3000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 connection.Base.metadata.create_all(bind=connection.engine)
 
@@ -29,14 +43,15 @@ def get_database():
 
 
 @app.post("/login")
-def login(user: schemas.UserCreate, db: Session = Depends(get_database)):
+def login(user: schemas.UserLogin, db: Session = Depends(get_database)):
     """
     Login and check if the user is an admin or not
-    Based on this, the user will be redirected 
+    Based on this, the user will be redirected
+    TODO: change to form? 
     """
     try:
         result = queries.check_user(db, user)
-        return {"Permissions": result}
+        return result
     except Exception as e:
         return {"Error": e}
 
@@ -82,13 +97,14 @@ def add_user(user: schemas.UserCreate, db: Session = Depends(get_database)):
 
 
 
-@app.get("/registrations/")
-def get_registrations_for_user(db: Session = Depends(get_database)):
+@app.get("/registrations")
+def get_registrations(email: str = Body(...), db: Session = Depends(get_database)):
     """
     Get the list of registrations
+    TODO: registrations for a given user...
     """
     try:
-        registrations = queries.get_registrations(db)
+        registrations = queries.get_registrations(db, email)
         return registrations
     except Exception as e:
         return {"Error": e}

@@ -1,4 +1,5 @@
 import datetime
+from math import perm
 from sqlalchemy.orm import Session
 
 import models, schemas, exception
@@ -13,27 +14,37 @@ def create_user(db: Session, user: schemas.UserCreate) -> schemas.UserBase:
     """
     Add a new user
     """
-    new_user = models.User(email=user.email, password=user.password, role=user.role)
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
+    try:
+        new_user = models.User(email=user.email, password=user.password, role=user.role)
+        db.add(new_user)
+        db.commit()
+        db.refresh(new_user)
+    except Exception as e:
+        print(e)
     return new_user
 
 
-def check_user(db: Session, user: schemas.UserCreate):
+def check_user(db: Session, user: schemas.UserLogin):
     """
     Check if the user is an admin or a normal user
     If an admin, return True, False otherwise
+    TODO: change format
     """
-    found_user = db.query(models.User).filter(models.User.email == user.email, models.User.password == user.password, models.User.role == user.role).first()
-
+    found_user = db.query(models.User).filter(models.User.email == user.email, models.User.password == user.password).first()
+    permissions = None
     if found_user is not None:
-        print(found_user)
         if found_user.role == "admin":
-            return True
-        return False
+            permissions = True
+        else:
+            permissions = False
+        result = {
+            "email": found_user.email,
+            "role": found_user.role,
+            "permissions": permissions
+        }
+        return result
     else:
-        raise exception.CustomError("The email or password is wrong. Try again.")
+        raise Exception("The email or password is wrong. Try again.")
 
 
 # books
@@ -73,11 +84,11 @@ def update_book_stock(db: Session, book_id: int, stock: int):
 
 # registrations
 
-def get_registrations(db: Session):
+def get_registrations(db: Session, email: str):
     """
     Get all registrations
     """
-    return db.query(models.Registration).all()
+    return db.query(models.Registration).filter(models.Registration.email == email).all()
 
 def checkin_book(db: Session, email: str, book_id: int):
     """

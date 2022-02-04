@@ -5,11 +5,14 @@ from datetime import datetime
 # model that will be shown
 class UserBase(BaseModel):
     email: str
-    role: str
+
+# login model
+class UserLogin(UserBase):
+    password: str
 
 # model that will be added to the db
-class UserCreate(UserBase):
-    password: str
+class UserCreate(UserLogin):
+    role: str
     class Config:
         orm_mode = True
 
