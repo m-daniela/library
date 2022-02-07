@@ -14,13 +14,13 @@ def create_user(db: Session, user: schemas.UserCreate) -> schemas.UserBase:
     """
     Add a new user
     """
-    try:
-        new_user = models.User(email=user.email, password=user.password, role=user.role)
-        db.add(new_user)
-        db.commit()
-        db.refresh(new_user)
-    except Exception as e:
-        print(e)
+    # try:
+    new_user = models.User(email=user.email, password=user.password, role=user.role)
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    # except Exception as e:
+    #     print(e)
     return new_user
 
 

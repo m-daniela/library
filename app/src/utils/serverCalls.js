@@ -9,7 +9,8 @@ export const userLogin = async (email, password) => {
 };
 
 export const registerUser = async (email, password, role) => {
-    return axios.post(registerUrl, { email, password, role })
+    const stringRole = role ? "admin" : "user";
+    return axios.post(registerUrl, { email, password, role: stringRole })
         .then(response => response.data)
         .catch(console.log);
 };

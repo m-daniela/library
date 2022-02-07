@@ -89,11 +89,17 @@ def add_user(user: schemas.UserCreate, db: Session = Depends(get_database)):
     Only the admin is allowed to do this operation
     """
     try:
-        result = queries.create_user(db, user)
-        print(result)
+        user = queries.create_user(db, user)
+        result = {
+            "email": user.email, 
+            "role": user.role, 
+            "message": f"{user.email} successfully added"
+        }
         return result
     except Exception as e:
-        return {"Error": e}
+        print(e)
+        return {"message": "This user already exists"}
+    
 
 
 
