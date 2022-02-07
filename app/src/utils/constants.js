@@ -22,5 +22,5 @@ export const getBooksUrl = `${baseUrl}books`;
 export const addBookUrl = `${baseUrl}book`;
 export const checkinUrl = `${baseUrl}checkin`;
 export const checkoutUrl = `${baseUrl}checkout`;
-export const getRegistrationsUrl = `${baseUrl}registrations`;
+export const getRegistrationsUrl = (email) => `${baseUrl}registrations/${email}`;
 

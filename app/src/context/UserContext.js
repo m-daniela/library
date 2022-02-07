@@ -25,14 +25,12 @@ const ContextProvider = ({ children }) => {
             };
             setUser(loggedUser);
             setIsLogged(true);
-            console.log(email, isLogged);
         }
     }, []);
 
     const login = (email, password) => {
         userLogin(email, password)
             .then(data => {
-                console.log(data);
                 setUser(data);
                 setIsLogged(true);
                 // save to localstorage for now

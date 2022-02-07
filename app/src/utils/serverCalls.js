@@ -1,5 +1,5 @@
 import axios from "axios";
-import { addBookUrl, getRegistrationsUrl, loginUrl, registerUrl } from "./constants";
+import { addBookUrl, checkinUrl, checkoutUrl, getBooksUrl, getRegistrationsUrl, loginUrl, registerUrl } from "./constants";
 
 
 export const userLogin = async (email, password) => {
@@ -22,17 +22,28 @@ export const addBook = async (title, description, cover, stock) => {
         .catch(console.log);
 };
 
+
 export const getBooks = async () => {
-    return axios.get(loginUrl)
+    return axios.get(getBooksUrl)
         .then(response => response.data)
         .catch(console.log);
 };
 
 
 export const getRegistrations = async (email) => {
-    return axios.get(getRegistrationsUrl, { email })
+    return axios.get(getRegistrationsUrl(email), {email})
         .then(response => response.data)
         .catch(console.log);
 };
 
+export const checkinBook = async (email, bookId) => {
+    return axios.post(checkinUrl, {email, book_id: bookId})
+        .then(response => response.data)
+        .catch(console.log);
+};
 
+export const checkoutBook = async (email, bookId) => {
+    return axios.put(checkoutUrl, {email, book_id: bookId})
+        .then(response => response.data)
+        .catch(console.log);
+};

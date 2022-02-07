@@ -1,5 +1,6 @@
 import datetime
 from math import perm
+from unittest import result
 from sqlalchemy.orm import Session
 
 import models, schemas, exception
@@ -31,16 +32,10 @@ def check_user(db: Session, user: schemas.UserLogin):
     TODO: change format
     """
     found_user = db.query(models.User).filter(models.User.email == user.email, models.User.password == user.password).first()
-    permissions = None
     if found_user is not None:
-        if found_user.role == "admin":
-            permissions = True
-        else:
-            permissions = False
         result = {
             "email": found_user.email,
             "role": found_user.role,
-            "permissions": permissions
         }
         return result
     else:
@@ -87,8 +82,20 @@ def update_book_stock(db: Session, book_id: int, stock: int):
 def get_registrations(db: Session, email: str):
     """
     Get all registrations
+    TODO: the results are split in two objects
     """
-    return db.query(models.Registration).filter(models.Registration.email == email).all()
+    results = db.query(models.Registration, models.Book)\
+        .filter(models.Registration.email == email, models.Registration.book_id == models.Book.id)\
+        .all()
+    # results = db.query(models.Registration).filter(models.Registration.email == email).join(models.Book).filter(models.Registration.book_id == models.Book.id).all()
+    # for result in results:
+    #     print(result)
+    # results = db.query(models.Registration)\
+    #     .join(models.Book)\
+    #     .filter(models.Registration.email == email, models.Registration.book_id == models.Book.id)\
+    #     .all()
+    # results = []
+    return results
 
 def checkin_book(db: Session, email: str, book_id: int):
     """

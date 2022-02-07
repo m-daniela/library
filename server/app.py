@@ -103,14 +103,16 @@ def add_user(user: schemas.UserCreate, db: Session = Depends(get_database)):
 
 
 
-@app.get("/registrations")
-def get_registrations(email: str = Body(...), db: Session = Depends(get_database)):
+@app.get("/registrations/{email}")
+def get_registrations(email: str, db: Session = Depends(get_database)):
     """
     Get the list of registrations
     TODO: registrations for a given user...
     """
     try:
+        print(email)
         registrations = queries.get_registrations(db, email)
+        print(registrations)
         return registrations
     except Exception as e:
         return {"Error": e}
