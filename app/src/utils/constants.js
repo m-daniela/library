@@ -1,4 +1,19 @@
 
+export const routes = {
+    login: "/", 
+    adminHome: "/admin", 
+    userHome: "/user", 
+
+    register: "/register", 
+    addBook: "/add",
+
+    yourBooks: "/your-books", 
+    allBooks: "/books"
+
+
+};
+
+
 const baseUrl = "http://localhost:8000/";
 
 export const loginUrl = `${baseUrl}login`;
