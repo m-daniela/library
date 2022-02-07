@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getRegistrationsUrl, loginUrl, registerUrl } from "./constants";
+import { addBookUrl, getRegistrationsUrl, loginUrl, registerUrl } from "./constants";
 
 
 export const userLogin = async (email, password) => {
@@ -15,6 +15,12 @@ export const registerUser = async (email, password, role) => {
         .catch(console.log);
 };
 
+
+export const addBook = async (title, description, cover, stock) => {
+    return axios.post(addBookUrl, {title, description, cover, stock })
+        .then(response => response.data)
+        .catch(console.log);
+};
 
 export const getBooks = async () => {
     return axios.get(loginUrl)

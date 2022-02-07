@@ -76,9 +76,9 @@ def add_book(book: schemas.Book, db: Session = Depends(get_database)):
     """
     try:
         result = queries.add_book(db, book)
-        return {"Success": f"Book with {result.id} and title {result.title} was added"}
+        return {"message": f"Book with title {result.title} was added"}
     except Exception as e:
-        return {"Error": e}
+        return {"message": e}
         
 
 

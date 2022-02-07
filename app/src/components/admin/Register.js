@@ -7,7 +7,7 @@ const Register = () => {
     const [admin, setAdmin] = useState(false);
     const [message, setMessage] = useState("");
 
-    const registerHandler = (e) => {
+    const handleRegister = (e) => {
         e.preventDefault();
         registerUser(email, password, admin)
             .then(data => {
@@ -19,7 +19,7 @@ const Register = () => {
 
     return <div className="register">
         <h2>Register a new user</h2>
-        <form onSubmit={registerHandler}>
+        <form onSubmit={handleRegister}>
             <label htmlFor="email" >Email</label>
             <input type="email" id="email" onChange={e => setEmail(e.target.value)} value={email} />
             <label htmlFor="password">Password</label>
