@@ -13,7 +13,7 @@ const Book = ({book}) => {
             .catch(console.log);
     };
 
-    return <div className="book">
+    return <div className="card">
         <h2>{book.title}</h2>
         <div>{book.description}</div>
         <p>In stock: {book.stock}</p>

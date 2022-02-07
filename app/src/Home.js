@@ -7,7 +7,7 @@ import { UserContext } from './context/UserContext';
 const Home = () => {
     const {isLogged, user} = useContext(UserContext);
 
-    return <div className="home">
+    return <>
         {isLogged ? 
             <>
                 {user.role === "admin" ?
@@ -19,7 +19,7 @@ const Home = () => {
             :
             <Login/>
         }
-    </div>;
+    </>;
 };
 
 export default Home;

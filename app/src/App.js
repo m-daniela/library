@@ -6,7 +6,6 @@ import { routes } from './utils/constants';
 import Register from './components/admin/Register';
 import Registrations from './components/user/Registrations';
 import AddBook from './components/admin/AddBook';
-import BooksList from './components/user/BooksList';
 import Header from './components/common/Header';
 import BookProvider from './context/BookContext';
 import AllBooks from './components/user/AllBooks';

@@ -32,8 +32,8 @@ const AddBook = () => {
         }
     };
 
-    return <div className="register">
-        <h2>Register a new user</h2>
+    return <div className="form add-book homepage">
+        <h2>Add a new book</h2>
         <form onSubmit={handleAddBook}>
             <label htmlFor="title" >Title</label>
             <input id="title" onChange={e => setTitle(e.target.value)} value={title} />

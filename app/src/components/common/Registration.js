@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { UserContext } from '../../context/UserContext';
+import { convertDate } from '../../utils/constants';
 import { checkoutBook } from '../../utils/serverCalls';
 
 const Registration = ({registrationInfo}) => {
@@ -17,13 +18,13 @@ const Registration = ({registrationInfo}) => {
             .catch(console.log);
     };
     
-    return <div className="book">
+    return <div className="card">
         <h2>{book.title}</h2>
         <div>{book.description}</div>
-        <p>Checked in at: {registration.checkin}</p>
+        <p>Checked in at: {convertDate(registration.checkin)}</p>
         {
             registration.checkout ?
-                <p>Checked out at: {registration.checkout}</p>
+                <p>Checked out at: {convertDate(registration.checkout)}</p>
                 :
                 <button onClick={checkout}>Checkout</button>
 

@@ -2,12 +2,68 @@
 @import "./general.scss";
 
 
+.app, body{
+    margin: 0;
+    padding: 0;
+}
 
-.app, form{
-    display: flex;
-    flex-direction: column;
+.app, form, .homepage{
+    @include display-column;
 }
 
 form{
     width: 300px;
+}
+
+nav{
+    width: calc(100% - 2em);
+    padding: 1em;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+h2{
+    align-self: center;
+}
+
+button{
+    padding: .7em;
+    border: none;
+}
+
+a{
+    padding: .5em;
+    margin: .2em;
+}
+
+form {
+    input, textarea{
+        margin: .3em 0;
+    }
+    label{
+        margin-top: .5em;
+    }
+}
+
+.homepage{
+    max-width: 1000px;
+    margin: 1em auto;
+}
+
+.all-books, .registrations{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.card{
+    width: 200px;
+    margin: 1em .5em;
+}
+
+.login{
+    button{
+        margin-top: 1em;
+    }
 }

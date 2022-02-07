@@ -9,8 +9,6 @@ export const routes = {
 
     yourBooks: "/your-books", 
     allBooks: "/books"
-
-
 };
 
 
@@ -24,3 +22,5 @@ export const checkinUrl = `${baseUrl}checkin`;
 export const checkoutUrl = `${baseUrl}checkout`;
 export const getRegistrationsUrl = (email) => `${baseUrl}registrations/${email}`;
 
+
+export const convertDate = (timestamp) => new Date(timestamp).toString();
