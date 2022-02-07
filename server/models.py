@@ -1,20 +1,9 @@
-from tokenize import String
 from xmlrpc.client import DateTime
 from sqlalchemy import Column, ForeignKey, Integer, String, Table, DateTime
 from sqlalchemy.orm import relationship
 import datetime
 
 import connection
-
-# using an association table
-# registration = Table(
-#     "registrations", 
-#     connection.Base.metadata, 
-#     Column("email", ForeignKey("users.email"), primary_key=True), 
-#     Column("book_id", ForeignKey("books.id"), primary_key=True), 
-#     Column("checkin", DateTime, default=datetime.datetime.utcnow, nullable=False),
-#     Column("checkout", DateTime, default=None, nullable=True),
-# )
 
 # using an actual table as an association table
 class Registration(connection.Base):
@@ -36,11 +25,6 @@ class User(connection.Base):
     email = Column(String, primary_key=True, index=True)
     password = Column(String)
     role = Column(String, default="user")
-    # books = relationship(
-    #     "Book", 
-    #     secondary=registration, 
-    #     back_populates="users"
-    # )
     books = relationship(
         "Registration", 
         back_populates="user"
@@ -59,11 +43,6 @@ class Book(connection.Base):
         "Registration", 
         back_populates="book"
     )
-    # users = relationship(
-    #     "User", 
-    #     secondary=registration,
-    #     back_populates="books"
-    # )
 
 
 
