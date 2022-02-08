@@ -30,5 +30,7 @@ class RegistrationSchema(SQLAlchemySchema):
     book_id = auto_field()
     checkin = auto_field()
     checkout = auto_field()
+    book = auto_field()
+    user = auto_field()
 
 
