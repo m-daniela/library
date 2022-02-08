@@ -1,5 +1,4 @@
 import datetime
-import email
 from connection import db
 from models import User, Book, Registration
 from schemas import BookSchema, UserSchema
@@ -17,6 +16,11 @@ def login_user(user: UserSchema):
     Login the user and return the 
     """
     found_user = User.query.filter_by(email=user["email"], password=user["password"]).first()
+    if found_user is not None:
+        found_user = {
+            "email": found_user.email, 
+            "role": found_user.role
+        }
     return found_user
 
 
@@ -102,13 +106,13 @@ def get_registrations_for_user(email: str):
     """
 
     # join on registration.book_id == book.id
-    registrations = Registration\
-        .query\
-        .join(Book, Registration.book_id == Book.id)\
-        .add_columns(Registration.email, Registration.checkin, Registration.checkout, Book.id, Book.title, Book.cover, Book.description, Book.stock)\
-        .filter(Registration.email == email)
+    # registrations = Registration\
+    #     .query\
+    #     .join(Book, Registration.book_id == Book.id)\
+    #     .add_columns(Registration.email, Registration.checkin, Registration.checkout, Book.id, Book.title, Book.cover, Book.description, Book.stock)\
+    #     .filter(Registration.email == email)
 
-    # registrations = Registration.query.filter_by(email=email).all()
-    # print(registrations[0])
+    # uses the nested fields property set on the schemas
+    registrations = User.query.filter_by(email=email).all()
     return registrations
     

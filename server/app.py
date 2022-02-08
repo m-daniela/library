@@ -25,10 +25,11 @@ def login():
         user = user_schema.dump(data)
         found_user = queries.login_user(user)
         if found_user is not None:
-            return jsonify(user=data, message="Successful login")
+            return jsonify(user=found_user, message="Successful login")
         else:
-            return jsonify(message="The username or password are incorrect")
-    except Exception:
+            return jsonify(message="The username or password is incorrect")
+    except Exception as e:
+        print(e)
         return jsonify(message="An error occurred, try again later")
 
 
@@ -40,7 +41,8 @@ def get_books():
         book_schema = BookSchema(many=True)
         result = book_schema.dump(books)
         return jsonify(result)
-    except Exception:
+    except Exception as e:
+        print(e)
         return jsonify(message="An error occurred, try again later")
 
 
@@ -85,7 +87,7 @@ def get_registrations():
 
         # only the columns from the registrations are displayed 
         # in this way
-        registration_schema = RegistrationSchema(many=True)
+        registration_schema = UserSchema(many=True)
         json_registrations = registration_schema.dump(registrations)
 
         return jsonify(registrations=json_registrations)

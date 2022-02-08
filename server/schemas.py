@@ -1,15 +1,5 @@
-from marshmallow_sqlalchemy import SQLAlchemySchema, auto_field
+from marshmallow_sqlalchemy import SQLAlchemySchema, auto_field, fields
 from models import User, Book, Registration
-
-
-class UserSchema(SQLAlchemySchema):
-    class Meta:
-        model=User
-
-    email = auto_field()
-    password = auto_field()
-    role = auto_field()
-
 
 class BookSchema(SQLAlchemySchema):
     class Meta:
@@ -21,8 +11,8 @@ class BookSchema(SQLAlchemySchema):
     cover = auto_field()
     stock = auto_field()
 
-
 class RegistrationSchema(SQLAlchemySchema):
+
     class Meta:
         model=Registration
 
@@ -30,7 +20,22 @@ class RegistrationSchema(SQLAlchemySchema):
     book_id = auto_field()
     checkin = auto_field()
     checkout = auto_field()
-    book = auto_field()
-    user = auto_field()
+    book = fields.Nested(BookSchema)
+
+
+
+class UserSchema(SQLAlchemySchema):
+    class Meta:
+        model=User
+
+    email = auto_field()
+    password = auto_field()
+    role = auto_field()
+    books = fields.Nested(RegistrationSchema, many=True)
+
+
+
+
+
 
 

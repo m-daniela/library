@@ -37,7 +37,8 @@ class Book(connection.Base):
         return f"Book: {self.id}, {self.title}, {self.stock}, {self.cover} {self.description}"
 
 
-# the association table
+# the association table because there are more columns, 
+# besides the keys of the User and Book tables
 class Registration(connection.Base):
     __tablename__ = "registrations"
 
