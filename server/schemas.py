@@ -1,44 +1,34 @@
-from pydantic import BaseModel
-from datetime import datetime
-
-# user model
-# model that will be shown
-class UserBase(BaseModel):
-    email: str
-
-# login model
-class UserLogin(UserBase):
-    password: str
-
-# model that will be added to the db
-class UserCreate(UserLogin):
-    role: str
-    class Config:
-        orm_mode = True
+from marshmallow_sqlalchemy import SQLAlchemySchema, auto_field
+from models import User, Book, Registration
 
 
-# book model
+class UserSchema(SQLAlchemySchema):
+    class Meta:
+        model=User
 
-class Book(BaseModel):
-    cover: str
-    title: str
-    description: str
-    stock: int
-    class Config:
-        orm_mode = True
+    email = auto_field()
+    password = auto_field()
+    role = auto_field()
 
 
-# registration model
+class BookSchema(SQLAlchemySchema):
+    class Meta:
+        model=Book
+    
+    id = auto_field()
+    title = auto_field()
+    description = auto_field()
+    cover = auto_field()
+    stock = auto_field()
 
-class RegistrationBase(BaseModel):
-    email: str
-    book_id: int
 
-class Registration(RegistrationBase):
-    checkin: datetime
-    checkout: datetime
+class RegistrationSchema(SQLAlchemySchema):
+    class Meta:
+        model=Registration
 
-    class Config:
-        orm_mode = True
+    email = auto_field()
+    book_id = auto_field()
+    checkin = auto_field()
+    checkout = auto_field()
 
 

@@ -1,3 +1,0 @@
-
-class UpdateError(Exception):
-    pass
