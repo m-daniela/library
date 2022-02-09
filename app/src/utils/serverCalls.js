@@ -4,7 +4,7 @@ import { addBookUrl, checkinUrl, checkoutUrl, getBooksUrl, getRegistrationsUrl, 
 
 export const userLogin = async (email, password) => {
     return axios.post(loginUrl, { email, password })
-        .then(response => response.data)
+        .then(response => response.data.data)
         .catch(console.log);
 };
 
@@ -25,7 +25,7 @@ export const addBook = async (title, description, cover, stock) => {
 
 export const getBooks = async () => {
     return axios.get(getBooksUrl)
-        .then(response => response.data)
+        .then(response => response.data.data)
         .catch(console.log);
 };
 
