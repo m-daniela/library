@@ -1,14 +1,14 @@
 import React from 'react';
-import ContextProvider from './context/UserContext';
+import ContextProvider from '../context/UserContext';
 import Home from './Home';
 import {BrowserRouter, Routes, Route } from "react-router-dom";
-import { routes } from './utils/constants';
-import Register from './components/admin/Register';
-import Registrations from './components/user/Registrations';
-import AddBook from './components/admin/AddBook';
-import Header from './components/common/Header';
-import BookProvider from './context/BookContext';
-import AllBooks from './components/user/AllBooks';
+import { routes } from '../utils/constants';
+import Register from './admin/Register';
+import Registrations from './user/Registrations';
+import AddBook from './admin/AddBook';
+import Header from './common/Header';
+import BookProvider from '../context/BookContext';
+import AllBooks from './user/AllBooks';
 
 
 function App() {

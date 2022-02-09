@@ -22,7 +22,7 @@ const Registrations = () => {
     return <div className="homepage">
         <h2>Your books</h2>
         <div className="registrations">
-            {myBooks?.map(book => <Registration key={book.Book.id} registrationInfo={book}/>)}
+            {myBooks?.map(registration => <Registration key={registration.book.id} registration={registration}/>)}
         </div>
     </div>;
 };

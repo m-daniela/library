@@ -31,8 +31,8 @@ export const getBooks = async () => {
 
 
 export const getRegistrations = async (email) => {
-    return axios.get(getRegistrationsUrl(email), {email})
-        .then(response => response.data)
+    return axios.post(getRegistrationsUrl, {email})
+        .then(response => response.data.registrations.books)
         .catch(console.log);
 };
 

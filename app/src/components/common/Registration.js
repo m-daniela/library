@@ -3,12 +3,9 @@ import { UserContext } from '../../context/UserContext';
 import { convertDate } from '../../utils/constants';
 import { checkoutBook } from '../../utils/serverCalls';
 
-const Registration = ({registrationInfo}) => {
+const Registration = ({registration}) => {
     const {user} = useContext(UserContext);
-    const book = registrationInfo.Book;
-    const registration = registrationInfo.Registration;
-    // const [book, registration] = registrationInfo;
-
+    const book = registration.book;
 
     const checkout = () => {
         checkoutBook(user.email, book.id)
@@ -27,7 +24,6 @@ const Registration = ({registrationInfo}) => {
                 <p>Checked out at: {convertDate(registration.checkout)}</p>
                 :
                 <button onClick={checkout}>Checkout</button>
-
         }
     </div>;
 };

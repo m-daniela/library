@@ -1,12 +1,7 @@
-from flask import Flask, jsonify, make_response, request
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 import connection, queries
 from schemas import UserSchema, BookSchema, RegistrationSchema
-
-
-origins = [
-    "http://localhost:3000",
-]
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -43,7 +38,7 @@ def get_books():
         return jsonify(result)
     except Exception as e:
         print(e)
-        return jsonify(message="An error occurred, try again later")
+        return jsonify(message="An error occurred while fetching the books, try again later")
 
 
 # add a new book
@@ -58,7 +53,7 @@ def add_book():
         return jsonify(message=message, book=book)
     except Exception as e:
         print(e)
-        return jsonify(message="An error occurred, try again later")
+        return jsonify(message="An error occurred while adding the book, try again later")
 
 
 # add a new user
@@ -77,7 +72,7 @@ def register_user():
 
 
 # Get the list of registrations
-@app.route("/registrations", methods=["GET"])
+@app.route("/registrations", methods=["POST"])
 def get_registrations():
     try:
         data = request.get_json()
@@ -87,14 +82,14 @@ def get_registrations():
 
         # only the columns from the registrations are displayed 
         # in this way
-        registration_schema = UserSchema(many=True)
+        registration_schema = UserSchema(only=("email", "books"))
         json_registrations = registration_schema.dump(registrations)
 
         return jsonify(registrations=json_registrations)
 
     except Exception as e:
         print(e)
-        return jsonify(message="An error occurred, try again later")
+        return jsonify(message="An error occurred while fetching the registrations, try again later")
 
     
 

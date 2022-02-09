@@ -21,7 +21,6 @@ const ContextProvider = ({ children }) => {
             const loggedUser = {
                 email,
                 role: localStorage.getItem("role"), 
-                permissions: localStorage.getItem("permissions")
             };
             setUser(loggedUser);
             setIsLogged(true);
@@ -31,12 +30,11 @@ const ContextProvider = ({ children }) => {
     const login = (email, password) => {
         userLogin(email, password)
             .then(data => {
-                setUser(data);
+                setUser(data.user);
                 setIsLogged(true);
                 // save to localstorage for now
-                localStorage.setItem("email", data.email);
-                localStorage.setItem("role", data.role);
-                localStorage.setItem("permissions", data.permissions);
+                localStorage.setItem("email", data.user.email);
+                localStorage.setItem("role", data.user.role);
             })
             .catch(console.log);
     };
@@ -44,7 +42,6 @@ const ContextProvider = ({ children }) => {
     const logout = () => {
         localStorage.removeItem("email");
         localStorage.removeItem("role");
-        localStorage.removeItem("permissions");
         setUser(null);
         setIsLogged(false);
     };

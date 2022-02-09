@@ -113,6 +113,6 @@ def get_registrations_for_user(email: str):
     #     .filter(Registration.email == email)
 
     # uses the nested fields property set on the schemas
-    registrations = User.query.filter_by(email=email).all()
+    registrations = User.query.filter_by(email=email).first()
     return registrations
     

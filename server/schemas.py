@@ -4,6 +4,7 @@ from models import User, Book, Registration
 class BookSchema(SQLAlchemySchema):
     class Meta:
         model=Book
+        load_instance=True
     
     id = auto_field()
     title = auto_field()
@@ -11,10 +12,13 @@ class BookSchema(SQLAlchemySchema):
     cover = auto_field()
     stock = auto_field()
 
+
+
 class RegistrationSchema(SQLAlchemySchema):
 
     class Meta:
         model=Registration
+        load_instance=True
 
     email = auto_field()
     book_id = auto_field()
@@ -27,11 +31,13 @@ class RegistrationSchema(SQLAlchemySchema):
 class UserSchema(SQLAlchemySchema):
     class Meta:
         model=User
+        load_instance=True
 
     email = auto_field()
     password = auto_field()
     role = auto_field()
-    books = fields.Nested(RegistrationSchema, many=True)
+    books = fields.Nested(RegistrationSchema, many=True, only=("checkin", "checkout", "book"))
+
 
 
 
