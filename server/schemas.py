@@ -1,5 +1,5 @@
-from typing import Optional, Union, Any
-from pydantic import BaseModel, Field
+from typing import Optional, Union
+from pydantic import BaseModel
 from datetime import datetime
 
 # user model
@@ -42,7 +42,11 @@ class RegistrationSchema(RegistrationBaseSchema):
     class Config:
         orm_mode = True
 
+# token
 
+class TokenSchema(BaseModel):
+    access_token: str
+    token_type: str
 
 # response model
 

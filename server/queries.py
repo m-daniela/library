@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from schemas import UserCreateSchema, UserBaseSchema, UserLoginSchema, BookSchema
 from models import User, Registration, Book
 from exception import CustomError
+from authentication import password_hash
 
 # users
 
@@ -18,7 +19,8 @@ def create_user(db: Session, user: UserCreateSchema) -> UserBaseSchema:
     """
     Add a new user
     """
-    new_user = User(email=user.email, password=user.password, role=user.role)
+    hashed_pass = password_hash(user.password)
+    new_user = User(email=user.email, password=hashed_pass, role=user.role)
     db.add(new_user)
     db.commit()
     db.refresh(new_user)

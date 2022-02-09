@@ -1,13 +1,34 @@
-from fastapi import Depends, FastAPI, Body
+from fastapi import Depends, FastAPI, Body, Request, HTTPException, status
 from sqlalchemy.orm import Session
-import connection, queries
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.middleware.cors import CORSMiddleware
+from jose import JWTError, jwt
+
+import connection, queries
 from schemas import ResponseModelSchema, UserLoginSchema, UserCreateSchema, BookSchema, RegistrationBaseSchema
 from exception import CustomError
+from authentication import secret, algorithm, authenticate_user, create_access_token
 
-# TODO: better authentication
-
+# add middleware so you can use the global dependencies 
+# that will be passed to the instance
 app = FastAPI()
+
+
+connection.Base.metadata.create_all(bind=connection.engine)
+
+# get the database session
+def get_database():
+    db = connection.SessionLocal()
+    try: 
+        yield db
+    finally:
+        db.close()
+
+
+# authentication
+
+auth_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
 
 origins = [
     "http://localhost:3000",
@@ -21,17 +42,66 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+def current_user(db: Session = Depends(get_database), token: str = Depends(auth_scheme)):
+    # print(token)
+    # return queries.get_user(db, token)
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, secret, algorithms=[algorithm])
+        username = payload.get("sub")
+        if not username:
+            raise credentials_exception
+        token_data = username
+    except JWTError:
+        raise credentials_exception
+    user = queries.get_user(db, username)
+    return user
 
-connection.Base.metadata.create_all(bind=connection.engine)
 
-# get the database session
-def get_database():
-    db = connection.SessionLocal()
-    try: 
-        yield db
-    finally:
-        db.close()
+@app.post("/token")
+def login(db: Session = Depends(get_database), form_data: OAuth2PasswordRequestForm = Depends()):
+    """
+    Check the user and if it is in the db, return a token
+    """
+    if form_data:
+        username = form_data.username
+        password = form_data.password
+        user = authenticate_user(db, UserLoginSchema(email=username, password=password))
+        print(user)
+        if user:
+            access_token = create_access_token(data={"sub": user.email})
+            return {"access_token": access_token, "token_type": "bearer"}
+    raise HTTPException(status_code=400, detail="Incorrect username or password")
 
+
+# @app.post("/token")
+# def login(db: Session = Depends(get_database), form_data: OAuth2PasswordRequestForm = Depends()):
+#     """
+#     Check the user and if it is in the db, return a token
+#     """
+#     if form_data:
+#         username = form_data.username
+#         password = form_data.password
+#         # get the user from the db
+#         user = queries.get_user(db, username)
+#         # check the password
+#         if password == user.password:
+#             # return the token if found
+#             return {"access_token": username, "token_type": "bearer"}
+#     raise HTTPException(status_code=400, detail="Incorrect username or password")
+
+
+# @app.get("/user-token")
+# def user_token(user: UserCreateSchema = Depends(authenticate_user)):
+#     return user
+
+@app.get("/user-token")
+def user_token(user: UserCreateSchema = Depends(current_user)):
+    return user
 
 
 @app.post("/login")
