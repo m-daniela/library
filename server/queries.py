@@ -8,7 +8,10 @@ def get_user(email: str):
     """
     Get the user from the database
     """
-    return User.query.filter_by(email=email).first()
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        raise CustomError("The user does not exist")
+    return user
 
 
 def login_user(user: UserSchema):
@@ -16,7 +19,7 @@ def login_user(user: UserSchema):
     Login the user and return the 
     """
     found_user = User.query.filter_by(email=user["email"], password=user["password"]).first()
-    if found_user is not None:
+    if found_user:
         found_user = {
             "email": found_user.email, 
             "role": found_user.role
@@ -57,62 +60,72 @@ def add_book(book: BookSchema):
     return new_book
 
 
-def update_book_stock(book_id: int, stock: int):
+def get_book(book_id: int):
+    """
+    Get the book with the given id
+    """
+    book = Book.query.filter_by(id=book_id).first()
+    if not book:
+        raise CustomError("The book does not exist")
+    return book
+
+def update_book_stock(book: Book, stock: int):
     """
     Update the book stock
     """
-    book = Book.query.filter_by(id=book_id).first()
-    if book is not None:
-        if stock < 0 and stock > 0:
-            raise CustomError("No books left")
+    if book:
+        if book.stock <= 0 and stock == -1:
+            raise CustomError("No books left with this title")
         else:
             book.stock += stock
     db.commit()
-    return book
 
 
 def checkin(book_id: int, email: str):
     """
     Register the given book for the user
     """
-    book = update_book_stock(book_id, -1)
     user = get_user(email)
+    book = get_book(book_id)
+    update_book_stock(book, -1)
 
     registration = Registration(book_id=book.id, email=user.email)
+    
     db.add(registration)
     db.commit()
     db.refresh(registration)
-    print(registration)
 
     return registration
+
 
 def checkout(book_id: int, email: str):
     """
     Checkout the book for the user
     """
-    book = update_book_stock(book_id, 1)
+    book = get_book(book_id)
     user = get_user(email)
+    
     registration = Registration.query.filter_by(book_id=book.id, email=user.email).first()
-    registration.checkout = datetime.datetime.utcnow()
 
-    db.commit()
+    if not registration:
+        raise CustomError("The registration does not exist")
 
-    return registration
+    if not registration.checkout:
+        update_book_stock(book, 1)
+        registration.checkout = datetime.datetime.utcnow()
+
+        db.commit()
+
+        return registration
+    else:
+        raise CustomError("You have already checked out this book")
 
 
 def get_registrations_for_user(email: str):
     """
     Get the books for the given user
     """
-
-    # join on registration.book_id == book.id
-    # registrations = Registration\
-    #     .query\
-    #     .join(Book, Registration.book_id == Book.id)\
-    #     .add_columns(Registration.email, Registration.checkin, Registration.checkout, Book.id, Book.title, Book.cover, Book.description, Book.stock)\
-    #     .filter(Registration.email == email)
-
     # uses the nested fields property set on the schemas
-    registrations = User.query.filter_by(email=email).first()
+    user = get_user(email)
+    registrations = User.query.filter_by(email=user.email).first()
     return registrations
-    

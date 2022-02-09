@@ -49,6 +49,7 @@ form {
 .homepage{
     max-width: 1000px;
     margin: 1em auto;
+    align-items: center;
 }
 
 .all-books, .registrations{
@@ -60,6 +61,8 @@ form {
 .card{
     width: 200px;
     margin: 1em .5em;
+    flex-basis: 30%;
+    text-align: center;
 }
 
 .login{

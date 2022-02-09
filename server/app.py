@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 import connection, queries
 from schemas import UserSchema, BookSchema, RegistrationSchema
+from exception import CustomError
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -24,7 +25,6 @@ def login():
         else:
             return jsonify(message="The username or password is incorrect")
     except Exception as e:
-        print(e)
         return jsonify(message="An error occurred, try again later")
 
 
@@ -37,7 +37,6 @@ def get_books():
         result = book_schema.dump(books)
         return jsonify(result)
     except Exception as e:
-        print(e)
         return jsonify(message="An error occurred while fetching the books, try again later")
 
 
@@ -87,8 +86,9 @@ def get_registrations():
 
         return jsonify(registrations=json_registrations)
 
+    except CustomError as e:
+        return jsonify(message=str(e))
     except Exception as e:
-        print(e)
         return jsonify(message="An error occurred while fetching the registrations, try again later")
 
     
@@ -105,8 +105,9 @@ def checkin():
 
         return jsonify(message="Checkin successful", registration=json_registration)
 
+    except CustomError as e:
+        return jsonify(message=str(e))
     except Exception as e:
-        print(e)
         return jsonify(message="You have already checked in this book")
 
 
@@ -122,9 +123,8 @@ def checkout():
 
         return jsonify(message="Checkout successful", registration=json_registration)
 
-    except Exception as e:
-        print(e)
-        return jsonify(message="You have already checked out this book")
+    except CustomError as e:
+        return jsonify(message=str(e))
 
 
 # to remove the db session at the end of the 
