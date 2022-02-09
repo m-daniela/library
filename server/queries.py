@@ -1,54 +1,50 @@
 import datetime
-from math import perm
-from unittest import result
 from sqlalchemy.orm import Session
 
-import models, schemas, exception
-
+from schemas import UserCreateSchema, UserBaseSchema, UserLoginSchema, BookSchema
+from models import User, Registration, Book
+from exception import CustomError
 
 # users
 
 def get_user(db: Session, email):
-    return db.query(models.User).filter(models.User.email == email).first()
+    user = db.query(User).filter(User.email == email).first()
+    if not user:
+        raise CustomError("The user does not exist")
+    return user
 
-def create_user(db: Session, user: schemas.UserCreate) -> schemas.UserBase:
+
+def create_user(db: Session, user: UserCreateSchema) -> UserBaseSchema:
     """
     Add a new user
     """
-    # try:
-    new_user = models.User(email=user.email, password=user.password, role=user.role)
+    new_user = User(email=user.email, password=user.password, role=user.role)
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
-    # except Exception as e:
-    #     print(e)
     return new_user
 
 
-def check_user(db: Session, user: schemas.UserLogin):
+def login_user(db: Session, user: UserLoginSchema):
     """
-    Check if the user is an admin or a normal user
-    If an admin, return True, False otherwise
-    TODO: change format
+    Login the user and return the email and permissions
     """
-    found_user = db.query(models.User).filter(models.User.email == user.email, models.User.password == user.password).first()
-    if found_user is not None:
-        result = {
+    found_user = db.query(User).filter(User.email == user.email, User.password == user.password).first()
+    if found_user:
+        found_user = {
             "email": found_user.email,
             "role": found_user.role,
         }
-        return result
-    else:
-        raise Exception("The email or password is wrong. Try again.")
+    return found_user
 
 
 # books
 
-def add_book(db: Session, book: schemas.Book):
+def add_book(db: Session, book: BookSchema):
     """
     Add a new book
     """
-    new_book = models.Book(cover=book.cover, title=book.title, description=book.description, stock=book.stock)
+    new_book = Book(cover=book.cover, title=book.title, description=book.description, stock=book.stock)
     db.add(new_book)
     db.commit()
     db.refresh(new_book)
@@ -61,21 +57,31 @@ def get_books(db: Session):
     Get the list of books
     Will add pagination later
     """
-    return db.query(models.Book).all()
+    return db.query(Book).all()
 
 
-def update_book_stock(db: Session, book_id: int, stock: int):
+def get_book(db: Session, book_id: int):
+    """
+    Get the book with the given id
+    """
+    book = db.query(Book).get(book_id)
+    if not book:
+        raise CustomError("The book does not exist")
+    return book
+
+
+def update_book_stock(db: Session, book: Book, stock: int):
     """
     Update the book stock
     """
-    book = db.query(models.Book).get(book_id)
-    if book is not None:
-        if stock < 0 and book.stock <= 0:
-            raise exception.CustomError("No books left")
+    if book:
+        if book.stock <= 0 and stock == -1:
+            raise CustomError("No books left with this title")
         else:
             book.stock += stock
     db.commit()
-    return book
+
+
 
 # registrations
 
@@ -84,8 +90,8 @@ def get_registrations(db: Session, email: str):
     Get all registrations
     TODO: the results are split in two objects
     """
-    results = db.query(models.Registration, models.Book)\
-        .filter(models.Registration.email == email, models.Registration.book_id == models.Book.id)\
+    results = db.query(Registration, Book)\
+        .filter(Registration.email == email, Registration.book_id == Book.id)\
         .all()
     # results = db.query(models.Registration).filter(models.Registration.email == email).join(models.Book).filter(models.Registration.book_id == models.Book.id).all()
     # for result in results:
@@ -97,42 +103,40 @@ def get_registrations(db: Session, email: str):
     # results = []
     return results
 
-def checkin_book(db: Session, email: str, book_id: int):
+def checkin(db: Session, email: str, book_id: int):
     """
-    Checkin book
-    Check and update the stock of books 
-    Add the user-book in the Registrations table
-    TODO: maybe check if the user with that email
-    exists?
+    Register the given book for the user
     """
-    
-    print(1)
-    updated_book = update_book_stock(db, book_id, -1)
     user = get_user(db, email)
-    try:
-        registration = models.Registration(email=user.email, book_id=updated_book.id)
-        db.add(registration)
-        db.commit()
-        db.refresh(registration)
-    except Exception as e:
-        print(e)
-    return {"Success": f"Book {book_id} was checked in, {updated_book.stock} remaining."}
+    book = get_book(db, book_id)
+    update_book_stock(db, book, -1)
+
+    registration = Registration(email=user.email, book_id=book.id)
+    db.add(registration)
+    db.commit()
+    db.refresh(registration)
+
+    return registration
 
 
-def checkout_book(db: Session, email: str, book_id: int):
+
+def checkout(db: Session, email: str, book_id: int):
     """
-    Checkout book
-    Update the stock of books and add the 
-    checkout date in the registrations table
+    Checkout the book for the user
     """
-    updated_book = update_book_stock(db, book_id, 1)
+
     user = get_user(db, email)
-    try:
-        registration = db.query(models.Registration).filter(models.Registration.email == user.email, models.Registration.book_id == updated_book.id).first()
+    book = get_book(db, book_id)
+
+    registration = db.query(Registration).filter(Registration.email == user.email, Registration.book_id == book.id).first()
+
+    if not registration:
+        raise CustomError("The registration does not exist")
+
+    if not registration.checkout:
+        update_book_stock(db, book, 1)
         registration.checkout = datetime.datetime.utcnow()
-        db.add(registration)
         db.commit()
-        db.refresh(registration)
-    except Exception as e:
-        print(e)
-    return {"Success": f"Book {book_id} was checked out, {updated_book.stock} remaining."}
+        return registration
+    else:
+        raise CustomError("You have already checked out this book")

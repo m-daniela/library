@@ -1,8 +1,9 @@
-from email.quoprimime import body_check
 from fastapi import Depends, FastAPI, Body
 from sqlalchemy.orm import Session
-import connection, connection, schemas, queries
+import connection, queries
 from fastapi.middleware.cors import CORSMiddleware
+from schemas import ResponseModelSchema, UserLoginSchema, UserCreateSchema, BookSchema, RegistrationBaseSchema
+from exception import CustomError
 
 # TODO: better authentication
 
@@ -32,28 +33,22 @@ def get_database():
         db.close()
 
 
-# Endpoints
-
-# get /books
-# get /registrations
-# post /register
-# post /checkin
-# put /checkout
-# get /your_books
-
 
 @app.post("/login")
-def login(user: schemas.UserLogin, db: Session = Depends(get_database)):
+def login(user: UserLoginSchema, db: Session = Depends(get_database)):
     """
     Login and check if the user is an admin or not
     Based on this, the user will be redirected
-    TODO: change to form? 
     """
     try:
-        result = queries.check_user(db, user)
-        return result
+        user = queries.login_user(db, user)
+
+        if user:
+            return ResponseModelSchema(data=user, message="Successful login")
+        else:
+            return ResponseModelSchema(message="The username or password is incorrect")
     except Exception as e:
-        return {"Error": e}
+        return ResponseModelSchema(message="An error occurred, try again later")
 
 
 @app.get("/books")
@@ -63,82 +58,78 @@ def get_books(db: Session = Depends(get_database)):
     """
     try:
         books = queries.get_books(db)
-        return books
+        return ResponseModelSchema(data=books)
     except Exception as e:
-        return {"Error": e}
+        return ResponseModelSchema(message="An error occurred while fetching the books, try again later")
 
 
 @app.post("/book")
-def add_book(book: schemas.Book, db: Session = Depends(get_database)):
+def add_book(book: BookSchema, db: Session = Depends(get_database)):
     """
     Add a new book
     Only an admin is allowed to perform this operation
     """
     try:
-        result = queries.add_book(db, book)
-        return {"message": f"Book with title {result.title} was added"}
+        added_book = queries.add_book(db, book)
+        message =  f"Book with title {added_book.title} was added"
+        return ResponseModelSchema(message=message, data=added_book)
     except Exception as e:
-        return {"message": e}
+        print(e)
+        return ResponseModelSchema(message="An error occurred while adding the book, try again later")
         
 
 
 @app.post("/register")
-def add_user(user: schemas.UserCreate, db: Session = Depends(get_database)):
+def add_user(user: UserCreateSchema, db: Session = Depends(get_database)):
     """
     Add a new user
     Only the admin is allowed to do this operation
     """
     try:
-        user = queries.create_user(db, user)
-        result = {
-            "email": user.email, 
-            "role": user.role, 
-            "message": f"{user.email} successfully added"
-        }
-        return result
+        queries.create_user(db, user)
+        return ResponseModelSchema(message="User created successfully")
     except Exception as e:
-        print(e)
-        return {"message": "This user already exists"}
+        return ResponseModelSchema(message="This user already exists")
     
 
 
-
-@app.get("/registrations/{email}")
-def get_registrations(email: str, db: Session = Depends(get_database)):
+@app.post("/registrations")
+def get_registrations(email: str = Body(..., embed=True), db: Session = Depends(get_database)):
     """
     Get the list of registrations
-    TODO: registrations for a given user...
+    TODO: change response model
     """
     try:
-        print(email)
         registrations = queries.get_registrations(db, email)
-        print(registrations)
         return registrations
+    except CustomError as e:
+        return ResponseModelSchema(message=str(e))
     except Exception as e:
-        return {"Error": e}
+        return ResponseModelSchema(message="An error occurred while fetching the registrations, try again later")
+
 
 
 @app.post("/checkin")
-def checkin(registration: schemas.RegistrationBase, db: Session = Depends(get_database)):
+def checkin(registration: RegistrationBaseSchema, db: Session = Depends(get_database)):
     """
     Book checkin
-    The current user sends a request with the email and 
-    the id of the book they want 
     """
     try:
-        result = queries.checkin_book(db, registration.email, registration.book_id)
-        return result
+        added_registration = queries.checkin(db, registration.email, registration.book_id)
+        return ResponseModelSchema(message="Checkin successful", data=added_registration)
+    except CustomError as e:
+        return ResponseModelSchema(message=str(e))
     except Exception as e:
-        return {"Error": e}
+        return ResponseModelSchema(message="You have already checked in this book")
         
 
 @app.put("/checkout")
-def checkout(registration: schemas.RegistrationBase, db: Session = Depends(get_database)):
+def checkout(registration: RegistrationBaseSchema, db: Session = Depends(get_database)):
     """
     Book checkout
     """
     try:
-        result = queries.checkout_book(db, registration.email, registration.book_id)
-        return result
-    except Exception as e:
-        return {"Error": e}
+        updated_registration = queries.checkout(db, registration.email, registration.book_id)
+        return ResponseModelSchema(message="Checkout successful", registration=updated_registration)
+    except CustomError as e:
+        return ResponseModelSchema(message=str(e))

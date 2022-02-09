@@ -11,8 +11,8 @@ export const routes = {
     allBooks: "/books"
 };
 
-
-const baseUrl = "http://localhost:8000/";
+const port = 5000;
+const baseUrl = `http://localhost:${port}/`;
 
 export const loginUrl = `${baseUrl}login`;
 export const registerUrl = `${baseUrl}register`;
@@ -20,7 +20,7 @@ export const getBooksUrl = `${baseUrl}books`;
 export const addBookUrl = `${baseUrl}book`;
 export const checkinUrl = `${baseUrl}checkin`;
 export const checkoutUrl = `${baseUrl}checkout`;
-export const getRegistrationsUrl = (email) => `${baseUrl}registrations/${email}`;
+export const getRegistrationsUrl = `${baseUrl}registrations`;
 
 
 export const convertDate = (timestamp) => new Date(timestamp).toString();
