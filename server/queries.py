@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from schemas import UserCreateSchema, UserBaseSchema, UserLoginSchema, BookSchema
 from models import User, Registration, Book
-from exception import CustomError
+from exception import CustomError, custom_not_found_exception
 from authentication import password_hash
 
 # users
@@ -11,7 +11,7 @@ from authentication import password_hash
 def get_user(db: Session, email):
     user = db.query(User).filter(User.email == email).first()
     if not user:
-        raise CustomError("The user does not exist")
+        raise custom_not_found_exception("The user does not exist")
     return user
 
 
@@ -68,7 +68,7 @@ def get_book(db: Session, book_id: int):
     """
     book = db.query(Book).get(book_id)
     if not book:
-        raise CustomError("The book does not exist")
+        raise custom_not_found_exception("The book does not exist")
     return book
 
 
@@ -89,11 +89,12 @@ def update_book_stock(db: Session, book: Book, stock: int):
 
 def get_registrations(db: Session, email: str):
     """
-    Get all registrations
+    Get all registrations for a user
     TODO: the results are split in two objects
     """
+    user = get_user(db, email)
     results = db.query(Registration, Book)\
-        .filter(Registration.email == email, Registration.book_id == Book.id)\
+        .filter(Registration.email == user.email, Registration.book_id == Book.id)\
         .all()
     # results = db.query(models.Registration).filter(models.Registration.email == email).join(models.Book).filter(models.Registration.book_id == models.Book.id).all()
     # for result in results:
@@ -133,7 +134,7 @@ def checkout(db: Session, email: str, book_id: int):
     registration = db.query(Registration).filter(Registration.email == user.email, Registration.book_id == book.id).first()
 
     if not registration:
-        raise CustomError("The registration does not exist")
+        raise custom_not_found_exception("The registration does not exist")
 
     if not registration.checkout:
         update_book_stock(db, book, 1)

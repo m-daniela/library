@@ -21,7 +21,6 @@ const BookProvider = ({children}) => {
     const retrieveMyBooks = (email) => {
         getRegistrations(email)
             .then(data => {
-                console.log(data);
                 setMyBooks(data);
             })
             .catch(error => {

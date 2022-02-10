@@ -23,4 +23,7 @@ export const checkoutUrl = `${baseUrl}checkout`;
 export const getRegistrationsUrl = `${baseUrl}registrations`;
 
 
-export const convertDate = (timestamp) => new Date(timestamp).toString();
+export const convertDate = (timestamp) => {
+    const time = new Date(timestamp);
+    return time.toLocaleString("ro-RO", { timeZone: 'UTC' });
+};

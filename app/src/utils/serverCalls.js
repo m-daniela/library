@@ -2,6 +2,10 @@ import axios from "axios";
 import jwt_decode from "jwt-decode";
 import { addBookUrl, checkinUrl, checkoutUrl, getBooksUrl, getRegistrationsUrl, loginUrl, registerUrl } from "./constants";
 
+/** 
+ * authentication header with the bearer token 
+ * this is necessary to perform the requests
+ */
 const authHeaders = () => {
     const token = localStorage.getItem("token");
     return { 
@@ -9,6 +13,14 @@ const authHeaders = () => {
     };
 }; 
 
+/**
+ * login 
+ * send the username and password parameters 
+ * as form data, so they can be handled by oauth2
+ * @param {string} email 
+ * @param {string} password 
+ * @returns 
+ */
 export const userLogin = async (email, password) => {
     const formData = new FormData();
     formData.append("username", email);
@@ -16,8 +28,6 @@ export const userLogin = async (email, password) => {
 
     return axios.post(loginUrl, formData)
         .then(response => {
-            console.log(response.data);
-
             // decode the jwt token
             const token_data = jwt_decode(response.data.access_token);
 
@@ -27,9 +37,21 @@ export const userLogin = async (email, password) => {
                 token: response.data.access_token
             };
         })
-        .catch(console.log);
+        .catch(error => {
+            throw error.response.data;
+        });
 };
 
+
+/**
+ * register user
+ * register a new user with the given email,
+ * password and role
+ * @param {string} email 
+ * @param {string} password 
+ * @param {boolean} role 
+ * @returns 
+ */
 export const registerUser = async (email, password, role) => {
     const stringRole = role ? "admin" : "user";
     return axios.post(registerUrl, { email, password, role: stringRole }, authHeaders())
@@ -39,7 +61,14 @@ export const registerUser = async (email, password, role) => {
         });
 };
 
-
+/**
+ * add book
+ * @param {string} title 
+ * @param {string} description 
+ * @param {string} cover 
+ * @param {int} stock 
+ * @returns 
+ */
 export const addBook = async (title, description, cover, stock) => {
     return axios.post(addBookUrl, {title, description, cover, stock }, authHeaders())
         .then(response => response.data)
@@ -48,28 +77,55 @@ export const addBook = async (title, description, cover, stock) => {
         });
 };
 
-
+/**
+ * get books
+ * @returns 
+ */
 export const getBooks = async () => {
     return axios.get(getBooksUrl, authHeaders())
         .then(response => response.data.data)
-        .catch(console.log);
+        .catch(error => {
+            throw error.response.data;
+        });
 };
 
-
+/**
+ * get the registrations for the given user
+ * @param {string} email 
+ * @returns 
+ */
 export const getRegistrations = async (email) => {
     return axios.post(getRegistrationsUrl, {email}, authHeaders())
         .then(response => response.data)
-        .catch(console.log);
+        .catch(error => {
+            throw error.response.data;
+        });
 };
 
+/**
+ * checkin book
+ * @param {string} email 
+ * @param {int} bookId 
+ * @returns 
+ */
 export const checkinBook = async (email, bookId) => {
     return axios.post(checkinUrl, {email, book_id: bookId}, authHeaders())
         .then(response => response.data)
-        .catch(console.log);
+        .catch(error => {
+            throw error.response.data;
+        });
 };
 
+/**
+ * checkout book
+ * @param {string} email 
+ * @param {int} bookId 
+ * @returns 
+ */
 export const checkoutBook = async (email, bookId) => {
     return axios.put(checkoutUrl, {email, book_id: bookId}, authHeaders())
         .then(response => response.data)
-        .catch(console.log);
+        .catch(error => {
+            throw error.response.data;
+        });
 };

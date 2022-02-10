@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { registerUser } from '../../utils/serverCalls';
 
+/**
+ * User registration form
+ * @returns 
+ */
 const Register = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");

@@ -1,33 +1,36 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { UserContext } from '../../context/UserContext';
 import { convertDate } from '../../utils/constants';
 import { checkoutBook } from '../../utils/serverCalls';
 
 const Registration = ({registrationInfo}) => {
     const {user} = useContext(UserContext);
+    const [message, setMessage] = useState("");
     const book = registrationInfo.Book;
     const registration = registrationInfo.Registration;
-    // const [book, registration] = registrationInfo;
-
 
     const checkout = () => {
         checkoutBook(user.email, book.id)
             .then(data => {
                 console.log(data);
+                setMessage(data.message);
             })
-            .catch(console.log);
+            .catch(error => {
+                console.log(error);
+                setMessage(error.detail);
+            });
     };
     
     return <div className="card">
         <h2>{book.title}</h2>
         <div>{book.description}</div>
         <p>Checked in at: {convertDate(registration.checkin)}</p>
+        <p>{message}</p>
         {
             registration.checkout ?
                 <p>Checked out at: {convertDate(registration.checkout)}</p>
                 :
                 <button onClick={checkout}>Checkout</button>
-
         }
     </div>;
 };

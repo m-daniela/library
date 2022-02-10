@@ -6,7 +6,7 @@ from jose import JWTError, jwt
 
 import connection, queries
 from schemas import ResponseModelSchema, TokenDataSchema, UserLoginSchema, UserCreateSchema, BookSchema, RegistrationBaseSchema
-from exception import CustomError, CustomHTTPException
+from exception import CustomError, custom_unauthorized_exception
 from authentication import secret, algorithm, authenticate_user, create_access_token
 
 # add middleware so you can use the global dependencies 
@@ -49,7 +49,7 @@ app.add_middleware(
 # get the currently authenticated user
 
 def current_user(scopes: SecurityScopes, db: Session = Depends(get_database), token: str = Depends(auth_scheme)):
-    credentials_validation = "Invalid credentials"
+    credentials_validation = "An error occurred. Please login again"
     permissions_validation = "You do not have permission to perform this action"
 
     # check if there are any scopes added
@@ -65,29 +65,29 @@ def current_user(scopes: SecurityScopes, db: Session = Depends(get_database), to
         username = payload.get("sub")
 
         if not username:
-            raise CustomHTTPException(credentials_validation, auth)
+            raise custom_unauthorized_exception(credentials_validation, auth)
 
         token_scopes = payload.get("scopes", [])
         token_data = TokenDataSchema(scopes=token_scopes, username=username)
 
     except JWTError:
-        raise CustomHTTPException(credentials_validation, auth)
+        raise custom_unauthorized_exception(credentials_validation, auth)
 
     user = queries.get_user(db, username)
     
     for scope in scopes.scopes:
         if scope not in token_data.scopes:
-            raise CustomHTTPException(permissions_validation, auth)
+            raise custom_unauthorized_exception(permissions_validation, auth)
 
     return user
 
 # add the scopes as security dependencies for admin users
 def admin_user(user: UserLoginSchema = Security(current_user, scopes=["register", "book"])):
-    return user
+    return
 
 # no scopes needed for normal users
 def normal_user(user: UserLoginSchema = Security(current_user)):
-    return user
+    return
 
 
 
@@ -166,13 +166,15 @@ def get_registrations(email: str = Body(..., embed=True), db: Session = Depends(
     Get the list of registrations
     TODO: change response model
     """
-    try:
-        registrations = queries.get_registrations(db, email)
-        return registrations
-    except CustomError as e:
-        return ResponseModelSchema(message=str(e))
-    except Exception as e:
-        return ResponseModelSchema(message="An error occurred while fetching the registrations, try again later")
+    registrations = queries.get_registrations(db, email)
+    return registrations
+    # try:
+    #     registrations = queries.get_registrations(db, email)
+    #     return registrations
+    # except CustomError as e:
+    #     return ResponseModelSchema(message=str(e))
+    # except Exception as e:
+    #     return ResponseModelSchema(message="An error occurred while fetching the registrations, try again later")
 
 
 

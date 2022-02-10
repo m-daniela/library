@@ -5,7 +5,7 @@ export const UserContext = createContext();
 
 /**
  * The user context
- * Holds an object with the email and role
+ * Holds an object with the email, role and JWT
  */
 const UserProvider = ({ children }) => {
     const [user, setUser] = useState(null);
