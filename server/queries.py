@@ -59,7 +59,7 @@ def get_books(db: Session):
     Get the list of books
     Will add pagination later
     """
-    return db.query(Book).all()
+    return db.query(Book).filter(Book.stock > 0).all()
 
 
 def get_book(db: Session, book_id: int):
@@ -107,8 +107,7 @@ def checkin(db: Session, email: str, book_id: int):
     db.add(registration)
     db.commit()
     db.refresh(registration)
-
-    return registration
+    return {"registration": registration, "book": book}
 
 
 

@@ -6,8 +6,10 @@ import { addBookUrl, checkinUrl, checkoutUrl, getBooksUrl, getRegistrationsUrl, 
  * authentication header with the bearer token 
  * this is necessary to perform the requests
  */
-const authHeaders = () => {
-    const token = localStorage.getItem("token");
+const authHeaders = (token) => {
+    if (!token){
+        token = localStorage.getItem("token");
+    }
     return { 
         headers: {"Authorization": `Bearer ${token}`}
     };
@@ -91,11 +93,15 @@ export const getBooks = async () => {
 
 /**
  * get the registrations for the given user
+ * added the token directly because it might 
+ * take a while to retrieve it from the local 
+ * storage and this function is called on login
  * @param {string} email 
+ * @param {string} token 
  * @returns 
  */
-export const getRegistrations = async (email) => {
-    return axios.post(getRegistrationsUrl, {email}, authHeaders())
+export const getRegistrations = async (email, token) => {
+    return axios.post(getRegistrationsUrl, {email}, authHeaders(token))
         .then(response => response.data)
         .catch(error => {
             throw error.response.data;
@@ -110,7 +116,10 @@ export const getRegistrations = async (email) => {
  */
 export const checkinBook = async (email, bookId) => {
     return axios.post(checkinUrl, {email, book_id: bookId}, authHeaders())
-        .then(response => response.data)
+        // .then(response => response.data)
+        .then(response => {
+            return response.data;
+        })
         .catch(error => {
             throw error.response.data;
         });

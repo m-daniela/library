@@ -199,6 +199,6 @@ def checkout(registration: RegistrationBaseSchema, db: Session = Depends(get_dat
     """
     try:
         updated_registration = queries.checkout(db, registration.email, registration.book_id)
-        return ResponseModelSchema(message="Checkout successful", registration=updated_registration)
+        return ResponseModelSchema(message="Checkout successful", data=updated_registration)
     except CustomError as e:
         return ResponseModelSchema(message=str(e))

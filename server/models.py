@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship
 import datetime
 import connection
 
-# added lazy loading so that the list of books
+# added eager** loading so that the list of books
 # for a user is retrieved when asking for registrations
 # without aditional joins
 # user -> registration -> book

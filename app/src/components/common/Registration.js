@@ -1,5 +1,7 @@
 import React, { useContext, useState } from 'react';
+import { BookContext } from '../../context/BookContext';
 import { UserContext } from '../../context/UserContext';
+import { actions } from '../../reducers/bookReducer';
 import { convertDate } from '../../utils/constants';
 import { checkoutBook } from '../../utils/serverCalls';
 
@@ -11,14 +13,16 @@ import { checkoutBook } from '../../utils/serverCalls';
  */
 const Registration = ({registration}) => {
     const {user} = useContext(UserContext);
+    const {dispatch} = useContext(BookContext);
     const [message, setMessage] = useState("");
     const book = registration.book;
 
     const checkout = () => {
         checkoutBook(user.email, book.id)
             .then(data => {
-                console.log(data);
                 setMessage(data.message);
+                dispatch({type: actions.checkout, payload: data.data});
+
             })
             .catch(error => {
                 console.log(error);
