@@ -1,24 +1,26 @@
-from typing import Optional, Union
+from typing import List, Optional, Union
 from pydantic import BaseModel
 from datetime import datetime
 
-# user model
-# model that will be shown
+# user 
+
 class UserBaseSchema(BaseModel):
     email: str
 
-# login model
+# user login data 
+
 class UserLoginSchema(UserBaseSchema):
     password: str
 
-# model that will be added to the db
+# user data for the database
+
 class UserCreateSchema(UserLoginSchema):
     role: str
     class Config:
         orm_mode = True
 
 
-# book model
+# book
 
 class BookSchema(BaseModel):
     cover: str
@@ -29,7 +31,7 @@ class BookSchema(BaseModel):
         orm_mode = True
 
 
-# registration model
+# registration 
 
 class RegistrationBaseSchema(BaseModel):
     email: str
@@ -44,11 +46,15 @@ class RegistrationSchema(RegistrationBaseSchema):
 
 # token
 
+class TokenDataSchema(BaseModel):
+    username: Optional[str] = None
+    scopes: List[str] = []
+
 class TokenSchema(BaseModel):
     access_token: str
     token_type: str
 
-# response model
+# response 
 
 class ResponseModelSchema(BaseModel):
     message: Optional[str]
