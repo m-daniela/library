@@ -49,8 +49,8 @@ app.add_middleware(
 # get the currently authenticated user
 
 def current_user(scopes: SecurityScopes, db: Session = Depends(get_database), token: str = Depends(auth_scheme)):
-    credentials_validation = "Could not validate credentials"
-    permissions_validation = "Not enough permissions"
+    credentials_validation = "Invalid credentials"
+    permissions_validation = "You do not have permission to perform this action"
 
     # check if there are any scopes added
     # and add them to the bearer string

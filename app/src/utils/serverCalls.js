@@ -34,14 +34,18 @@ export const registerUser = async (email, password, role) => {
     const stringRole = role ? "admin" : "user";
     return axios.post(registerUrl, { email, password, role: stringRole }, authHeaders())
         .then(response => response.data)
-        .catch(error => error);
+        .catch(error => {
+            throw error.response.data;
+        });
 };
 
 
 export const addBook = async (title, description, cover, stock) => {
     return axios.post(addBookUrl, {title, description, cover, stock }, authHeaders())
         .then(response => response.data)
-        .catch(error => error);
+        .catch(error => {
+            throw error.response.data;
+        });
 };
 
 

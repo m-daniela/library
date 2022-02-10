@@ -6,9 +6,8 @@ export const UserContext = createContext();
 /**
  * The user context
  * Holds an object with the email and role
- * @returns 
  */
-const ContextProvider = ({ children }) => {
+const UserProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [isLogged, setIsLogged] = useState(false);
 
@@ -33,7 +32,7 @@ const ContextProvider = ({ children }) => {
             .then(data => {
                 setUser(data);
                 setIsLogged(true);
-                
+
                 localStorage.setItem("email", data.email);
                 localStorage.setItem("role", data.role);
                 localStorage.setItem("token", data.token);
@@ -55,4 +54,4 @@ const ContextProvider = ({ children }) => {
     </UserContext.Provider>;
 };
 
-export default ContextProvider;
+export default UserProvider;

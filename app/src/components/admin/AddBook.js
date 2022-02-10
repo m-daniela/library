@@ -29,7 +29,7 @@ const AddBook = () => {
                     setStock(1);
                 })
                 .catch(error => {
-                    console.log(error);
+                    setMessage(error.detail);
                 });
         }
     };

@@ -13,7 +13,9 @@ const Register = () => {
             .then(data => {
                 setMessage(data.message);
             })
-            .catch(setMessage);
+            .catch(error => {
+                setMessage(error.detail);
+            });
     };
 
 
