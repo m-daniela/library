@@ -1,15 +1,16 @@
 from datetime import datetime, timedelta
-from jose import jwt
 from passlib.context import CryptContext
+from jose import jwt
 
 import queries
 from schemas import UserLoginSchema
+
 
 # will change these too
 # got the secret with openssl rand -hex 32
 secret = "4fa246c8fcd8126b85aa1ada346262824209a9e779767af134fedb8e00c06cfc"
 algorithm = "HS256"
-token_expiration_minutes = 5
+token_expiration_minutes = 15
 
 # create the hash context
 # will be used to hash and verify the passwords
@@ -18,7 +19,6 @@ password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 # function to get the hash of the password
 def password_hash(password):
     return password_context.hash(password)
-
 
 # function to verify the password
 def password_verification(password, hashed_password):
@@ -44,3 +44,4 @@ def create_access_token(data: dict):
     encoded_jwt = jwt.encode(data, secret, algorithm=algorithm)
     return encoded_jwt
     
+

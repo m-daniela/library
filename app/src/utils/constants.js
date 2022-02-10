@@ -14,7 +14,7 @@ export const routes = {
 const port = 5000;
 const baseUrl = `http://localhost:${port}/`;
 
-export const loginUrl = `${baseUrl}login`;
+export const loginUrl = `${baseUrl}token`;
 export const registerUrl = `${baseUrl}register`;
 export const getBooksUrl = `${baseUrl}books`;
 export const addBookUrl = `${baseUrl}book`;

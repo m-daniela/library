@@ -1,18 +1,17 @@
-from fastapi import Depends, FastAPI, Body, Request, HTTPException, Security, status
+from fastapi import Depends, FastAPI, Body, HTTPException, Security
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm, SecurityScopes
 from fastapi.middleware.cors import CORSMiddleware
 from jose import JWTError, jwt
 
 import connection, queries
-from schemas import ResponseModelSchema, TokenDataSchema, UserBaseSchema, UserLoginSchema, UserCreateSchema, BookSchema, RegistrationBaseSchema
+from schemas import ResponseModelSchema, TokenDataSchema, UserLoginSchema, UserCreateSchema, BookSchema, RegistrationBaseSchema
 from exception import CustomError, CustomHTTPException
 from authentication import secret, algorithm, authenticate_user, create_access_token
 
 # add middleware so you can use the global dependencies 
 # that will be passed to the instance
 app = FastAPI()
-
 
 connection.Base.metadata.create_all(bind=connection.engine)
 
@@ -61,6 +60,7 @@ def current_user(scopes: SecurityScopes, db: Session = Depends(get_database), to
         auth = "Bearer"
 
     try:
+        # get the data from the payload 
         payload = jwt.decode(token, secret, algorithms=[algorithm])
         username = payload.get("sub")
 
@@ -99,58 +99,23 @@ def login(db: Session = Depends(get_database), form_data: OAuth2PasswordRequestF
     if form_data:
         username = form_data.username
         password = form_data.password
+
         user = authenticate_user(db, UserLoginSchema(email=username, password=password))
 
         if user:
+            data = {
+                "sub": user.email, 
+                "role": user.role
+            }
             # check if the user is an admin and give 
             # the corresponding scopes
             if user.role == "admin":
-                access_token = create_access_token(
-                data={
-                    "sub": user.email, 
-                    "scopes": ["register", "book"]
-                })
-            else:
-                access_token = create_access_token(
-                    data={
-                        "sub": user.email, 
-                    })
+                data.update({"scopes": ["register", "book"]})
+
+            access_token = create_access_token(data=data)
+
             return {"access_token": access_token, "token_type": "bearer"}
     raise HTTPException(status_code=400, detail="Incorrect username or password")
-
-
-# @app.post("/token")
-# def login(db: Session = Depends(get_database), form_data: OAuth2PasswordRequestForm = Depends()):
-#     """
-#     Check the user and if it is in the db, return a token
-#     """
-#     if form_data:
-#         username = form_data.username
-#         password = form_data.password
-#         # get the user from the db
-#         user = queries.get_user(db, username)
-#         # check the password
-#         if password == user.password:
-#             # return the token if found
-#             return {"access_token": username, "token_type": "bearer"}
-#     raise HTTPException(status_code=400, detail="Incorrect username or password")
-
-
-@app.post("/login")
-def login(user: UserLoginSchema, db: Session = Depends(get_database)):
-    """
-    Login and check if the user is an admin or not
-    Based on this, the user will be redirected
-    """
-    try:
-        user = queries.login_user(db, user)
-
-        if user:
-            return ResponseModelSchema(data=user, message="Successful login")
-        else:
-            return ResponseModelSchema(message="The username or password is incorrect")
-    except Exception as e:
-        return ResponseModelSchema(message="An error occurred, try again later")
 
 
 @app.get("/books", dependencies=[Depends(normal_user)])
@@ -181,7 +146,7 @@ def add_book(book: BookSchema, db: Session = Depends(get_database)):
         
 
 
-@app.post("/register")
+@app.post("/register", dependencies=[Security(admin_user, scopes=["register"])])
 def add_user(user: UserCreateSchema, db: Session = Depends(get_database)):
     """
     Add a new user
@@ -195,7 +160,7 @@ def add_user(user: UserCreateSchema, db: Session = Depends(get_database)):
     
 
 
-@app.post("/registrations")
+@app.post("/registrations", dependencies=[Depends(normal_user)])
 def get_registrations(email: str = Body(..., embed=True), db: Session = Depends(get_database)):
     """
     Get the list of registrations
@@ -211,7 +176,7 @@ def get_registrations(email: str = Body(..., embed=True), db: Session = Depends(
 
 
 
-@app.post("/checkin")
+@app.post("/checkin", dependencies=[Depends(normal_user)])
 def checkin(registration: RegistrationBaseSchema, db: Session = Depends(get_database)):
     """
     Book checkin
@@ -225,7 +190,7 @@ def checkin(registration: RegistrationBaseSchema, db: Session = Depends(get_data
         return ResponseModelSchema(message="You have already checked in this book")
         
 
-@app.put("/checkout")
+@app.put("/checkout", dependencies=[Depends(normal_user)])
 def checkout(registration: RegistrationBaseSchema, db: Session = Depends(get_database)):
     """
     Book checkout
