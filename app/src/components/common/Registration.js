@@ -3,11 +3,16 @@ import { UserContext } from '../../context/UserContext';
 import { convertDate } from '../../utils/constants';
 import { checkoutBook } from '../../utils/serverCalls';
 
-const Registration = ({registrationInfo}) => {
+/**
+ * Registration
+ * Display a registration and handle checkout
+ * @param {*} registrationInfo
+ * @returns 
+ */
+const Registration = ({registration}) => {
     const {user} = useContext(UserContext);
     const [message, setMessage] = useState("");
-    const book = registrationInfo.Book;
-    const registration = registrationInfo.Registration;
+    const book = registration.book;
 
     const checkout = () => {
         checkoutBook(user.email, book.id)
@@ -22,8 +27,8 @@ const Registration = ({registrationInfo}) => {
     };
     
     return <div className="card">
-        <h2>{book.title}</h2>
-        <div>{book.description}</div>
+        <h2>{book?.title}</h2>
+        <div>{book?.description}</div>
         <p>Checked in at: {convertDate(registration.checkin)}</p>
         <p>{message}</p>
         {

@@ -1,5 +1,5 @@
 import datetime
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, subqueryload
 
 from schemas import UserCreateSchema, UserBaseSchema, UserLoginSchema, BookSchema
 from models import User, Registration, Book
@@ -90,21 +90,10 @@ def update_book_stock(db: Session, book: Book, stock: int):
 def get_registrations(db: Session, email: str):
     """
     Get all registrations for a user
-    TODO: the results are split in two objects
     """
     user = get_user(db, email)
-    results = db.query(Registration, Book)\
-        .filter(Registration.email == user.email, Registration.book_id == Book.id)\
-        .all()
-    # results = db.query(models.Registration).filter(models.Registration.email == email).join(models.Book).filter(models.Registration.book_id == models.Book.id).all()
-    # for result in results:
-    #     print(result)
-    # results = db.query(models.Registration)\
-    #     .join(models.Book)\
-    #     .filter(models.Registration.email == email, models.Registration.book_id == models.Book.id)\
-    #     .all()
-    # results = []
-    return results
+    books = user.books
+    return books
 
 def checkin(db: Session, email: str, book_id: int):
     """

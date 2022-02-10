@@ -10,6 +10,7 @@ const BookProvider = ({children}) => {
     const retrieveBooks = () => {
         getBooks()
             .then(data => {
+                console.log(data);
                 setBooks(data);
             })
             .catch(error => {

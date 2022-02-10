@@ -1,25 +1,22 @@
 import React, { useContext, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-
 import { BookContext } from '../../context/BookContext';
 import { UserContext } from '../../context/UserContext';
-import { routes } from '../../utils/constants';
 import Book from '../common/Book';
 
+/**
+ * List all the books
+ * Get the books from the server and display them
+ * @returns 
+ */
 const AllBooks = () => {
     const {isLogged} = useContext(UserContext);
     const {books, retrieveBooks} = useContext(BookContext);
-    const navigate = useNavigate();
-
 
     useEffect(() => {
         if (isLogged){
             retrieveBooks();
         }
-        else {
-            navigate(routes.login);
-        }
-    }, []);
+    }, [isLogged]);
 
     return <div className="homepage">
         <h2>Available books</h2>

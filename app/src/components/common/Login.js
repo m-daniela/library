@@ -1,6 +1,10 @@
 import React, { useContext, useState } from 'react';
 import { UserContext } from '../../context/UserContext';
 
+/**
+ * Login form
+ * @returns 
+ */
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");

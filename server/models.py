@@ -1,10 +1,12 @@
-from tokenize import String
-from xmlrpc.client import DateTime
 from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
 from sqlalchemy.orm import relationship
 import datetime
-
 import connection
+
+# added lazy loading so that the list of books
+# for a user is retrieved when asking for registrations
+# without aditional joins
+# user -> registration -> book
 
 # using an actual table as an association table
 class Registration(connection.Base):
@@ -16,8 +18,10 @@ class Registration(connection.Base):
     checkout = Column(DateTime, default=None, nullable=True)
 
     user = relationship("User", back_populates="books")
-    book = relationship("Book", back_populates="users")
+    book = relationship("Book", back_populates="users", lazy="subquery")
 
+    def __str__(self) -> str:
+        return f"{self.email}, {self.book_id}, {self.checkin}, {self.checkout}"
 
 
 class User(connection.Base):
@@ -28,7 +32,8 @@ class User(connection.Base):
     role = Column(String, default="user")
     books = relationship(
         "Registration", 
-        back_populates="user"
+        back_populates="user",
+        lazy="subquery"
     )
 
 
@@ -42,7 +47,7 @@ class Book(connection.Base):
     stock = Column(Integer, nullable=False)
     users = relationship(
         "Registration", 
-        back_populates="book"
+        back_populates="book",
     )
 
 

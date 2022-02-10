@@ -12,7 +12,11 @@ import AllBooks from './user/AllBooks';
 import AdminRoute from './routes/AdminRoute';
 import UserRoute from './routes/UserRoute';
 
-
+/**
+ * Main component
+ * Contains the routing logic and contexts
+ * @returns 
+ */
 function App() {
     return (
         <div className="app">
