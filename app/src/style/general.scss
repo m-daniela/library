@@ -1,4 +1,20 @@
 
+:root{
+    --primary-background: #FBF8F1;
+    --secondary-background: #E9DAC1;
+    --highlight: #F7ECDE;
+    // --highlight2: #54BAB9;
+    --highlight2: #5089C6;
+    --font-color: #222;
+
+    // --primary-background: #171717;
+    // --secondary-background: #444444;
+    // --highlight: #334756;
+    // // --highlight2: #54BAB9;
+    // --highlight2: #FF4C29;
+    // --font-color: #EDEDED;
+}
+
 @mixin display-column {
     display: flex;
     flex-direction: column;

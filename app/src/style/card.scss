@@ -1,0 +1,23 @@
+
+.card{
+    // width: 200px;
+    display: flex;
+    margin: 1em .5em;
+    flex-basis: 45%;
+    img{
+        max-width: 200px;
+    }
+    .details{
+        margin: 0 1em;
+
+        h2{
+            margin-top: 0;
+        }
+
+        .description{
+            max-height: 6em;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+}

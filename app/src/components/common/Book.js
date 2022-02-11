@@ -36,11 +36,14 @@ const Book = ({book}) => {
 
     return <div className="card">
         <img src={book.cover} alt="img" />
-        <h2>{book.title}</h2>
-        <div>{book.description}</div>
-        <p>In stock: {book.stock}</p>
-        <p>{message}</p>
-        <button onClick={checkin}>Checkin</button>
+        <div className='details'>
+            <h2>{book.title}</h2>
+            <div className='description'>{book.description}</div>
+            <p>In stock: {book.stock}</p>
+            <p>{message}</p>
+            <button onClick={checkin}>Checkin</button>
+        </div>
+        
     </div>;
 };
 

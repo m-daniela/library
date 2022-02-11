@@ -32,17 +32,19 @@ const Registration = ({registration}) => {
     
     return <div className="card">
         <img src={book?.cover} alt="img" />
+        <div className='details'>
+            <h2>{book?.title}</h2>
+            <div className='description'>{book?.description}</div>
+            <p>Checked in at: {convertDate(registration.checkin)}</p>
+            <p>{message}</p>
+            {
+                registration.checkout ?
+                    <p>Checked out at: {convertDate(registration.checkout)}</p>
+                    :
+                    <button onClick={checkout}>Checkout</button>
+            }
+        </div>
 
-        <h2>{book?.title}</h2>
-        <div>{book?.description}</div>
-        <p>Checked in at: {convertDate(registration.checkin)}</p>
-        <p>{message}</p>
-        {
-            registration.checkout ?
-                <p>Checked out at: {convertDate(registration.checkout)}</p>
-                :
-                <button onClick={checkout}>Checkout</button>
-        }
     </div>;
 };
 
