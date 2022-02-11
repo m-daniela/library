@@ -34,7 +34,7 @@ const AddBook = () => {
         }
     };
 
-    return <div className="form add-book homepage">
+    return <div className="homepage">
         <h2>Add a new book</h2>
         <form onSubmit={handleAddBook}>
             <label htmlFor="title" >Title</label>

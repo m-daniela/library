@@ -10,10 +10,10 @@ import { routes } from '../../utils/constants';
  */
 const UserHomepage = () => {
 
-    return <div className="homepage">
+    return <>
         <Link to={routes.yourBooks}>Your books</Link>
         <Link to={routes.allBooks}>Get another book</Link>
-    </div>;
+    </>;
 };
 
 export default UserHomepage;

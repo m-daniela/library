@@ -23,7 +23,7 @@ const Register = () => {
     };
 
 
-    return <div className="form register homepage">
+    return <div className="homepage">
         <h2>Register a new user</h2>
         <form onSubmit={handleRegister}>
             <label htmlFor="email" >Email</label>

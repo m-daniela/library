@@ -2,7 +2,8 @@
 
 export const routes = {
     login: "/", 
-    
+    changePassword: "/change-password",
+
     register: "/register", 
     addBook: "/add",
     

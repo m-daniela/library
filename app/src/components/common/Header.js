@@ -8,7 +8,7 @@ const Header = () => {
     return <nav>
         <Link to={routes.login}>Home</Link>
         {user && <>
-            <span>{user.email} as {user.role}</span>
+            <Link to={routes.changePassword}>{user.email} as {user.role}</Link>
             <button onClick={logout}>Logout</button>
         </>}
     </nav>;

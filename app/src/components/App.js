@@ -12,6 +12,7 @@ import AllBooks from './user/AllBooks';
 import AdminRoute from './routes/AdminRoute';
 import UserRoute from './routes/UserRoute';
 import BookDetails from './common/BookDetails';
+import ChangePassword from './user/ChangePassword';
 
 /**
  * Main component
@@ -57,6 +58,12 @@ function App() {
                             <Route exact path={routes.details} element={
                                 <UserRoute>
                                     <BookDetails />
+                                </UserRoute>
+                            } />
+
+                            <Route exact path={routes.changePassword} element={
+                                <UserRoute>
+                                    <ChangePassword />
                                 </UserRoute>
                             } />
 

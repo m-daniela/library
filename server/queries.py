@@ -8,12 +8,17 @@ from authentication import password_hash
 
 # users
 
-def get_user(db: Session, email):
+def get_user(db: Session, email: str):
     user = db.query(User).filter(User.email == email).first()
     if not user:
         raise custom_not_found_exception("The user does not exist")
     return user
 
+def get_user_with_password(db: Session, user: UserLoginSchema):
+    user = db.query(User).filter(User.email == user.email, User.password == user.password).first()
+    if not user:
+        raise custom_not_found_exception("The user does not exist")
+    return user
 
 def create_user(db: Session, user: UserCreateSchema) -> UserBaseSchema:
     """
@@ -31,14 +36,20 @@ def login_user(db: Session, user: UserLoginSchema):
     """
     Login the user and return the email and permissions
     """
-    found_user = db.query(User).filter(User.email == user.email, User.password == user.password).first()
-    if found_user:
-        found_user = {
-            "email": found_user.email,
-            "role": found_user.role,
-        }
+    found_user = get_user_with_password(db, user)
+    found_user = {
+        "email": found_user.email,
+        "role": found_user.role,
+    }
     return found_user
 
+
+def change_password(db: Session, user: UserLoginSchema, newPassword: str):
+    found_user = get_user_with_password(db, user)
+    found_user.password = password_hash(newPassword)
+    db.commit()
+
+        
 
 # books
 
