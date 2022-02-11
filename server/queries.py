@@ -1,5 +1,5 @@
 import datetime
-from sqlalchemy.orm import Session, subqueryload
+from sqlalchemy.orm import Session
 
 from schemas import UserCreateSchema, UserBaseSchema, UserLoginSchema, BookSchema
 from models import User, Registration, Book

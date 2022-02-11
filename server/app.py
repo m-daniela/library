@@ -166,15 +166,14 @@ def get_registrations(email: str = Body(..., embed=True), db: Session = Depends(
     Get the list of registrations
     TODO: change response model
     """
-    registrations = queries.get_registrations(db, email)
-    return registrations
-    # try:
-    #     registrations = queries.get_registrations(db, email)
-    #     return registrations
-    # except CustomError as e:
-    #     return ResponseModelSchema(message=str(e))
-    # except Exception as e:
-    #     return ResponseModelSchema(message="An error occurred while fetching the registrations, try again later")
+    
+    try:
+        registrations = queries.get_registrations(db, email)
+        return registrations
+    except CustomError as e:
+        return ResponseModelSchema(message=str(e))
+    except Exception as e:
+        return ResponseModelSchema(message="An error occurred while fetching the registrations, try again later")
 
 
 

@@ -116,10 +116,7 @@ export const getRegistrations = async (email, token) => {
  */
 export const checkinBook = async (email, bookId) => {
     return axios.post(checkinUrl, {email, book_id: bookId}, authHeaders())
-        // .then(response => response.data)
-        .then(response => {
-            return response.data;
-        })
+        .then(response => response.data)
         .catch(error => {
             throw error.response.data;
         });

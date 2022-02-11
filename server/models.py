@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
+from sqlalchemy import CheckConstraint, Column, ForeignKey, Integer, String, DateTime
 from sqlalchemy.orm import relationship
 import datetime
 import connection
@@ -12,7 +12,7 @@ import connection
 class Registration(connection.Base):
     __tablename__ = "registrations"
 
-    email = Column(ForeignKey("users.email"), primary_key=True)
+    email = Column(ForeignKey("users.email", ondelete="cascade"), primary_key=True)
     book_id = Column(ForeignKey("books.id"), primary_key=True)
     checkin = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
     checkout = Column(DateTime, default=None, nullable=True)
@@ -33,7 +33,9 @@ class User(connection.Base):
     books = relationship(
         "Registration", 
         back_populates="user",
-        lazy="subquery"
+        lazy="subquery", 
+        cascade="all, delete",
+        passive_deletes=True
     )
 
 
@@ -44,7 +46,7 @@ class Book(connection.Base):
     title = Column(String, nullable=False)
     description = Column(String, nullable=False)
     cover = Column(String)
-    stock = Column(Integer, nullable=False)
+    stock = Column(Integer, CheckConstraint("stock > 0"), nullable=False)
     users = relationship(
         "Registration", 
         back_populates="book",
