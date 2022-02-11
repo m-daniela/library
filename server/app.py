@@ -1,4 +1,4 @@
-from fastapi import Depends, FastAPI, Body, HTTPException, Security
+from fastapi import BackgroundTasks, Depends, FastAPI, Body, HTTPException, Security
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm, SecurityScopes
 from fastapi.middleware.cors import CORSMiddleware
@@ -8,6 +8,7 @@ import connection, queries
 from schemas import ResponseModelSchema, TokenDataSchema, UserLoginSchema, UserCreateSchema, BookSchema, RegistrationBaseSchema
 from exception import CustomError, custom_unauthorized_exception
 from authentication import secret, algorithm, authenticate_user, create_access_token
+from background_tasks.emails import send_email
 
 # add middleware so you can use the global dependencies 
 # that will be passed to the instance
@@ -90,7 +91,6 @@ def normal_user(user: UserLoginSchema = Security(current_user)):
     return
 
 
-
 @app.post("/token")
 def login(db: Session = Depends(get_database), form_data: OAuth2PasswordRequestForm = Depends()):
     """
@@ -146,13 +146,16 @@ def add_book(book: BookSchema, db: Session = Depends(get_database)):
 
 
 @app.post("/register", dependencies=[Security(admin_user, scopes=["register"])])
-def add_user(user: UserCreateSchema, db: Session = Depends(get_database)):
+def add_user(user: UserCreateSchema, background_tasks: BackgroundTasks, db: Session = Depends(get_database)):
     """
     Add a new user
     Only the admin is allowed to do this operation
     """
     try:
         queries.create_user(db, user)
+        # add a background task which sends an email to the address
+        background_tasks.add_task(send_email, user.email)
+
         return ResponseModelSchema(message="User created successfully")
     except Exception as e:
         return ResponseModelSchema(message="This user already exists")

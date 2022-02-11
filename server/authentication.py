@@ -4,13 +4,15 @@ from jose import jwt
 
 import queries
 from schemas import UserLoginSchema
+from settings import settings
+
 
 
 # will change these too
 # got the secret with openssl rand -hex 32
-secret = "4fa246c8fcd8126b85aa1ada346262824209a9e779767af134fedb8e00c06cfc"
-algorithm = "HS256"
-token_expiration_minutes = 15
+secret = settings.secret
+algorithm = settings.hash_algorithm
+token_expiration_minutes = settings.token_expiration
 
 # create the hash context
 # will be used to hash and verify the passwords

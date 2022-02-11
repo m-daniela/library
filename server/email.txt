@@ -1,0 +1,25 @@
+
+
+---
+
+to: test@mail.com
+from: The Library
+
+Your account has been registered in The Library with the address test@mail.com.
+
+---
+
+to: test2@mail.com
+from: The Library
+
+Your account has been registered in The Library with the address test2@mail.com.
+
+---
+
+to: test3@mail.com
+from: The Library
+
+Your account has been registered in The Library with the address test3@mail.com.to: test4@mail.com
+from: The Library
+
+Your account has been registered in The Library with the address test4@mail.com.
