@@ -1,7 +1,9 @@
 import React, { useContext, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { BookContext } from '../../context/BookContext';
 import { UserContext } from '../../context/UserContext';
 import { actions } from '../../reducers/bookReducer';
+import { detailsRoute } from '../../utils/constants';
 import { checkinBook } from '../../utils/serverCalls';
 
 /**
@@ -40,8 +42,10 @@ const Book = ({book}) => {
             <h2>{book.title}</h2>
             <div className='description'>{book.description}</div>
             <p>In stock: {book.stock}</p>
-            <p>{message}</p>
+            {message.length !== 0 && <span>{message}</span>}
+            <Link to={detailsRoute(book.id)} state={{book}}>Show more details</Link>
             <button onClick={checkin}>Checkin</button>
+
         </div>
         
     </div>;

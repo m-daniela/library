@@ -32,6 +32,9 @@ h2{
     align-self: center;
 }
 
+img{
+    max-width: 200px;
+}
 
 button, input, textarea{
     padding: .7em;
@@ -87,4 +90,14 @@ form {
     button{
         margin-top: 1em;
     }
+}
+
+.book-details{
+    .description {
+        margin-top: 2em;
+    }
+}
+
+.description{
+    text-align: justify;
 }

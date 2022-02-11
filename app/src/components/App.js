@@ -11,6 +11,7 @@ import BookProvider from '../context/BookContext';
 import AllBooks from './user/AllBooks';
 import AdminRoute from './routes/AdminRoute';
 import UserRoute from './routes/UserRoute';
+import BookDetails from './common/BookDetails';
 
 /**
  * Main component
@@ -52,6 +53,13 @@ function App() {
                                     <AllBooks />
                                 </UserRoute>
                             } />
+
+                            <Route exact path={routes.details} element={
+                                <UserRoute>
+                                    <BookDetails />
+                                </UserRoute>
+                            } />
+
                         </Routes>
                     </BookProvider>
                 </UserProvider>

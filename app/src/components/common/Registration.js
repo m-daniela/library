@@ -1,8 +1,9 @@
 import React, { useContext, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { BookContext } from '../../context/BookContext';
 import { UserContext } from '../../context/UserContext';
 import { actions } from '../../reducers/bookReducer';
-import { convertDate } from '../../utils/constants';
+import { convertDate, detailsRoute } from '../../utils/constants';
 import { checkoutBook } from '../../utils/serverCalls';
 
 /**
@@ -35,14 +36,17 @@ const Registration = ({registration}) => {
         <div className='details'>
             <h2>{book?.title}</h2>
             <div className='description'>{book?.description}</div>
+            <Link to={detailsRoute(book.id)} state={{book}}>Show more details</Link>
             <p>Checked in at: {convertDate(registration.checkin)}</p>
-            <p>{message}</p>
+            {message.length !== 0 && <span>{message}</span>}
+            
             {
                 registration.checkout ?
                     <p>Checked out at: {convertDate(registration.checkout)}</p>
                     :
                     <button onClick={checkout}>Checkout</button>
             }
+
         </div>
 
     </div>;

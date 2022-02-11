@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 
 /**
  * Book details
@@ -6,12 +7,15 @@ import React from 'react';
  * image) on another page
  * @returns 
  */
-const BookDetails = ({book}) => {
+const BookDetails = () => {
+    const {state} = useLocation();
+    const book = state.book;
+
     return (
-        <div className='book-details'>
+        <div className='book-details homepage'>
             <h2>{book.title}</h2>
             <img src={book.cover} alt="img"/>
-            <div>{book.description}</div>
+            <div className='description'>{book.description}</div>
         </div>
     );
 };

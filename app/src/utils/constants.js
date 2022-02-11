@@ -2,15 +2,16 @@
 
 export const routes = {
     login: "/", 
-    adminHome: "/admin", 
-    userHome: "/user", 
-
+    
     register: "/register", 
     addBook: "/add",
-
+    
     yourBooks: "/your-books", 
-    allBooks: "/books"
+    allBooks: "/books",
+    details: "/details/:id"
 };
+
+export const detailsRoute = (id) => `/details/${id}`;
 
 const port = 5000;
 const baseUrl = `http://localhost:${port}/`;

@@ -4,12 +4,10 @@
     display: flex;
     margin: 1em .5em;
     flex-basis: 45%;
-    img{
-        max-width: 200px;
-    }
+    
     .details{
         margin: 0 1em;
-
+        @include display-column;
         h2{
             margin-top: 0;
         }
@@ -19,5 +17,6 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+        
     }
 }
