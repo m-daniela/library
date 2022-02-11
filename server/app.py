@@ -141,7 +141,6 @@ def add_book(book: BookSchema, db: Session = Depends(get_database)):
         message =  f"Book with title {added_book.title} was added"
         return ResponseModelSchema(message=message, data=added_book)
     except Exception as e:
-        print(e)
         return ResponseModelSchema(message="An error occurred while adding the book, try again later")
         
 
@@ -172,8 +171,8 @@ def get_registrations(email: str = Body(..., embed=True), db: Session = Depends(
         return registrations
     except CustomError as e:
         return ResponseModelSchema(message=str(e))
-    except Exception as e:
-        return ResponseModelSchema(message="An error occurred while fetching the registrations, try again later")
+    # except Exception as e:
+    #     return ResponseModelSchema(message="An error occurred while fetching the registrations, try again later")
 
 
 
@@ -187,8 +186,6 @@ def checkin(registration: RegistrationBaseSchema, db: Session = Depends(get_data
         return ResponseModelSchema(message="Checkin successful", data=added_registration)
     except CustomError as e:
         return ResponseModelSchema(message=str(e))
-    except Exception as e:
-        return ResponseModelSchema(message="You have already checked in this book")
         
 
 @app.put("/checkout", dependencies=[Depends(normal_user)])

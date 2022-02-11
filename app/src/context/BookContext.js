@@ -8,7 +8,6 @@ export const BookContext = createContext();
 
 const BookProvider = ({children}) => {
     const [books, setBooks] = useState([]);
-    // const [myBooks, setMyBooks] = useState([]);
     const [myBooks, dispatch] = useReducer(reducer, []);
     const {user} = useContext(UserContext);
 
@@ -35,10 +34,6 @@ const BookProvider = ({children}) => {
                 setBooks([]);
             });
     };
-
-    // const retrieveMyBooks = (email) => {
-        
-    // };
 
     return <BookContext.Provider value={{books, retrieveBooks, myBooks, dispatch}}>
         {children}

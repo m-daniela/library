@@ -101,13 +101,19 @@ def checkin(db: Session, email: str, book_id: int):
     """
     user = get_user(db, email)
     book = get_book(db, book_id)
-    update_book_stock(db, book, -1)
 
-    registration = Registration(email=user.email, book_id=book.id)
-    db.add(registration)
-    db.commit()
-    db.refresh(registration)
-    return {"registration": registration, "book": book}
+    found_registration = db.query(Registration).filter(Registration.book_id == book.id, Registration.email == user.email).first()
+    
+    if not found_registration:
+        update_book_stock(db, book, -1)
+
+        registration = Registration(email=user.email, book_id=book.id)
+        db.add(registration)
+        db.commit()
+        db.refresh(registration)
+        return {"registration": registration, "book": book}
+    else:
+        raise CustomError("You have already checked in this book")
 
 
 

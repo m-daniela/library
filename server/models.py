@@ -38,6 +38,9 @@ class User(connection.Base):
         passive_deletes=True
     )
 
+    def __str__(self) -> str:
+        return f"{self.email}, {self.role}"
+
 
 class Book(connection.Base):
     __tablename__ = "books"
@@ -52,5 +55,7 @@ class Book(connection.Base):
         back_populates="book",
     )
 
+    def __str__(self) -> str:
+        return f"{self.id}, {self.title}, {self.description}, {self.cover}, {self.stock}"
 
 
