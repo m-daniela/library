@@ -8,7 +8,7 @@ import connection, queries
 from schemas import ResponseModelSchema, TokenDataSchema, UserLoginSchema, UserCreateSchema, BookSchema, RegistrationBaseSchema
 from exception import CustomError, custom_unauthorized_exception
 from authentication import secret, algorithm, authenticate_user, create_access_token
-from background_tasks.emails import send_email
+from background_tasks.emails import return_book_email, send_email
 
 # add middleware so you can use the global dependencies 
 # that will be passed to the instance
@@ -174,18 +174,19 @@ def get_registrations(email: str = Body(..., embed=True), db: Session = Depends(
         return registrations
     except CustomError as e:
         return ResponseModelSchema(message=str(e))
-    # except Exception as e:
-    #     return ResponseModelSchema(message="An error occurred while fetching the registrations, try again later")
 
 
 
 @app.post("/checkin", dependencies=[Depends(normal_user)])
-def checkin(registration: RegistrationBaseSchema, db: Session = Depends(get_database)):
+def checkin(registration: RegistrationBaseSchema, background_tasks: BackgroundTasks, db: Session = Depends(get_database)):
     """
     Book checkin
     """
     try:
         added_registration = queries.checkin(db, registration.email, registration.book_id)
+        book = added_registration.get("book")
+
+        background_tasks.add_task(return_book_email, registration.email, book.title)
         return ResponseModelSchema(message="Checkin successful", data=added_registration)
     except CustomError as e:
         return ResponseModelSchema(message=str(e))

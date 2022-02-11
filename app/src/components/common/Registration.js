@@ -31,6 +31,8 @@ const Registration = ({registration}) => {
     };
     
     return <div className="card">
+        <img src={book?.cover} alt="img" />
+
         <h2>{book?.title}</h2>
         <div>{book?.description}</div>
         <p>Checked in at: {convertDate(registration.checkin)}</p>

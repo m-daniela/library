@@ -8,8 +8,7 @@ import { addBook } from '../../utils/serverCalls';
  * TODO: handle the cover
  */
 const AddBook = () => {
-    // will change cover to image 
-    const [cover, setCover] = useState("img");
+    const [cover, setCover] = useState("");
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [stock, setStock] = useState(1);
@@ -27,6 +26,7 @@ const AddBook = () => {
                     setTitle("");
                     setDescription("");
                     setStock(1);
+                    setCover("");
                 })
                 .catch(error => {
                     setMessage(error.detail);
@@ -45,6 +45,9 @@ const AddBook = () => {
 
             <label htmlFor="stock" >Stock</label>
             <input id="stock" onChange={e => setStock(e.target.value)} value={stock} />
+
+            <label htmlFor="cover" >Cover image</label>
+            <input id="cover" onChange={e => setCover(e.target.value)} value={cover} placeholder="https://" />
 
             <p>{message}</p>
             <button type="submit">Add book</button>
