@@ -208,6 +208,21 @@ def get_registrations(email: str = Body(..., embed=True), db: Session = Depends(
 
 
 
+@app.post("/raport", dependencies=[Depends(normal_user)])
+def get_registrations(email: str = Body(..., embed=True), db: Session = Depends(get_database)):
+    """
+    Get a raport with the list of registrations 
+    for the user, in the last week
+    """
+    
+    try:
+        registrations = queries.get_raport(db, email)
+        return registrations
+    except CustomError as e:
+        return ResponseModelSchema(message=str(e))
+
+
+
 @app.post("/checkin", dependencies=[Depends(normal_user)])
 def checkin(registration: RegistrationBaseSchema, db: Session = Depends(get_database)):
     """

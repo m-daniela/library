@@ -1,5 +1,4 @@
 import datetime
-from optparse import Option
 from typing import Optional
 from sqlalchemy.orm import Session
 from sqlalchemy import func
@@ -110,6 +109,23 @@ def get_registrations(db: Session, email: str):
     user = get_user(db, email)
     books = user.books
     return books
+
+
+def get_raport(db: Session, email: str):
+    """
+    Display the books borrowed by the user in the
+    past week
+    """
+
+    week_ago = datetime.datetime.utcnow() - datetime.timedelta(days=7)
+    
+    result = db.query(Registration)\
+        .join(Book)\
+        .filter(Registration.email == email, Registration.checkin >= week_ago)\
+        .all()
+
+    return result
+
 
 def checkin(db: Session, email: str, book_id: int):
     """

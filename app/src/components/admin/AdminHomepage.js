@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from "react-router-dom";
 import { routes } from '../../utils/constants';
+import UserHomepage from '../user/UserHomepage';
 
 /**
  * Admin homepage
@@ -9,13 +10,10 @@ import { routes } from '../../utils/constants';
  * @returns 
  */
 const AdminHomepage = () => {
-    return <>
+    return <UserHomepage>
         <Link to={routes.register}>Add new user</Link>
         <Link to={routes.addBook}>Add new book</Link>
-        <Link to={routes.yourBooks}>Your books</Link>
-        <Link to={routes.allBooks}>Get another book</Link>
-        
-    </>;
+    </UserHomepage>;
 };
 
 export default AdminHomepage;

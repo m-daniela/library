@@ -1,6 +1,6 @@
 import axios from "axios";
 import jwt_decode from "jwt-decode";
-import { addBookUrl, changePasswordUrl, checkinUrl, checkoutUrl, getBooksUrl, getRegistrationsUrl, getSearchedBooksUrl, loginUrl, registerUrl } from "./constants";
+import { addBookUrl, changePasswordUrl, checkinUrl, checkoutUrl, getBooksUrl, getRaport, getRegistrationsUrl, getSearchedBooksUrl, loginUrl, registerUrl } from "./constants";
 
 /** 
  * authentication header with the bearer token 
@@ -115,7 +115,7 @@ export const getBooks = async () => {
 export const getSearchedBooks = async (query, order, sort) => {
     return axios.get(getSearchedBooksUrl(query, order, sort), authHeaders())
         .then(response => {
-            console.log(response);
+            // console.log(response);
             return response.data.data;
         })
         .catch(error => {
@@ -141,6 +141,20 @@ export const getRegistrations = async (email, token) => {
             throw error.response.data;
         });
 };
+
+
+export const getUserRaport = async (email) => {
+    return axios.post(getRaport, {email}, authHeaders())
+        .then(response => {
+            // console.log(response.data);
+            return response.data;
+        })
+        .catch(error => {
+            throw error.response.data;
+        });
+};
+
+
 
 /**
  * checkin book

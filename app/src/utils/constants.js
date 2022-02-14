@@ -9,7 +9,8 @@ export const routes = {
     
     yourBooks: "/your-books", 
     allBooks: "/books",
-    details: "/details/:id"
+    details: "/details/:id",
+    raport: "/raport",
 };
 
 export const detailsRoute = (id) => `/details/${id}`;
@@ -25,6 +26,7 @@ export const addBookUrl = `${baseUrl}book`;
 export const checkinUrl = `${baseUrl}checkin`;
 export const checkoutUrl = `${baseUrl}checkout`;
 export const getRegistrationsUrl = `${baseUrl}registrations`;
+export const getRaport = `${baseUrl}raport`;
 export const changePasswordUrl = `${baseUrl}change-password`;
 
 
