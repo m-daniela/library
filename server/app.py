@@ -8,7 +8,9 @@ import connection, queries
 from schemas import ResponseModelSchema, TokenDataSchema, UserLoginSchema, UserCreateSchema, BookSchema, RegistrationBaseSchema
 from exception import CustomError, custom_unauthorized_exception
 from authentication import secret, algorithm, authenticate_user, create_access_token
-from background_tasks.emails import return_book_email, send_email
+# from background_tasks.emails import return_book_email, send_email
+from tasks import send_email, return_book_email
+# import tasks
 
 # add middleware so you can use the global dependencies 
 # that will be passed to the instance
@@ -118,6 +120,19 @@ def login(db: Session = Depends(get_database), form_data: OAuth2PasswordRequestF
     raise HTTPException(status_code=400, detail="Incorrect username or password")
 
 
+@app.get("/change_password", dependencies=[Depends(normal_user)])
+def change_password(user: UserLoginSchema, password: str = Body(..., embed=True), db: Session = Depends(get_database)):
+    """
+    Change the password
+    TODO: send the new token to the user
+    """
+    try:
+        user = queries.change_password(db, user, password)
+        return ResponseModelSchema(message="Your password was changed")
+    except Exception as e:
+        return ResponseModelSchema(message="An error occurred while fetching the books, try again later")
+
+
 @app.get("/books", dependencies=[Depends(normal_user)])
 def get_books(db: Session = Depends(get_database)):
     """
@@ -146,7 +161,7 @@ def add_book(book: BookSchema, db: Session = Depends(get_database)):
 
 
 @app.post("/register", dependencies=[Security(admin_user, scopes=["register"])])
-def add_user(user: UserCreateSchema, background_tasks: BackgroundTasks, db: Session = Depends(get_database)):
+def add_user(user: UserCreateSchema, db: Session = Depends(get_database)):
     """
     Add a new user
     Only the admin is allowed to do this operation
@@ -154,7 +169,9 @@ def add_user(user: UserCreateSchema, background_tasks: BackgroundTasks, db: Sess
     try:
         queries.create_user(db, user)
         # add a background task which sends an email to the address
-        background_tasks.add_task(send_email, user.email)
+        # background_tasks.add_task(send_email, user.email)
+        # use delay directly since you want the email to be sent immediately
+        send_email.delay(user.email)
 
         return ResponseModelSchema(message="User created successfully")
     except Exception as e:
@@ -178,7 +195,7 @@ def get_registrations(email: str = Body(..., embed=True), db: Session = Depends(
 
 
 @app.post("/checkin", dependencies=[Depends(normal_user)])
-def checkin(registration: RegistrationBaseSchema, background_tasks: BackgroundTasks, db: Session = Depends(get_database)):
+def checkin(registration: RegistrationBaseSchema, db: Session = Depends(get_database)):
     """
     Book checkin
     """
@@ -186,7 +203,13 @@ def checkin(registration: RegistrationBaseSchema, background_tasks: BackgroundTa
         added_registration = queries.checkin(db, registration.email, registration.book_id)
         book = added_registration.get("book")
 
-        background_tasks.add_task(return_book_email, registration.email, book.title)
+        # create a background task to send an email with a checkout notice
+        # background_tasks.add_task(return_book_email, registration.email, book.title)
+        checkout_notice = 60
+        # using apply_async to add a delay (the countdown) with the time after the task 
+        # should run
+        return_book_email.apply_async(args=[registration.email, book.title], countdown=checkout_notice)
+
         return ResponseModelSchema(message="Checkin successful", data=added_registration)
     except CustomError as e:
         return ResponseModelSchema(message=str(e))

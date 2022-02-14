@@ -20,7 +20,7 @@ def get_user_with_password(db: Session, user: UserLoginSchema):
         raise custom_not_found_exception("The user does not exist")
     return user
 
-def create_user(db: Session, user: UserCreateSchema) -> UserBaseSchema:
+def create_user(db: Session, user: UserCreateSchema):
     """
     Add a new user
     """

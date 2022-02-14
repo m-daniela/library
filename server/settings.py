@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     smtp_port: int
     smtp_host: str
     contact_email: str
+    amqp: str
 
     class Config:
         env_file = ".env"
