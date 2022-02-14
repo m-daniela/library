@@ -120,17 +120,29 @@ def login(db: Session = Depends(get_database), form_data: OAuth2PasswordRequestF
     raise HTTPException(status_code=400, detail="Incorrect username or password")
 
 
-@app.get("/change_password", dependencies=[Depends(normal_user)])
-def change_password(user: UserLoginSchema, password: str = Body(..., embed=True), db: Session = Depends(get_database)):
+@app.post("/change-password", dependencies=[Depends(normal_user)])
+def change_password(user: UserLoginSchema, new_password: str = Body(..., embed=True), db: Session = Depends(get_database)):
     """
     Change the password
-    TODO: send the new token to the user
+    TODO: change response
     """
-    try:
-        user = queries.change_password(db, user, password)
-        return ResponseModelSchema(message="Your password was changed")
-    except Exception as e:
-        return ResponseModelSchema(message="An error occurred while fetching the books, try again later")
+    user = authenticate_user(db, UserLoginSchema(email=user.email, password=user.password))
+
+    if user:
+        queries.change_password(db, user, new_password)
+        data = {
+            "sub": user.email, 
+            "role": user.role
+        }
+        # check if the user is an admin and give 
+        # the corresponding scopes
+        if user.role == "admin":
+            data.update({"scopes": ["register", "book"]})
+
+        access_token = create_access_token(data=data)
+
+        return {"access_token": access_token, "token_type": "bearer", "message": "Password changed successfully"}
+    raise HTTPException(status_code=400, detail="Incorrect username or password")
 
 
 @app.get("/books", dependencies=[Depends(normal_user)])

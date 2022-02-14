@@ -40,6 +40,14 @@ const UserProvider = ({ children }) => {
             .catch(console.log);
     };
 
+    const updateToken = (token) => {
+        setUser({
+            ...user, 
+            token
+        });
+        localStorage.setItem("token", token);
+    };
+
     const logout = () => {
         localStorage.removeItem("email");
         localStorage.removeItem("role");
@@ -49,7 +57,7 @@ const UserProvider = ({ children }) => {
     };
 
 
-    return <UserContext.Provider value={{ user, login, logout, isLogged, setIsLogged }}>
+    return <UserContext.Provider value={{ user, login, logout, isLogged, setIsLogged, updateToken }}>
         {children}
     </UserContext.Provider>;
 };

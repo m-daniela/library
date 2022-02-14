@@ -20,7 +20,7 @@ def send_email(email: str):
     """
     Send a registration email when a new user is added
     TODO: the email is sent to a local smtp server, add config
-    for real email
+    for real email 
     """
     contents = f"Your account has been registered in The Library with the address {email}."
 

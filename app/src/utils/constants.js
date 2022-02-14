@@ -24,6 +24,7 @@ export const addBookUrl = `${baseUrl}book`;
 export const checkinUrl = `${baseUrl}checkin`;
 export const checkoutUrl = `${baseUrl}checkout`;
 export const getRegistrationsUrl = `${baseUrl}registrations`;
+export const changePasswordUrl = `${baseUrl}change-password`;
 
 
 export const convertDate = (timestamp) => {

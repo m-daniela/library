@@ -1,6 +1,6 @@
 import axios from "axios";
 import jwt_decode from "jwt-decode";
-import { addBookUrl, checkinUrl, checkoutUrl, getBooksUrl, getRegistrationsUrl, loginUrl, registerUrl } from "./constants";
+import { addBookUrl, changePasswordUrl, checkinUrl, checkoutUrl, getBooksUrl, getRegistrationsUrl, loginUrl, registerUrl } from "./constants";
 
 /** 
  * authentication header with the bearer token 
@@ -60,6 +60,22 @@ export const registerUser = async (email, password, role) => {
         .then(response => response.data)
         .catch(error => {
             throw error.response.data;
+        });
+};
+
+
+/**
+ * change password
+ * @param {string} email 
+ * @param {string} password 
+ * @param {string} newPassword 
+ * @returns 
+ */
+export const changePassword = async (email, password, newPassword) => {
+    return axios.post(changePasswordUrl, { user: {email, password}, new_password: newPassword }, authHeaders())
+        .then(response => response.data)
+        .catch(error => {
+            throw error.response.data.detail;
         });
 };
 
