@@ -28,7 +28,6 @@ const AllBooks = () => {
     const searchBooks = (query, sort, order) => {
         getFilteredBooks(query, sort, order)
             .then(data => {
-                console.log(data);
                 if (data?.length){
                     setFilteredBooks(data);
                 }

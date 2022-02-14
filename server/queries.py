@@ -153,6 +153,7 @@ def get_raport(db: Session, email: str):
     result = db.query(Registration)\
         .join(Book)\
         .filter(Registration.email == email, Registration.checkin >= week_ago)\
+        .order_by(Registration.checkout.desc())\
         .all()
 
     return result

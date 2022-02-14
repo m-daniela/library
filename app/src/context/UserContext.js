@@ -27,8 +27,8 @@ const UserProvider = ({ children }) => {
         }
     }, []);
 
-    const login = (email, password) => {
-        userLogin(email, password)
+    const login = async (email, password) => {
+        return userLogin(email, password)
             .then(data => {
                 setUser(data);
                 setIsLogged(true);
@@ -36,8 +36,11 @@ const UserProvider = ({ children }) => {
                 localStorage.setItem("email", data.email);
                 localStorage.setItem("role", data.role);
                 localStorage.setItem("token", data.token);
+                return data.message;
             })
-            .catch(console.log);
+            .catch(error => {
+                throw error.detail;
+            });
     };
 
     const updateToken = (token) => {

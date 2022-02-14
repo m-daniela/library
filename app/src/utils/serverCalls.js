@@ -140,7 +140,7 @@ export const getFilteredBooks = async (query, order, sort) => {
 export const getRegistrations = async (email, token) => {
     return axios.post(getRegistrationsUrl, {email}, authHeaders(token))
         .then(response => {
-            console.log(response.data);
+            // console.log(response.data);
             return response.data;
         })
         .catch(error => {

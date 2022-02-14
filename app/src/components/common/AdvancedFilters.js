@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 const AdvancedFilters = ({filterBooks, filters}) => {
     const [search, setSearch] = useState("");
-    const [order, setOrder] = useState(filters[0]);
+    const [order, setOrder] = useState("");
     const [sorting, setSorting] = useState("ASC");
 
     const handleSearch = (e) => {
@@ -12,23 +12,33 @@ const AdvancedFilters = ({filterBooks, filters}) => {
 
     return (
         <>
-            <form className='search-bar' onSubmit={handleSearch}>
-                <label htmlFor="search">Search books</label>
-                <input id="search" onChange={e => setSearch(e.target.value)} value={search} />
-                <button type="submit">Go</button>
+            <form className='filter' onSubmit={handleSearch}>
+                <div className='search-bar'>
+                    <label htmlFor="search">Search books</label>
+                    <input id="search" onChange={e => setSearch(e.target.value)} value={search} />
+                </div>
 
-                <select onChange={e => setOrder(e.target.value)} value={order}>
-                    {filters.map(filter => <option key={filter} value={filter}>{filter}</option>)}
-                </select>
+                <div className='order'>
+                    <span>Order the results by</span>
+                    <select onChange={e => setOrder(e.target.value)} value={order}>
+                        <option value="">select</option>
+                        {filters.map(filter => <option key={filter} value={filter}>{filter}</option>)}
+                    </select>
 
-                <label htmlFor="asc"> 
-                    <input type="radio" id="asc" value="ASC" onChange={e => setSorting(e.target.value)} checked={sorting === "ASC"}/>
-                Ascending
-                </label>
-                <label htmlFor="desc"> 
-                    <input type="radio" id="desc" value="DESC" onChange={e => setSorting(e.target.value)} checked={sorting === "DESC"}/>
-                Descending
-                </label>
+                    <label htmlFor="asc"> 
+                        <input type="radio" id="asc" value="ASC" onChange={e => setSorting(e.target.value)} checked={sorting === "ASC"}/>
+                ascending
+                    </label>
+                    <label htmlFor="desc"> 
+                        <input type="radio" id="desc" value="DESC" onChange={e => setSorting(e.target.value)} checked={sorting === "DESC"}/>
+                descending
+                    </label>
+                </div>
+                
+                <button type="submit">Apply filters</button>
+
+
+                
 
             </form>
         

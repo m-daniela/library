@@ -8,11 +8,19 @@ import { UserContext } from '../../context/UserContext';
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [message, setMessage] = useState("");
     const { login } = useContext(UserContext);
 
     const loginHandler = (e) => {
         e.preventDefault();
-        login(email, password);
+        login(email, password)
+            .then(data => {
+                console.log(data);
+            })
+            .catch(error => {
+                console.log(error);
+                setMessage(error);
+            });
     };
 
 
@@ -23,6 +31,7 @@ const Login = () => {
             <input type="email" id="email" onChange={e => setEmail(e.target.value)} value={email} />
             <label htmlFor="password">Password</label>
             <input type="password" id="password" onChange={e => setPassword(e.target.value)} value={password} />
+            <span>{message}</span>
             <button type="submit">Login</button>
         </form>
     </div>;
