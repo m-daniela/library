@@ -1,5 +1,6 @@
 import datetime
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 
 from schemas import UserCreateSchema, UserLoginSchema, BookSchema
 from models import User, Registration, Book
@@ -57,6 +58,12 @@ def get_books(db: Session):
     Will add pagination later
     """
     return db.query(Book).filter(Book.stock > 0).all()
+
+def get_books_by_query(db: Session, query: str):
+    """
+    Get the list of books with the given query contained in the title
+    """
+    return db.query(Book).filter(Book.stock > 0, func.lower(Book.title).contains(query.lower())).all()
 
 
 def get_book(db: Session, book_id: int):

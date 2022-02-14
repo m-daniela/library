@@ -1,7 +1,9 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { BookContext } from '../../context/BookContext';
 import { UserContext } from '../../context/UserContext';
+import { getSearchedBooks } from '../../utils/serverCalls';
 import Book from '../common/Book';
+import Search from '../common/Search';
 
 /**
  * List all the books
@@ -11,6 +13,9 @@ import Book from '../common/Book';
 const AllBooks = () => {
     const {isLogged} = useContext(UserContext);
     const {books, retrieveBooks} = useContext(BookContext);
+    const [filteredBooks, setFilteredBooks] = useState([]);
+    // const [message, setMessage] = useState("");
+
 
     useEffect(() => {
         if (isLogged){
@@ -18,10 +23,34 @@ const AllBooks = () => {
         }
     }, [isLogged]);
 
+
+    const searchBooks = (query) => {
+        getSearchedBooks(query)
+            .then(data => {
+                console.log(data);
+                if (data.length){
+                    setFilteredBooks(data);
+                }
+            })
+            .catch(error => {
+                console.log(error);
+                setFilteredBooks([]);
+            });
+    };
+
+
     return <div className="homepage">
         <h2>Available books</h2>
+        <Search searchBooks={searchBooks}/>
         <div className="all-books">
-            {books?.map(book => <Book key={book.id} book={book}/>)}
+            {
+                filteredBooks.length === 0 ? 
+                    <>{books?.map(book => <Book key={book.id} book={book}/>)}</>
+                    :
+                    <>{filteredBooks?.map(book => <Book key={book.id} book={book}/>)}</>
+                
+            }
+            
         </div>
     </div>;
 };

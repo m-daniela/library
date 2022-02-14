@@ -1,6 +1,6 @@
 import axios from "axios";
 import jwt_decode from "jwt-decode";
-import { addBookUrl, changePasswordUrl, checkinUrl, checkoutUrl, getBooksUrl, getRegistrationsUrl, loginUrl, registerUrl } from "./constants";
+import { addBookUrl, changePasswordUrl, checkinUrl, checkoutUrl, getBooksUrl, getRegistrationsUrl, getSearchedBooksUrl, loginUrl, registerUrl } from "./constants";
 
 /** 
  * authentication header with the bearer token 
@@ -106,6 +106,24 @@ export const getBooks = async () => {
             throw error.response.data;
         });
 };
+
+/**
+ * get the books based on the query 
+ * @param {string} query 
+ * @returns 
+ */
+export const getSearchedBooks = async (query) => {
+    return axios.get(getSearchedBooksUrl(query), authHeaders())
+        .then(response => {
+            console.log(response);
+            return response.data.data;
+        })
+        .catch(error => {
+            throw error.response.data;
+        });
+};
+
+
 
 /**
  * get the registrations for the given user
