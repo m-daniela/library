@@ -147,16 +147,13 @@ def change_password(user: UserLoginSchema, new_password: str = Body(..., embed=T
 
 
 @app.get("/books", dependencies=[Depends(normal_user)])
-def get_books(q: Optional[str] = Query(None),  db: Session = Depends(get_database)):
+def get_books(q: Optional[str] = Query(None), order: Optional[str] = Query(None), sorting: Optional[str] = Query(None),  db: Session = Depends(get_database)):
     """
     Get the list of books
     If a query string is provided, return the books based on that query
     """
     try:
-        if q:
-            books = queries.get_books_by_query(db, q)
-        else:
-            books = queries.get_books(db)
+        books = queries.get_books(db, q, order, sorting)
         return ResponseModelSchema(data=books)
     except Exception as e:
         return ResponseModelSchema(message="An error occurred while fetching the books, try again later")

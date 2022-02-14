@@ -20,7 +20,7 @@ const baseUrl = `http://localhost:${port}/`;
 export const loginUrl = `${baseUrl}token`;
 export const registerUrl = `${baseUrl}register`;
 export const getBooksUrl = `${baseUrl}books`;
-export const getSearchedBooksUrl = (query) => `${baseUrl}books?q=${query}`;
+export const getSearchedBooksUrl = (query="", order="", sort=1) => `${baseUrl}books?q=${query}&order=${order}&sorting=${sort}`;
 export const addBookUrl = `${baseUrl}book`;
 export const checkinUrl = `${baseUrl}checkin`;
 export const checkoutUrl = `${baseUrl}checkout`;

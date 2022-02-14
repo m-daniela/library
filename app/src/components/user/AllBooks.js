@@ -2,8 +2,8 @@ import React, { useContext, useEffect, useState } from 'react';
 import { BookContext } from '../../context/BookContext';
 import { UserContext } from '../../context/UserContext';
 import { getSearchedBooks } from '../../utils/serverCalls';
+import AdvancedFilters from '../common/AdvancedFilters';
 import Book from '../common/Book';
-import Search from '../common/Search';
 
 /**
  * List all the books
@@ -24,11 +24,11 @@ const AllBooks = () => {
     }, [isLogged]);
 
 
-    const searchBooks = (query) => {
-        getSearchedBooks(query)
+    const searchBooks = (query, sort, order) => {
+        getSearchedBooks(query, sort, order)
             .then(data => {
                 console.log(data);
-                if (data.length){
+                if (data?.length){
                     setFilteredBooks(data);
                 }
             })
@@ -41,7 +41,7 @@ const AllBooks = () => {
 
     return <div className="homepage">
         <h2>Available books</h2>
-        <Search searchBooks={searchBooks}/>
+        <AdvancedFilters filterBooks={searchBooks}/>
         <div className="all-books">
             {
                 filteredBooks.length === 0 ? 

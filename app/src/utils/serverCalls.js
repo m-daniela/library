@@ -112,8 +112,8 @@ export const getBooks = async () => {
  * @param {string} query 
  * @returns 
  */
-export const getSearchedBooks = async (query) => {
-    return axios.get(getSearchedBooksUrl(query), authHeaders())
+export const getSearchedBooks = async (query, order, sort) => {
+    return axios.get(getSearchedBooksUrl(query, order, sort), authHeaders())
         .then(response => {
             console.log(response);
             return response.data.data;

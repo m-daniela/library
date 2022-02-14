@@ -44,7 +44,7 @@ const Book = ({book}) => {
             <p>In stock: {book.stock}</p>
             {message.length !== 0 && <span>{message}</span>}
             <Link to={detailsRoute(book.id)} state={{book}}>Show more details</Link>
-            <button onClick={checkin}>Checkin</button>
+            {book.stock > 0 && <button onClick={checkin}>Checkin</button>}
 
         </div>
         

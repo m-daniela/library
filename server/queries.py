@@ -1,4 +1,6 @@
 import datetime
+from optparse import Option
+from typing import Optional
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 
@@ -51,19 +53,29 @@ def add_book(db: Session, book: BookSchema):
     return new_book
 
 
+def get_books(db: Session, query: Optional[str], order: Optional[str], sorting: Optional[str]):
+    """
+    Get the books based on the given criteria
+    The query is built step by step, based on the given filter parameters
+    """
+    book_query = db.query(Book)
 
-def get_books(db: Session):
-    """
-    Get the list of books
-    Will add pagination later
-    """
-    return db.query(Book).filter(Book.stock > 0).all()
+    if query:
+        book_query = book_query.filter(func.lower(Book.title).contains(query.lower()))
 
-def get_books_by_query(db: Session, query: str):
-    """
-    Get the list of books with the given query contained in the title
-    """
-    return db.query(Book).filter(Book.stock > 0, func.lower(Book.title).contains(query.lower())).all()
+    if order == "stock":
+        if sorting == "ASC":
+            book_query = book_query.order_by(Book.stock)
+        else:
+            book_query = book_query.order_by(Book.stock.desc())
+    elif order == "title":
+        if sorting == "ASC":
+            book_query = book_query.order_by(Book.title)
+        else:
+            book_query = book_query.order_by(Book.title.desc())
+
+    return book_query.all()
+
 
 
 def get_book(db: Session, book_id: int):
