@@ -13,10 +13,12 @@ const Registrations = () => {
     const {myBooks} = useContext(BookContext);
     const {user} = useContext(UserContext);
     const [filteredRegistrations, setFilteredRegistrations] = useState([]);
-    const filters = ["checkin", "checkout", "title"];
+    const orderBy = ["checkin", "checkout", "title"];
+    const filters = ["checkedout"];
 
-    const searchBooks = (query, sort, order) => {
-        getFilteredRegistrations(user.email, query, sort, order)
+    const searchBooks = (query, sort, order, filter) => {
+        console.log(filter);
+        getFilteredRegistrations(user.email, query, sort, order, filter)
             .then(data => {
                 if (data?.length){
                     setFilteredRegistrations(data);
@@ -35,7 +37,7 @@ const Registrations = () => {
 
     return <div className="homepage">
         <h2>Your books</h2>
-        <AdvancedFilters filterBooks={searchBooks} filters={filters} />
+        <AdvancedFilters filterBooks={searchBooks} orderBy={orderBy} filters={filters}/>
         <div className="registrations">
             {
                 filteredRegistrations.length === 0 ? 

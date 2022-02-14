@@ -147,13 +147,14 @@ def change_password(user: UserLoginSchema, new_password: str = Body(..., embed=T
 
 
 @app.get("/books", dependencies=[Depends(normal_user)])
-def get_books(q: Optional[str] = Query(None), order: Optional[str] = Query(None), sorting: Optional[str] = Query(None),  db: Session = Depends(get_database)):
+def get_books(q: Optional[str] = Query(None), order: Optional[str] = Query(None), sorting: Optional[str] = Query(None), filter: Optional[int] = Query(None),  db: Session = Depends(get_database)):
     """
     Get the list of books
     If a query string is provided, return the books based on that query
     """
     try:
-        books = queries.get_books(db, q, order, sorting)
+        print(filter)
+        books = queries.get_books(db, q, order, sorting, filter)
         return ResponseModelSchema(data=books)
     except Exception as e:
         return ResponseModelSchema(message="An error occurred while fetching the books, try again later")
@@ -194,14 +195,15 @@ def add_user(user: UserCreateSchema, db: Session = Depends(get_database)):
 
 
 @app.post("/registrations", dependencies=[Depends(normal_user)])
-def get_registrations(email: str = Body(..., embed=True), q: Optional[str] = Query(None), order: Optional[str] = Query(None), sorting: Optional[str] = Query(None), db: Session = Depends(get_database)):
+def get_registrations(email: str = Body(..., embed=True), q: Optional[str] = Query(None), order: Optional[str] = Query(None), sorting: Optional[str] = Query(None), filter: Optional[int] = Query(None), db: Session = Depends(get_database)):
     """
     Get the list of registrations
     TODO: change response model
     """
     
     try:
-        registrations = queries.get_filtered_registrations(db, email, q, order, sorting)
+        print(filter)
+        registrations = queries.get_filtered_registrations(db, email, q, order, sorting, filter)
         return registrations
     except CustomError as e:
         return ResponseModelSchema(message=str(e))

@@ -14,7 +14,8 @@ const AllBooks = () => {
     const {isLogged} = useContext(UserContext);
     const {books, retrieveBooks} = useContext(BookContext);
     const [filteredBooks, setFilteredBooks] = useState([]);
-    const filters = ["title", "stock"];
+    const orderBy = ["title", "stock"];
+    const filters = ["availability"];
     // const [message, setMessage] = useState("");
 
 
@@ -25,8 +26,9 @@ const AllBooks = () => {
     }, [isLogged]);
 
 
-    const searchBooks = (query, sort, order) => {
-        getFilteredBooks(query, sort, order)
+    const searchBooks = (query, sort, order, filter) => {
+        console.log(filter);
+        getFilteredBooks(query, sort, order, filter)
             .then(data => {
                 if (data?.length){
                     setFilteredBooks(data);
@@ -44,7 +46,7 @@ const AllBooks = () => {
 
     return <div className="homepage">
         <h2>Available books</h2>
-        <AdvancedFilters filterBooks={searchBooks} filters={filters}/>
+        <AdvancedFilters filterBooks={searchBooks} orderBy={orderBy} filters={filters}/>
         <div className="all-books">
             {
                 filteredBooks.length === 0 ? 

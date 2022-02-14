@@ -21,12 +21,12 @@ const baseUrl = `http://localhost:${port}/`;
 export const loginUrl = `${baseUrl}token`;
 export const registerUrl = `${baseUrl}register`;
 export const getBooksUrl = `${baseUrl}books`;
-export const getFilteredBooksUrl = (query="", order="", sort=1) => `${baseUrl}books?q=${query}&order=${order}&sorting=${sort}`;
+export const getFilteredBooksUrl = (query="", order="", sort="asc", filter="") => `${baseUrl}books?q=${query}&order=${order}&sorting=${sort}&filter=${filter}`;
 export const addBookUrl = `${baseUrl}book`;
 export const checkinUrl = `${baseUrl}checkin`;
 export const checkoutUrl = `${baseUrl}checkout`;
 export const getRegistrationsUrl = `${baseUrl}registrations`;
-export const getFilteredRegistrationsUrl = (query="", order="", sort=1) => `${baseUrl}registrations?q=${query}&order=${order}&sorting=${sort}`;
+export const getFilteredRegistrationsUrl = (query="", order="", sort="asc", filter="") => `${baseUrl}registrations?q=${query}&order=${order}&sorting=${sort}&filter=${filter}`;
 export const getRaport = `${baseUrl}raport`;
 export const changePasswordUrl = `${baseUrl}change-password`;
 

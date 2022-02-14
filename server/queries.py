@@ -52,7 +52,7 @@ def add_book(db: Session, book: BookSchema):
     return new_book
 
 
-def get_books(db: Session, query: Optional[str], order: Optional[str], sorting: Optional[str]):
+def get_books(db: Session, query: Optional[str], order: Optional[str], sorting: Optional[str], filter: Optional[int]):
     """
     Get the books based on the given criteria
     The query is built step by step, based on the given filter parameters
@@ -61,6 +61,12 @@ def get_books(db: Session, query: Optional[str], order: Optional[str], sorting: 
 
     if query:
         book_query = book_query.filter(func.lower(Book.title).contains(query.lower()))
+
+    # the filter checks only if the books is available (stock > 0)
+    if filter == 1:
+        book_query = book_query.filter(Book.stock > 0)
+    elif filter == 0:
+        book_query = book_query.filter(Book.stock == 0)
 
     if order == "stock":
         if sorting == "ASC":
@@ -111,7 +117,7 @@ def update_book_stock(db: Session, book: Book, stock: int):
 #     return books
 
 
-def get_filtered_registrations(db: Session, email: str, query: Optional[str], order: Optional[str], sorting: Optional[str]):
+def get_filtered_registrations(db: Session, email: str, query: Optional[str], order: Optional[str], sorting: Optional[str], filter: Optional[int]):
     """
     Filter the registrations for a user based on
     the given criteria
@@ -122,6 +128,14 @@ def get_filtered_registrations(db: Session, email: str, query: Optional[str], or
 
     if query:
         registrations_query = registrations_query.filter(func.lower(Book.title).contains(query.lower()))
+
+    # the filter checks only if the book was checked out or not 
+    
+    if filter == 1:
+        registrations_query = registrations_query.filter(Registration.checkout != None)
+    elif filter == 0:
+        registrations_query = registrations_query.filter(Registration.checkout == None)
+
 
     if order == "checkout":
         if sorting == "ASC":

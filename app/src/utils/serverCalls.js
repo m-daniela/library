@@ -115,10 +115,10 @@ export const getBooks = async () => {
  * @param {string} query 
  * @returns 
  */
-export const getFilteredBooks = async (query, order, sort) => {
-    return axios.get(getFilteredBooksUrl(query, order, sort), authHeaders())
+export const getFilteredBooks = async (query, order, sort, filter) => {
+    return axios.get(getFilteredBooksUrl(query, order, sort, filter), authHeaders())
         .then(response => {
-            // console.log(response);
+            console.log(response.data);
             return response.data.data;
         })
         .catch(error => {
@@ -157,8 +157,8 @@ export const getRegistrations = async (email, token) => {
  * @param {string} sort 
  * @returns 
  */
-export const getFilteredRegistrations = async (email, query, order, sort) => {
-    return axios.post(getFilteredRegistrationsUrl(query, order, sort), {email}, authHeaders())
+export const getFilteredRegistrations = async (email, query, order, sort, filter) => {
+    return axios.post(getFilteredRegistrationsUrl(query, order, sort, filter), {email}, authHeaders())
         .then(response => {
             // console.log(response);
             return response.data;
