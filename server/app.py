@@ -194,14 +194,15 @@ def add_user(user: UserCreateSchema, db: Session = Depends(get_database)):
 
 
 @app.post("/registrations", dependencies=[Depends(normal_user)])
-def get_registrations(email: str = Body(..., embed=True), db: Session = Depends(get_database)):
+def get_registrations(email: str = Body(..., embed=True), q: Optional[str] = Query(None), order: Optional[str] = Query(None), sorting: Optional[str] = Query(None), db: Session = Depends(get_database)):
     """
     Get the list of registrations
     TODO: change response model
     """
     
     try:
-        registrations = queries.get_registrations(db, email)
+        registrations = queries.get_filtered_registrations(db, email, q, order, sorting)
+        print(registrations)
         return registrations
     except CustomError as e:
         return ResponseModelSchema(message=str(e))

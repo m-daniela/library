@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
-const AdvancedFilters = ({filterBooks}) => {
+const AdvancedFilters = ({filterBooks, filters}) => {
     const [search, setSearch] = useState("");
-    const [order, setOrder] = useState("title");
+    const [order, setOrder] = useState(filters[0]);
     const [sorting, setSorting] = useState("ASC");
 
     const handleSearch = (e) => {
@@ -18,10 +18,9 @@ const AdvancedFilters = ({filterBooks}) => {
                 <button type="submit">Go</button>
 
                 <select onChange={e => setOrder(e.target.value)} value={order}>
-                    <option value="title">Title</option>
-                    <option value="stock">Stock</option>
+                    {filters.map(filter => <option key={filter} value={filter}>{filter}</option>)}
                 </select>
-                
+
                 <label htmlFor="asc"> 
                     <input type="radio" id="asc" value="ASC" onChange={e => setSorting(e.target.value)} checked={sorting === "ASC"}/>
                 Ascending

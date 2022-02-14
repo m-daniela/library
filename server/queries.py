@@ -102,13 +102,44 @@ def update_book_stock(db: Session, book: Book, stock: int):
 
 # registrations
 
-def get_registrations(db: Session, email: str):
+# def get_registrations(db: Session, email: str):
+#     """
+#     Get all registrations for a user
+#     """
+#     user = get_user(db, email)
+#     books = user.books
+#     return books
+
+
+def get_filtered_registrations(db: Session, email: str, query: Optional[str], order: Optional[str], sorting: Optional[str]):
     """
-    Get all registrations for a user
+    Filter the registrations for a user based on
+    the given criteria
     """
-    user = get_user(db, email)
-    books = user.books
-    return books
+    registrations_query = db.query(Registration)\
+        .join(Book)\
+        .filter(Registration.email == email)\
+
+    if query:
+        registrations_query = registrations_query.filter(func.lower(Book.title).contains(query.lower()))
+
+    if order == "checkout":
+        if sorting == "ASC":
+            registrations_query = registrations_query.order_by(Registration.checkout)
+        else:
+            registrations_query = registrations_query.order_by(Registration.checkout.desc())
+    elif order == "title":
+        if sorting == "ASC":
+            registrations_query = registrations_query.order_by(Book.title)
+        else:
+            registrations_query = registrations_query.order_by(Book.title.desc())
+    else:
+        if sorting == "ASC":
+            registrations_query = registrations_query.order_by(Registration.checkin)
+        else:
+            registrations_query = registrations_query.order_by(Registration.checkin.desc())
+
+    return registrations_query.all()
 
 
 def get_raport(db: Session, email: str):
@@ -118,7 +149,7 @@ def get_raport(db: Session, email: str):
     """
 
     week_ago = datetime.datetime.utcnow() - datetime.timedelta(days=7)
-    
+
     result = db.query(Registration)\
         .join(Book)\
         .filter(Registration.email == email, Registration.checkin >= week_ago)\

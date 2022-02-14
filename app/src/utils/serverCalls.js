@@ -1,6 +1,9 @@
 import axios from "axios";
 import jwt_decode from "jwt-decode";
-import { addBookUrl, changePasswordUrl, checkinUrl, checkoutUrl, getBooksUrl, getRaport, getRegistrationsUrl, getSearchedBooksUrl, loginUrl, registerUrl } from "./constants";
+import { addBookUrl, changePasswordUrl, 
+    checkinUrl, checkoutUrl, getBooksUrl, 
+    getFilteredBooksUrl, getFilteredRegistrationsUrl, 
+    getRaport, getRegistrationsUrl, loginUrl, registerUrl } from "./constants";
 
 /** 
  * authentication header with the bearer token 
@@ -112,8 +115,8 @@ export const getBooks = async () => {
  * @param {string} query 
  * @returns 
  */
-export const getSearchedBooks = async (query, order, sort) => {
-    return axios.get(getSearchedBooksUrl(query, order, sort), authHeaders())
+export const getFilteredBooks = async (query, order, sort) => {
+    return axios.get(getFilteredBooksUrl(query, order, sort), authHeaders())
         .then(response => {
             // console.log(response);
             return response.data.data;
@@ -136,11 +139,35 @@ export const getSearchedBooks = async (query, order, sort) => {
  */
 export const getRegistrations = async (email, token) => {
     return axios.post(getRegistrationsUrl, {email}, authHeaders(token))
-        .then(response => response.data)
+        .then(response => {
+            console.log(response.data);
+            return response.data;
+        })
         .catch(error => {
             throw error.response.data;
         });
 };
+
+/**
+ * get the filtered registrations
+ * for the given user
+ * @param {string} email 
+ * @param {string} query 
+ * @param {string} order 
+ * @param {string} sort 
+ * @returns 
+ */
+export const getFilteredRegistrations = async (email, query, order, sort) => {
+    return axios.post(getFilteredRegistrationsUrl(query, order, sort), {email}, authHeaders())
+        .then(response => {
+            // console.log(response);
+            return response.data;
+        })
+        .catch(error => {
+            throw error.response;
+        });
+};
+
 
 
 export const getUserRaport = async (email) => {
