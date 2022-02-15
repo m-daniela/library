@@ -15,7 +15,11 @@ const BookProvider = ({children}) => {
         if (user !== null){
             getRegistrations(user.email, user.token)
                 .then(data => {
-                    dispatch({type: actions.load_data, payload: data});
+                    if (data?.length){
+                        dispatch({type: actions.load_data, payload: data});
+                    }
+                    dispatch({type: actions.load_data, payload: []});
+
                 })
                 .catch(error => {
                     console.log(error);

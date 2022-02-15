@@ -2,6 +2,7 @@
 
 export const routes = {
     login: "/", 
+    chat: "/chat", 
     changePassword: "/change-password",
 
     register: "/register", 
@@ -16,8 +17,14 @@ export const routes = {
 
 export const detailsRoute = (id) => `/details/${id}`;
 
+
+const host = "localhost";
 const port = 5000;
-const baseUrl = `http://localhost:${port}/`;
+const baseUrl = `http://${host}:${port}/`;
+
+export const socketUrl = `ws://${host}:${port}/socket`;
+
+
 
 export const loginUrl = `${baseUrl}token`;
 export const registerUrl = `${baseUrl}register`;

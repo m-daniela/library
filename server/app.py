@@ -1,5 +1,6 @@
+from time import sleep
 from typing import Optional
-from fastapi import BackgroundTasks, Depends, FastAPI, Body, HTTPException, Path, Query, Security
+from fastapi import BackgroundTasks, Depends, FastAPI, Body, HTTPException, Path, Query, Security, WebSocket
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm, SecurityScopes
 from fastapi.middleware.cors import CORSMiddleware
@@ -13,8 +14,7 @@ from authentication import secret, algorithm, authenticate_user, create_access_t
 from tasks import deleted_registration, send_email, return_book_email
 # import tasks
 
-# add middleware so you can use the global dependencies 
-# that will be passed to the instance
+
 app = FastAPI()
 
 connection.Base.metadata.create_all(bind=connection.engine)
@@ -282,3 +282,31 @@ def delete_registration(*, registration: RegistrationBaseSchema, db: Session = D
     except CustomError as e:
         return ResponseModelSchema(message=str(e))
     
+
+########## websockets ##########
+
+@app.websocket("/socket")
+async def contact(websocket: WebSocket):
+    await websocket.accept()
+    while True:
+        try:
+            data = await websocket.receive_text()
+            # sleep(1)
+            print(data)
+            message = {
+                "sender": "hehe", 
+                "time": 12342352,
+                "text": data
+            }
+            await websocket.send_json(message)
+        except:
+            message = {
+                "sender": "hehe", 
+                "time": 12342352,
+                "text": "Disconnecting"
+            }
+            await websocket.send_json(message)
+            websocket.close()
+            break
+
+
