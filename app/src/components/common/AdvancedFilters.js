@@ -53,6 +53,10 @@ const AdvancedFilters = ({filterBooks, orderBy, filters}) => {
                         <input type="radio" id="no" value={0} onChange={e => setFilterOption(+e.target.value)} checked={filterOption === 0}/>
                 no
                     </label>
+                    <label htmlFor="all"> 
+                        <input type="radio" id="all" value={2} onChange={e => setFilterOption(+e.target.value)} checked={filterOption === 2}/>
+                all
+                    </label>
                 </div>
                 
                 <div className='buttons'>

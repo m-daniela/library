@@ -13,7 +13,7 @@ import AdminRoute from './routes/AdminRoute';
 import UserRoute from './routes/UserRoute';
 import BookDetails from './common/BookDetails';
 import ChangePassword from './user/ChangePassword';
-import Raport from './common/Raport';
+import Report from './common/Report';
 
 /**
  * Main component
@@ -62,9 +62,9 @@ function App() {
                                 </UserRoute>
                             } />
 
-                            <Route exact path={routes.raport} element={
+                            <Route exact path={routes.report} element={
                                 <UserRoute>
-                                    <Raport />
+                                    <Report />
                                 </UserRoute>
                             } />
 

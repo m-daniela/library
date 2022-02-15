@@ -1,20 +1,20 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../../context/UserContext';
-import { getUserRaport } from '../../utils/serverCalls';
+import { getUserReport } from '../../utils/serverCalls';
 import Registration from './Registration';
 
-const Raport = () => {
+const Report = () => {
     const {user} = useContext(UserContext);
-    const [raport, setRaport] = useState([]);
+    const [report, setReport] = useState([]);
 
     useEffect(() => {
-        getUserRaport(user.email)
+        getUserReport(user.email)
             .then(data => {
-                setRaport(data);
+                setReport(data);
             })
             .catch(data => {
                 console.log(data);
-                setRaport([]);
+                setReport([]);
             });
     }, []);
     
@@ -23,11 +23,11 @@ const Raport = () => {
         <div className='homepage'>
             <h2>Registrations</h2>
             <span>Your registrations in the past week</span>
-            <div className="all-books raport">
-                {raport?.map(registration => <Registration key={registration.book_id} registration={registration}/>)}
+            <div className="all-books report">
+                {report?.map(registration => <Registration key={registration.book_id} registration={registration}/>)}
             </div>
         </div>
     );
 };
 
-export default Raport;
+export default Report;

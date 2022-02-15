@@ -10,7 +10,7 @@ export const routes = {
     yourBooks: "/your-books", 
     allBooks: "/books",
     details: "/details/:id",
-    raport: "/raport",
+    report: "/report",
 };
 
 export const detailsRoute = (id) => `/details/${id}`;
@@ -27,7 +27,7 @@ export const checkinUrl = `${baseUrl}checkin`;
 export const checkoutUrl = `${baseUrl}checkout`;
 export const getRegistrationsUrl = `${baseUrl}registrations`;
 export const getFilteredRegistrationsUrl = (query="", order="", sort="asc", filter="") => `${baseUrl}registrations?q=${query}&order=${order}&sorting=${sort}&filter=${filter}`;
-export const getRaport = `${baseUrl}raport`;
+export const getReport = `${baseUrl}report`;
 export const changePasswordUrl = `${baseUrl}change-password`;
 
 

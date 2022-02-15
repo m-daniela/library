@@ -125,7 +125,6 @@ def login(db: Session = Depends(get_database), form_data: OAuth2PasswordRequestF
 def change_password(user: UserLoginSchema, new_password: str = Body(..., embed=True), db: Session = Depends(get_database)):
     """
     Change the password
-    TODO: change response
     """
     user = authenticate_user(db, UserLoginSchema(email=user.email, password=user.password))
 
@@ -198,27 +197,26 @@ def add_user(user: UserCreateSchema, db: Session = Depends(get_database)):
 def get_registrations(email: str = Body(..., embed=True), q: Optional[str] = Query(None), order: Optional[str] = Query(None), sorting: Optional[str] = Query(None), filter: Optional[int] = Query(None), db: Session = Depends(get_database)):
     """
     Get the list of registrations
-    TODO: change response model
     """
     
     try:
         registrations = queries.get_filtered_registrations(db, email, q, order, sorting, filter)
-        return registrations
+        return ResponseModelSchema(data=registrations)
     except CustomError as e:
         return ResponseModelSchema(message=str(e))
 
 
 
-@app.post("/raport", dependencies=[Depends(normal_user)])
+@app.post("/report", dependencies=[Depends(normal_user)])
 def get_registrations(email: str = Body(..., embed=True), db: Session = Depends(get_database)):
     """
-    Get a raport with the list of registrations 
+    Get a report with the list of registrations 
     for the user, in the last week
     """
     
     try:
-        registrations = queries.get_raport(db, email)
-        return registrations
+        registrations = queries.get_report(db, email)
+        return ResponseModelSchema(data=registrations)
     except CustomError as e:
         return ResponseModelSchema(message=str(e))
 

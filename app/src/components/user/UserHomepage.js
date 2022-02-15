@@ -14,7 +14,7 @@ const UserHomepage = ({children}) => {
         {children}
         <Link to={routes.yourBooks}>Your books</Link>
         <Link to={routes.allBooks}>Get another book</Link>
-        <Link to={routes.raport}>Get the borrowings raport</Link>
+        <Link to={routes.report}>Get the borrowings report</Link>
     </>;
 };
 

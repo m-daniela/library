@@ -5,7 +5,6 @@ import { addBook } from '../../utils/serverCalls';
 /**
  * Add a new book
  * Add the title, description stock and cover image
- * TODO: handle the cover
  */
 const AddBook = () => {
     const [cover, setCover] = useState("");

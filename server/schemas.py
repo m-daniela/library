@@ -59,3 +59,28 @@ class TokenSchema(BaseModel):
 class ResponseModelSchema(BaseModel):
     message: Optional[str]
     data: Optional[Union[dict, list, BookSchema, RegistrationSchema]]
+
+
+# filter builder
+
+class FilterBuilder:
+    def __init__(self, query) -> None:
+        self.__query = query
+
+    def set_query(self, query):
+        self.__query = query
+
+    def add_filter(self, filter_criteria):
+        query = self.__query.filter(filter_criteria)
+        self.set_query(query)
+
+    def add_order(self, order_criteria, sorting = None):
+        if sorting == "ASC":
+            query = self.__query.order_by(order_criteria)
+        else:
+            query = self.__query.order_by(order_criteria.desc())
+        self.set_query(query)
+        
+    def get_query(self):
+        return self.__query
+

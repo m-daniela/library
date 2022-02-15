@@ -3,7 +3,7 @@ import jwt_decode from "jwt-decode";
 import { addBookUrl, changePasswordUrl, 
     checkinUrl, checkoutUrl, getBooksUrl, 
     getFilteredBooksUrl, getFilteredRegistrationsUrl, 
-    getRaport, getRegistrationsUrl, loginUrl, registerUrl } from "./constants";
+    getReport, getRegistrationsUrl, loginUrl, registerUrl } from "./constants";
 
 /** 
  * authentication header with the bearer token 
@@ -126,8 +126,6 @@ export const getFilteredBooks = async (query, order, sort, filter) => {
         });
 };
 
-
-
 /**
  * get the registrations for the given user
  * added the token directly because it might 
@@ -140,8 +138,8 @@ export const getFilteredBooks = async (query, order, sort, filter) => {
 export const getRegistrations = async (email, token) => {
     return axios.post(getRegistrationsUrl, {email}, authHeaders(token))
         .then(response => {
-            // console.log(response.data);
-            return response.data;
+            console.log(response.data);
+            return response.data.data;
         })
         .catch(error => {
             throw error.response.data;
@@ -161,7 +159,7 @@ export const getFilteredRegistrations = async (email, query, order, sort, filter
     return axios.post(getFilteredRegistrationsUrl(query, order, sort, filter), {email}, authHeaders())
         .then(response => {
             // console.log(response);
-            return response.data;
+            return response.data.data;
         })
         .catch(error => {
             throw error.response;
@@ -169,9 +167,14 @@ export const getFilteredRegistrations = async (email, query, order, sort, filter
 };
 
 
-
-export const getUserRaport = async (email) => {
-    return axios.post(getRaport, {email}, authHeaders())
+/**
+ * get weekly borrowings report
+ * for the given user
+ * @param {string} email 
+ * @returns 
+ */
+export const getUserReport = async (email) => {
+    return axios.post(getReport, {email}, authHeaders())
         .then(response => {
             // console.log(response.data);
             return response.data;
