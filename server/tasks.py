@@ -37,12 +37,28 @@ def send_email(email: str):
 @celery_app.task
 def return_book_email(email: str, title: str):
     """
-    Send a registration email when a new user is added
+    Send a checkout notice on the given book to the email
     """
     contents = f"Please return the book with title {title}."
 
     message = MIMEText(contents)
     message["Subject"] = "Book return notice"
+    message["From"] = sender
+    message["To"] = email
+    
+    with smtplib.SMTP(server, port) as smtp_email:
+        smtp_email.sendmail(sender, email, message.as_string())
+
+
+@celery_app.task
+def deleted_registration(email: str, title: str):
+    """
+    Send a notice message that a registration was deleted
+    """
+    contents = f"Your registration for the book {title} was deleted."
+
+    message = MIMEText(contents)
+    message["Subject"] = "Registration deleted notice"
     message["From"] = sender
     message["To"] = email
     

@@ -292,11 +292,10 @@ def delete_registration(db: Session, email: str, book_id: int):
         .filter(Registration.email == user.email, Registration.book_id == book.id, Registration.checkout != None)
 
     registration = registration_query.first()
-    print(registration)
-
 
     if registration:
         registration_query.delete()
         db.commit()
+        return registration
     else:
-        raise CustomError("This registration does not exist or it wasn't checked out")
+        raise CustomError("This registration does not exist or the book wasn't checked out")

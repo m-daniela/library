@@ -10,7 +10,7 @@ from schemas import ResponseModelSchema, TokenDataSchema, UserLoginSchema, UserC
 from exception import CustomError, custom_unauthorized_exception
 from authentication import secret, algorithm, authenticate_user, create_access_token
 # from background_tasks.emails import return_book_email, send_email
-from tasks import send_email, return_book_email
+from tasks import deleted_registration, send_email, return_book_email
 # import tasks
 
 # add middleware so you can use the global dependencies 
@@ -266,6 +266,10 @@ def delete_registration(*, registration: RegistrationBaseSchema, db: Session = D
     try:
         registration = queries.delete_registration(db, registration.email, registration.book_id)
         print(registration)
+
+        # send email notice about registration deletion
+        deleted_registration.delay(registration.email, registration.book.title)
+
         message =  f"The registration was deleted"
         return ResponseModelSchema(message=message)
     except CustomError as e:
