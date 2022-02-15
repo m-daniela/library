@@ -1,10 +1,16 @@
 
 .card{
-    // width: 200px;
+    width: fit-content;
     display: flex;
     margin: 1em .5em;
     flex-basis: 45%;
     
+    h2, a{
+        align-self: start;
+        margin-left: 0;
+        padding-left: 0;
+    }
+
     .details{
         margin: 0 1em;
         @include display-column;

@@ -118,7 +118,7 @@ export const getBooks = async () => {
 export const getFilteredBooks = async (query, order, sort, filter) => {
     return axios.get(getFilteredBooksUrl(query, order, sort, filter), authHeaders())
         .then(response => {
-            console.log(response.data);
+            // console.log(response.data);
             return response.data.data;
         })
         .catch(error => {

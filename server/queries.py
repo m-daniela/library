@@ -130,7 +130,7 @@ def get_filtered_registrations(db: Session, email: str, query: Optional[str], or
         registrations_query = registrations_query.filter(func.lower(Book.title).contains(query.lower()))
 
     # the filter checks only if the book was checked out or not 
-    
+
     if filter == 1:
         registrations_query = registrations_query.filter(Registration.checkout != None)
     elif filter == 0:

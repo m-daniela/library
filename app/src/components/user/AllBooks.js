@@ -16,8 +16,7 @@ const AllBooks = () => {
     const [filteredBooks, setFilteredBooks] = useState([]);
     const orderBy = ["title", "stock"];
     const filters = ["availability"];
-    // const [message, setMessage] = useState("");
-
+    const [isFiltered, setIsFiltered] = useState(false);
 
     useEffect(() => {
         if (isLogged){
@@ -25,9 +24,11 @@ const AllBooks = () => {
         }
     }, [isLogged]);
 
+    const removeFilters = () =>{
+        setIsFiltered(false);
+    };
 
     const searchBooks = (query, sort, order, filter) => {
-        console.log(filter);
         getFilteredBooks(query, sort, order, filter)
             .then(data => {
                 if (data?.length){
@@ -40,6 +41,9 @@ const AllBooks = () => {
             .catch(error => {
                 console.log(error);
                 setFilteredBooks([]);
+            })
+            .finally(() => {
+                setIsFiltered(true);
             });
     };
 
@@ -47,12 +51,13 @@ const AllBooks = () => {
     return <div className="homepage">
         <h2>Available books</h2>
         <AdvancedFilters filterBooks={searchBooks} orderBy={orderBy} filters={filters}/>
+        <button onClick={removeFilters}>Display all books</button>
         <div className="all-books">
             {
-                filteredBooks.length === 0 ? 
-                    <>{books?.map(book => <Book key={book.id} book={book}/>)}</>
-                    :
+                isFiltered? 
                     <>{filteredBooks?.map(book => <Book key={book.id} book={book}/>)}</>
+                    :
+                    <>{books?.map(book => <Book key={book.id} book={book}/>)}</>
             }
         </div>
     </div>;

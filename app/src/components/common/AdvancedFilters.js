@@ -9,9 +9,9 @@ const AdvancedFilters = ({filterBooks, orderBy, filters}) => {
 
     const handleSearch = (e) => {
         e.preventDefault();
-        console.log(filterOption);
         filterBooks(search, order, sorting, filterOption);
     };
+
 
     return (
         <>
@@ -55,7 +55,10 @@ const AdvancedFilters = ({filterBooks, orderBy, filters}) => {
                     </label>
                 </div>
                 
-                <button type="submit">Apply filters</button>
+                <div className='buttons'>
+                    <button type="submit">Apply filters</button>
+                </div>
+                
 
             </form>
         

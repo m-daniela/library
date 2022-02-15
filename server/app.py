@@ -202,7 +202,6 @@ def get_registrations(email: str = Body(..., embed=True), q: Optional[str] = Que
     """
     
     try:
-        print(filter)
         registrations = queries.get_filtered_registrations(db, email, q, order, sorting, filter)
         return registrations
     except CustomError as e:

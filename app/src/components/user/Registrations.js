@@ -13,11 +13,15 @@ const Registrations = () => {
     const {myBooks} = useContext(BookContext);
     const {user} = useContext(UserContext);
     const [filteredRegistrations, setFilteredRegistrations] = useState([]);
+    const [isFiltered, setIsFiltered] = useState(false);
     const orderBy = ["checkin", "checkout", "title"];
     const filters = ["checkedout"];
 
+    const removeFilters = () =>{
+        setIsFiltered(false);
+    };
+
     const searchBooks = (query, sort, order, filter) => {
-        console.log(filter);
         getFilteredRegistrations(user.email, query, sort, order, filter)
             .then(data => {
                 if (data?.length){
@@ -30,20 +34,24 @@ const Registrations = () => {
             .catch(error => {
                 console.log(error);
                 setFilteredRegistrations([]);
+            })
+            .finally(() => {
+                setIsFiltered(true);
             });
     };
 
 
-
     return <div className="homepage">
         <h2>Your books</h2>
-        <AdvancedFilters filterBooks={searchBooks} orderBy={orderBy} filters={filters}/>
+        <AdvancedFilters filterBooks={searchBooks} orderBy={orderBy} filters={filters} setIsFiltered={setIsFiltered}/>
+        <button onClick={removeFilters}>Display all books</button>
+
         <div className="registrations">
             {
-                filteredRegistrations.length === 0 ? 
-                    <>{myBooks?.map(registration => <Registration key={registration.book_id} registration={registration}/>)}</>
-                    :
+                isFiltered ? 
                     <>{filteredRegistrations?.map(registration => <Registration key={registration.book_id} registration={registration}/>)}</>
+                    :
+                    <>{myBooks?.map(registration => <Registration key={registration.book_id} registration={registration}/>)}</>
             }
         </div>
     </div>;
