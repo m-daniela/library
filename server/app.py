@@ -34,7 +34,9 @@ def get_database():
 
 auth_scheme = OAuth2PasswordBearer(
     tokenUrl="token", 
-    scopes={"register": "Add a new user", "book": "Add a new book"}
+    scopes={"register": "Add a new user", 
+    "book": "Add a new book", 
+    "delete": "Delete a registration"}
 )
 
 
@@ -86,7 +88,7 @@ def current_user(scopes: SecurityScopes, db: Session = Depends(get_database), to
     return user
 
 # add the scopes as security dependencies for admin users
-def admin_user(user: UserLoginSchema = Security(current_user, scopes=["register", "book"])):
+def admin_user(user: UserLoginSchema = Security(current_user, scopes=["register", "book", "delete"])):
     return
 
 # no scopes needed for normal users
@@ -113,7 +115,7 @@ def login(db: Session = Depends(get_database), form_data: OAuth2PasswordRequestF
             # check if the user is an admin and give 
             # the corresponding scopes
             if user.role == "admin":
-                data.update({"scopes": ["register", "book"]})
+                data.update({"scopes": ["register", "book", "delete"]})
 
             access_token = create_access_token(data=data)
 
@@ -137,7 +139,7 @@ def change_password(user: UserLoginSchema, new_password: str = Body(..., embed=T
         # check if the user is an admin and give 
         # the corresponding scopes
         if user.role == "admin":
-            data.update({"scopes": ["register", "book"]})
+            data.update({"scopes": ["register", "book", "delete"]})
 
         access_token = create_access_token(data=data)
 
@@ -253,3 +255,19 @@ def checkout(registration: RegistrationBaseSchema, db: Session = Depends(get_dat
         return ResponseModelSchema(message="Checkout successful", data=updated_registration)
     except CustomError as e:
         return ResponseModelSchema(message=str(e))
+
+
+@app.delete("/delete-registration", dependencies=[Security(admin_user, scopes=["delete"])])
+def delete_registration(*, registration: RegistrationBaseSchema, db: Session = Depends(get_database)):
+    """
+    Delete a registration
+    Only an admin is allowed to perform this operation
+    """
+    try:
+        registration = queries.delete_registration(db, registration.email, registration.book_id)
+        print(registration)
+        message =  f"The registration was deleted"
+        return ResponseModelSchema(message=message)
+    except CustomError as e:
+        return ResponseModelSchema(message=str(e))
+    

@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from passlib.context import CryptContext
 from jose import jwt
 
@@ -41,7 +41,8 @@ def authenticate_user(db, user: UserLoginSchema):
 # of the token
 # https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/#technical-details-about-the-jwt-subject-sub
 def create_access_token(data: dict):
-    expire = datetime.utcnow() + timedelta(minutes=token_expiration_minutes)
+    # expire = datetime.utcnow() + timedelta(minutes=token_expiration_minutes)
+    expire = datetime.now(tz=timezone.utc) + timedelta(minutes=token_expiration_minutes)
     data.update({"exp": expire})
     encoded_jwt = jwt.encode(data, secret, algorithm=algorithm)
     return encoded_jwt

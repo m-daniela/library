@@ -3,7 +3,7 @@ import jwt_decode from "jwt-decode";
 import { addBookUrl, changePasswordUrl, 
     checkinUrl, checkoutUrl, getBooksUrl, 
     getFilteredBooksUrl, getFilteredRegistrationsUrl, 
-    getReport, getRegistrationsUrl, loginUrl, registerUrl } from "./constants";
+    getReport, getRegistrationsUrl, loginUrl, registerUrl, deleteRegistrationUrl } from "./constants";
 
 /** 
  * authentication header with the bearer token 
@@ -35,7 +35,7 @@ export const userLogin = async (email, password) => {
         .then(response => {
             // decode the jwt token
             const token_data = jwt_decode(response.data.access_token);
-
+            console.log(token_data);
             return {
                 email: token_data.sub,
                 role: token_data.role, 
@@ -177,7 +177,7 @@ export const getUserReport = async (email) => {
     return axios.post(getReport, {email}, authHeaders())
         .then(response => {
             // console.log(response.data);
-            return response.data;
+            return response.data.data;
         })
         .catch(error => {
             throw error.response.data;
@@ -208,6 +208,27 @@ export const checkinBook = async (email, bookId) => {
  */
 export const checkoutBook = async (email, bookId) => {
     return axios.put(checkoutUrl, {email, book_id: bookId}, authHeaders())
+        .then(response => response.data)
+        .catch(error => {
+            throw error.response.data;
+        });
+};
+
+
+/**
+ * delete the given registration
+ * TODO: the delete function takes the parameters in 
+ * another order (url, headers, data), will keept it
+ * with a configuration object for now
+ * @param {string} email 
+ * @param {int} bookId 
+ * @returns 
+ */
+export const deleteRegistration = async (email, bookId) => {
+    // return axios.delete(deleteRegistrationUrl, {email, book_id: bookId}, authHeaders())
+    const headers = authHeaders();
+    const config = {data: {email, book_id: bookId}, ...headers};
+    return axios.delete(deleteRegistrationUrl, config)
         .then(response => response.data)
         .catch(error => {
             throw error.response.data;

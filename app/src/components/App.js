@@ -14,6 +14,7 @@ import UserRoute from './routes/UserRoute';
 import BookDetails from './common/BookDetails';
 import ChangePassword from './user/ChangePassword';
 import Report from './common/Report';
+import UserRegistrations from './admin/UserRegistrations';
 
 /**
  * Main component
@@ -41,7 +42,12 @@ function App() {
                                 <AdminRoute>
                                     <Register/>
                                 </AdminRoute>
-                                
+                            }/>
+
+                            <Route exact path={routes.userRegistrations} element={
+                                <AdminRoute>
+                                    <UserRegistrations/>
+                                </AdminRoute>
                             }/>
 
                             <Route exact path={routes.yourBooks} element={

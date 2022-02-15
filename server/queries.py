@@ -1,4 +1,5 @@
 import datetime
+from doctest import register_optionflag
 from mimetypes import init
 from typing import Optional
 from sqlalchemy.orm import Session
@@ -220,7 +221,8 @@ def get_report(db: Session, email: str):
     past week
     """
 
-    week_ago = datetime.datetime.utcnow() - datetime.timedelta(days=7)
+    week_ago = datetime.datetime.now(tz=datetime.timezone.utc) - datetime.timedelta(days=7)
+    print(week_ago)
 
     result = db.query(Registration)\
         .join(Book)\
@@ -268,8 +270,33 @@ def checkout(db: Session, email: str, book_id: int):
 
     if not registration.checkout:
         update_book_stock(db, book, 1)
-        registration.checkout = datetime.datetime.utcnow()
+        registration.checkout = datetime.datetime.now(tz=datetime.timezone.utc)
         db.commit()
         return registration
     else:
         raise CustomError("You have already checked out this book")
+
+
+def delete_registration(db: Session, email: str, book_id: int):
+    """
+    Delete a registration
+    You can do this only if the book was checked out
+    """
+
+    user = get_user(db, email)
+    book = get_book(db, book_id)
+
+    # week_ago = datetime.datetime.now(tz=datetime.timezone.utc) - datetime.timedelta(days=7)
+
+    registration_query = db.query(Registration)\
+        .filter(Registration.email == user.email, Registration.book_id == book.id, Registration.checkout != None)
+
+    registration = registration_query.first()
+    print(registration)
+
+
+    if registration:
+        registration_query.delete()
+        db.commit()
+    else:
+        raise CustomError("This registration does not exist or it wasn't checked out")

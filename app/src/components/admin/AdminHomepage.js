@@ -13,6 +13,7 @@ const AdminHomepage = () => {
     return <UserHomepage>
         <Link to={routes.register}>Add new user</Link>
         <Link to={routes.addBook}>Add new book</Link>
+        <Link to={routes.userRegistrations}>Search for a user</Link>
     </UserHomepage>;
 };
 

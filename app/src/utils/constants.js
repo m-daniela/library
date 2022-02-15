@@ -6,6 +6,7 @@ export const routes = {
 
     register: "/register", 
     addBook: "/add",
+    userRegistrations: "registrations",
     
     yourBooks: "/your-books", 
     allBooks: "/books",
@@ -29,6 +30,8 @@ export const getRegistrationsUrl = `${baseUrl}registrations`;
 export const getFilteredRegistrationsUrl = (query="", order="", sort="asc", filter="") => `${baseUrl}registrations?q=${query}&order=${order}&sorting=${sort}&filter=${filter}`;
 export const getReport = `${baseUrl}report`;
 export const changePasswordUrl = `${baseUrl}change-password`;
+export const deleteRegistrationUrl = `${baseUrl}delete-registration`;
+
 
 
 export const convertDate = (timestamp) => {
