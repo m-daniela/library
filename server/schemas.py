@@ -22,11 +22,13 @@ class UserCreateSchema(UserLoginSchema):
 
 # book
 
-class BookSchema(BaseModel):
+class BookUpdateSchema(BaseModel):
     cover: str
-    title: str
     description: str
     stock: int
+
+class BookSchema(BookUpdateSchema):
+    title: str
     class Config:
         orm_mode = True
 

@@ -1,12 +1,12 @@
 from typing import Optional
-from fastapi import BackgroundTasks, Depends, FastAPI, Body, HTTPException, Query, Security
+from fastapi import BackgroundTasks, Depends, FastAPI, Body, HTTPException, Path, Query, Security
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm, SecurityScopes
 from fastapi.middleware.cors import CORSMiddleware
 from jose import JWTError, jwt
 
 import connection, queries
-from schemas import ResponseModelSchema, TokenDataSchema, UserLoginSchema, UserCreateSchema, BookSchema, RegistrationBaseSchema
+from schemas import ResponseModelSchema, TokenDataSchema, UserLoginSchema, UserCreateSchema, BookUpdateSchema, BookSchema, RegistrationBaseSchema
 from exception import CustomError, custom_unauthorized_exception
 from authentication import secret, algorithm, authenticate_user, create_access_token
 # from background_tasks.emails import return_book_email, send_email
@@ -154,7 +154,6 @@ def get_books(q: Optional[str] = Query(None), order: Optional[str] = Query(None)
     If a query string is provided, return the books based on that query
     """
     try:
-        print(filter)
         books = queries.get_books(db, q, order, sorting, filter)
         return ResponseModelSchema(data=books)
     except Exception as e:
@@ -174,6 +173,15 @@ def add_book(book: BookSchema, db: Session = Depends(get_database)):
     except Exception as e:
         return ResponseModelSchema(message="An error occurred while adding the book, try again later")
         
+@app.put("/book/{book_id}", dependencies=[Security(admin_user, scopes=["book"])])
+def update_book(book: BookUpdateSchema, book_id: int = Path(...), db: Session = Depends(get_database)):
+    """
+    Upadte a book
+    Only an admin is allowed to perform this operation
+    """
+    updated_book = queries.update_book(db, book_id, book)
+    message =  f"Book with title {updated_book.title} was updated"
+    return ResponseModelSchema(message=message, data=updated_book)
 
 
 @app.post("/register", dependencies=[Security(admin_user, scopes=["register"])])
@@ -265,7 +273,6 @@ def delete_registration(*, registration: RegistrationBaseSchema, db: Session = D
     """
     try:
         registration = queries.delete_registration(db, registration.email, registration.book_id)
-        print(registration)
 
         # send email notice about registration deletion
         deleted_registration.delay(registration.email, registration.book.title)

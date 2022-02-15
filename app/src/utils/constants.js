@@ -24,6 +24,7 @@ export const registerUrl = `${baseUrl}register`;
 export const getBooksUrl = `${baseUrl}books`;
 export const getFilteredBooksUrl = (query="", order="", sort="asc", filter="") => `${baseUrl}books?q=${query}&order=${order}&sorting=${sort}&filter=${filter}`;
 export const addBookUrl = `${baseUrl}book`;
+export const updateBookUrl = (bookId) => `${baseUrl}book/${bookId}`;
 export const checkinUrl = `${baseUrl}checkin`;
 export const checkoutUrl = `${baseUrl}checkout`;
 export const getRegistrationsUrl = `${baseUrl}registrations`;
@@ -36,5 +37,5 @@ export const deleteRegistrationUrl = `${baseUrl}delete-registration`;
 
 export const convertDate = (timestamp) => {
     const time = new Date(timestamp);
-    return time.toLocaleString("ro-RO", { timeZone: 'UTC' });
+    return time.toLocaleString("ro-RO");
 };

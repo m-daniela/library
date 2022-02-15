@@ -5,7 +5,7 @@ from typing import Optional
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 
-from schemas import FilterBuilder, UserCreateSchema, UserLoginSchema, BookSchema
+from schemas import BookUpdateSchema, FilterBuilder, UserCreateSchema, UserLoginSchema, BookSchema
 from models import User, Registration, Book
 from exception import CustomError, custom_not_found_exception
 from authentication import password_hash
@@ -54,34 +54,21 @@ def add_book(db: Session, book: BookSchema):
     return new_book
 
 
-# def get_books(db: Session, query: Optional[str], order: Optional[str], sorting: Optional[str], filter: Optional[int]):
-#     """
-#     Get the books based on the given criteria
-#     The query is built step by step, based on the given filter parameters
-#     """
-#     book_query = db.query(Book)
+def update_book(db: Session, book_id: int, book: BookUpdateSchema):
+    """
+    Update a book
+    """
+    old_book = get_book(db, book_id)
 
-#     if query:
-#         book_query = book_query.filter(func.lower(Book.title).contains(query.lower()))
+    old_book.cover = book.cover
+    old_book.description = book.description
+    old_book.stock = book.stock
 
-#     # the filter checks only if the books is available (stock > 0)
-#     if filter == 1:
-#         book_query = book_query.filter(Book.stock > 0)
-#     elif filter == 0:
-#         book_query = book_query.filter(Book.stock == 0)
+    db.commit()
+    db.refresh(old_book)
 
-#     if order == "stock":
-#         if sorting == "ASC":
-#             book_query = book_query.order_by(Book.stock)
-#         else:
-#             book_query = book_query.order_by(Book.stock.desc())
-#     elif order == "title":
-#         if sorting == "ASC":
-#             book_query = book_query.order_by(Book.title)
-#         else:
-#             book_query = book_query.order_by(Book.title.desc())
+    return old_book
 
-#     return book_query.all()
 
 
 def get_books(db: Session, query: Optional[str], order: Optional[str], sorting: Optional[str], filter: Optional[int]):
@@ -146,45 +133,6 @@ def update_book_stock(db: Session, book: Book, stock: int):
 #     return books
 
 
-# def get_filtered_registrations(db: Session, email: str, query: Optional[str], order: Optional[str], sorting: Optional[str], filter: Optional[int]):
-#     """
-#     Filter the registrations for a user based on
-#     the given criteria
-#     """
-#     registrations_query = db.query(Registration)\
-#         .join(Book)\
-#         .filter(Registration.email == email)\
-
-#     if query:
-#         registrations_query = registrations_query.filter(func.lower(Book.title).contains(query.lower()))
-
-#     # the filter checks only if the book was checked out or not 
-
-#     if filter == 1:
-#         registrations_query = registrations_query.filter(Registration.checkout != None)
-#     elif filter == 0:
-#         registrations_query = registrations_query.filter(Registration.checkout == None)
-
-
-#     if order == "checkout":
-#         if sorting == "ASC":
-#             registrations_query = registrations_query.order_by(Registration.checkout)
-#         else:
-#             registrations_query = registrations_query.order_by(Registration.checkout.desc())
-#     elif order == "title":
-#         if sorting == "ASC":
-#             registrations_query = registrations_query.order_by(Book.title)
-#         else:
-#             registrations_query = registrations_query.order_by(Book.title.desc())
-#     else:
-#         if sorting == "ASC":
-#             registrations_query = registrations_query.order_by(Registration.checkin)
-#         else:
-#             registrations_query = registrations_query.order_by(Registration.checkin.desc())
-
-#     return registrations_query.all()
-
-
 def get_filtered_registrations(db: Session, email: str, query: Optional[str], order: Optional[str], sorting: Optional[str], filter: Optional[int]):
     """
     Filter the registrations for a user based on
@@ -222,7 +170,6 @@ def get_report(db: Session, email: str):
     """
 
     week_ago = datetime.datetime.now(tz=datetime.timezone.utc) - datetime.timedelta(days=7)
-    print(week_ago)
 
     result = db.query(Registration)\
         .join(Book)\

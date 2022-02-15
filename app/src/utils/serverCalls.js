@@ -3,7 +3,7 @@ import jwt_decode from "jwt-decode";
 import { addBookUrl, changePasswordUrl, 
     checkinUrl, checkoutUrl, getBooksUrl, 
     getFilteredBooksUrl, getFilteredRegistrationsUrl, 
-    getReport, getRegistrationsUrl, loginUrl, registerUrl, deleteRegistrationUrl } from "./constants";
+    getReport, getRegistrationsUrl, loginUrl, registerUrl, deleteRegistrationUrl, updateBookUrl } from "./constants";
 
 /** 
  * authentication header with the bearer token 
@@ -97,6 +97,23 @@ export const addBook = async (title, description, cover, stock) => {
             throw error.response.data;
         });
 };
+
+/**
+ * update a book
+ * @param {int} bookId 
+ * @param {string} description 
+ * @param {string} cover 
+ * @param {int} stock 
+ * @returns 
+ */
+export const updateBook = async (bookId, description, cover, stock) => {
+    return axios.put(updateBookUrl(bookId), { description, cover, stock }, authHeaders())
+        .then(response => response.data)
+        .catch(error => {
+            throw error.response.data;
+        });
+};
+
 
 /**
  * get books

@@ -10,10 +10,13 @@ const Report = () => {
     useEffect(() => {
         getUserReport(user.email)
             .then(data => {
-                setReport(data);
+                if (data?.length){
+                    setReport(data);
+                    setReport([]);
+                }
             })
-            .catch(data => {
-                console.log(data);
+            .catch(error => {
+                console.log(error);
                 setReport([]);
             });
     }, []);
