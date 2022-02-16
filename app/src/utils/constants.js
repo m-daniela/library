@@ -39,6 +39,7 @@ export const getFilteredRegistrationsUrl = (query="", order="", sort="asc", filt
 export const getReport = `${baseUrl}report`;
 export const changePasswordUrl = `${baseUrl}change-password`;
 export const deleteRegistrationUrl = `${baseUrl}delete-registration`;
+export const getChatsUrl = `${baseUrl}chats`;
 
 
 

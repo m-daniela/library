@@ -1,12 +1,10 @@
 import datetime
-from doctest import register_optionflag
-from mimetypes import init
 from typing import Optional
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 
-from schemas import BookUpdateSchema, FilterBuilder, UserCreateSchema, UserLoginSchema, BookSchema
-from models import User, Registration, Book
+from schemas import BookUpdateSchema, FilterBuilder, MessageSchema, UserCreateSchema, UserLoginSchema, BookSchema
+from models import Message, User, Registration, Book
 from exception import CustomError, custom_not_found_exception
 from authentication import password_hash
 
@@ -246,3 +244,22 @@ def delete_registration(db: Session, email: str, book_id: int):
         return registration
     else:
         raise CustomError("This registration does not exist or the book wasn't checked out")
+
+
+# messages
+
+def add_message(db: Session, message: MessageSchema):
+    new_message = Message(sender=message.sender, receiver=message.receiver, text=message.text)
+
+    db.add(new_message)
+    db.commit()
+    db.refresh(new_message)
+
+    return new_message
+
+
+def get_messages(db: Session, sender: str, receiver: str):
+    return db.query(Message).filter(Message.sender == sender, Message.receiver == receiver).all()
+
+def get_chats(db: Session):
+    return db.query(Message).all()

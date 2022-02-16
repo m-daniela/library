@@ -17,7 +17,8 @@ const SocketProvider = ({children}) => {
     useEffect(() => {
         if (user){
             const socketInit = io(socketUrl, { path: "/socket/socket.io", transports: ['websocket', 'polling'], auth: user.email });
-            socketInit.on("connect", () => console.log("connected", socketInit.id)); 
+            socketInit.on("connect", () => console.log("connected", socketInit.id));
+            socketInit.on("notification", (data) => console.log("notification", data)); 
             setSocket(socketInit);
         }
     }, [user]);

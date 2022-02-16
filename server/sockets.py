@@ -22,6 +22,7 @@ async def message(sid, message):
     # the room holds the receiver of the 
     # message
     await sio.emit("message", message, room=receiver)
+    await sio.emit("notification", {"from": message.get("sender")})
 
 @sio.on("broadcast")
 async def broadcast(sid, message):

@@ -83,6 +83,7 @@ def current_user(scopes: SecurityScopes, db: Session = Depends(get_database), to
 
     user = queries.get_user(db, username)
     
+
     for scope in scopes.scopes:
         if scope not in token_data.scopes:
             raise custom_unauthorized_exception(permissions_validation, auth)
@@ -108,6 +109,8 @@ def login(db: Session = Depends(get_database), form_data: OAuth2PasswordRequestF
         password = form_data.password
 
         user = authenticate_user(db, UserLoginSchema(email=username, password=password))
+
+        print(user, 123)
 
         if user:
             data = {
@@ -285,36 +288,16 @@ def delete_registration(*, registration: RegistrationBaseSchema, db: Session = D
         return ResponseModelSchema(message=str(e))
     
 
-########## websockets ##########
+@app.post("/chats", dependencies=[Depends(normal_user)])
+def get_chats(db: Session = Depends(get_database)):
+    """
+    Delete a registration
+    Only an admin is allowed to perform this operation
+    """
+    try:
+        registration = queries.get_chats(db)
 
-# @app.websocket("/socket")
-# async def contact(websocket: WebSocket):
-#     # add connection
-#     await socketsManager.connect(websocket)
-
-#     try: 
-#         while True:
-#             data = await websocket.receive_json()
-#             await 
-#     while True:
-#         try:
-#             data = await websocket.receive_json()
-#             # sleep(1)
-#             print(data.get("text"))
-#             message = {
-#                 "sender": data.get("receiver"),
-#                 "receiver": data.get("sender"),
-#                 # "time": 12342352,
-#                 "text": data.get("text")
-#             }
-#             await websocket.send_json(message)
-#         except Exception as e:
-#             print(e)
-#             message = {
-#                 "text": "Disconnecting"
-#             }
-#             await websocket.send_json(message)
-#             await websocket.close()
-#             break
-
-
+        return ResponseModelSchema(data=registration)
+    except CustomError as e:
+        return ResponseModelSchema(message=str(e))
+    

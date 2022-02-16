@@ -46,6 +46,17 @@ class RegistrationSchema(RegistrationBaseSchema):
     class Config:
         orm_mode = True
 
+# message
+
+class MessageSchema(BaseModel):
+    id: int
+    sender: str
+    receiver: str
+    text: str
+
+    class Config:
+        orm_mode = True
+
 # token
 
 class TokenDataSchema(BaseModel):

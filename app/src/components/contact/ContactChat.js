@@ -1,7 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { ChatContext } from '../../context/ChatContext';
 import { SocketContext } from '../../context/SocketContext';
+import { UserContext } from '../../context/UserContext';
 import { chatActions } from '../../reducers/chatReducer';
+import { getContactChats } from '../../utils/serverCalls';
 import MessageInput from '../chat/MessageInput';
 import MessageList from '../chat/MessageList';
 import Sidebar from '../chat/Sidebar';
@@ -14,6 +16,7 @@ import Sidebar from '../chat/Sidebar';
  * @returns 
  */
 const ContactChat = () => {
+    const {user} = useContext(UserContext);
     const {chats, dispatch} = useContext(ChatContext);
     const {socket} = useContext(SocketContext);
     const [selectedChat, setSelectedChat] = useState("");
@@ -26,6 +29,14 @@ const ContactChat = () => {
             });
         }
     }, []);
+
+    useEffect(() => {
+        if (user){
+            console.log(user.token, 111);
+            getContactChats(user.token);
+        }
+        
+    }, [user]);
 
     const sendMessage = (message) => {
         if(socket){

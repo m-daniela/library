@@ -38,6 +38,11 @@ class User(connection.Base):
         passive_deletes=True
     )
 
+    messages = relationship(
+        "Message", 
+        back_populates="user"
+    )
+
     def __str__(self) -> str:
         return f"{self.email}, {self.role}"
 
@@ -57,5 +62,24 @@ class Book(connection.Base):
 
     def __str__(self) -> str:
         return f"{self.id}, {self.title}, {self.description}, {self.cover}, {self.stock}"
+
+
+
+
+class Message(connection.Base):
+    __tablename__ = "messages"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    text = Column(String, nullable=False)
+    
+    email = Column(String, ForeignKey("user.email"))
+    user = relationship("User", back_populates="messages", foreign_keys=[email])
+
+    # receiver_email = Column(String, ForeignKey("user.email"))
+    # receiver = relationship("User", foreign_keys=[receiver_email])
+
+
+    def __str__(self) -> str:
+        return f"{self.id}, {self.text}, sent by {self.sender}"
 
 
