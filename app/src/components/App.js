@@ -16,7 +16,7 @@ import ChangePassword from './user/ChangePassword';
 import Report from './common/Report';
 import UserRegistrations from './admin/UserRegistrations';
 import ChatProvider from '../context/ChatContext';
-import ContactRoute from './routes/ContactRoute';
+import ChatRoute from './routes/ContactRoute';
 import SocketProvider from '../context/SocketContext';
 
 /**
@@ -87,7 +87,7 @@ function App() {
 
 
                                     <Route exact path={routes.chat} element={
-                                        <ContactRoute />
+                                        <ChatRoute />
                                     } />
 
                                 </Routes>

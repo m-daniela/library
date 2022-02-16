@@ -13,6 +13,7 @@ const MessageInput = ({sendMessage}) => {
     const handleMessage = (e) => {
         e.preventDefault();
         sendMessage(message);
+        setMessage("");
     };
 
     return (

@@ -13,9 +13,9 @@ import UserChat from '../user/UserChat';
  * The user is redirected to the homepage if 
  * not logged in
  */
-const ContactRoute = () => {
+const ChatRoute = () => {
     const {isLogged, user} = useContext(UserContext);
     return isLogged ? (user.email === "contact@library.com" ? <ContactChat /> : <UserChat />) : <Navigate to={routes.login}/>;
 };
 
-export default ContactRoute;
+export default ChatRoute;
