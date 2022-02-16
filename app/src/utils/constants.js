@@ -22,7 +22,7 @@ const host = "localhost";
 const port = 5000;
 const baseUrl = `http://${host}:${port}/`;
 
-export const socketUrl = `ws://${host}:${port}/socket`;
+export const socketUrl = `ws://${host}:${port}`;
 
 
 

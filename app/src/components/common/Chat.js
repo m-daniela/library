@@ -1,5 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
+import {io} from "socket.io-client";
 import { ChatContext } from '../../context/ChatContext';
+import { UserContext } from '../../context/UserContext';
 import { socketUrl } from '../../utils/constants';
 
 // the socket instance
@@ -9,34 +11,53 @@ const Message = ({message}) => {
     return <div className='message'>
         <span>{message.sender}</span>
         <div>{message.text}</div>
-        <span>{message.time}</span>
+        {/* <span>{message.time}</span> */}
     </div>;
 };
 
 const Chat = () => {
+    const {user} = useContext(UserContext);
     const [messages, setMessages] = useState([]);
-    // const {messages, addMessage} = useContext(ChatContext);
     const [message, setMessage] = useState("");
 
     // socket logic on mount
     useEffect(() => {
         // initialize the socket if it isn't already
         if (!socket){
-            socket = new WebSocket(socketUrl);
+            // socket = new WebSocket(socketUrl);
+            socket = io(socketUrl, { path: "/socket/socket.io", transports: ['websocket', 'polling'] });
+            // socket = io.connect(socketUrl);
         }
-        socket.onmessage = onMessage;
+        socket.on("connect", () => console.log("connected", socket.id)); 
+        // bind the message handler
+        // socket.onmessage = onMessage;
 
-        socket.onopen = () => socket.send("Connected");
-        return socket.onclose = () => socket.send("Disconnected");
+        // send a message when the user connects
+        // socket.onopen = () => socket.send("Connected");
+
+        // send a message when the user disconnects 
+        // return socket.onclose = () => socket.send(JSON.stringify({message: "Disconnected"}));
+        return socket.on("disconnect", () => console.log("disconnected", socket.id)); 
+        
     }, []);
 
-    // get the message data
+
+    useEffect(() => {
+        socket.on("message", (data) => {
+            console.log(data, "from socket");
+        });
+    }, [socket]);
+
+    // get the message data when a message is received
     const onMessage = (e) => {
         const socketMessage = JSON.parse(e.data);
         console.log(socketMessage, "socket");
-        // const currentMessages = messages.slice();
-        // currentMessages.push(socketMessage);
-        // setMessages(currentMessages);
+        // if the receiver is the current user, add
+        // the message to the list
+        if (socketMessage.receiver === user.email){
+            
+            setMessages([...messages, socketMessage]);
+        }
     };
 
 
@@ -44,16 +65,17 @@ const Chat = () => {
         e.preventDefault();
         const preparedMessage = {
             text: message, 
-            time: Date.now(),
-            sender: "meh"
+            // time: Date.now(),
+            sender: user.email,
+            receiver: "contact@library.com"
         };
-        const currentMessages = messages.slice();
-        currentMessages.push(preparedMessage);
-        setMessages(currentMessages);
-        console.log(preparedMessage, "client");
+        // setMessages([...messages, preparedMessage]);
 
-        socket.send(message);
-        // socket.emit("message", message);
+        // const currentMessages = messages.slice();
+        // currentMessages.push(preparedMessage);
+        // setMessages(currentMessages);
+        console.log(preparedMessage, "client");
+        socket.emit("message", preparedMessage);
     };
     
     return (

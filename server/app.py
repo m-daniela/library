@@ -12,10 +12,12 @@ from exception import CustomError, custom_unauthorized_exception
 from authentication import secret, algorithm, authenticate_user, create_access_token
 # from background_tasks.emails import return_book_email, send_email
 from tasks import deleted_registration, send_email, return_book_email
-# import tasks
-
+from sockets import socket_app
 
 app = FastAPI()
+
+
+
 
 connection.Base.metadata.create_all(bind=connection.engine)
 
@@ -51,6 +53,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# connect the socket app to an endpoint
+app.mount("/socket", socket_app)
 
 # get the currently authenticated user
 
@@ -285,28 +290,34 @@ def delete_registration(*, registration: RegistrationBaseSchema, db: Session = D
 
 ########## websockets ##########
 
-@app.websocket("/socket")
-async def contact(websocket: WebSocket):
-    await websocket.accept()
-    while True:
-        try:
-            data = await websocket.receive_text()
-            # sleep(1)
-            print(data)
-            message = {
-                "sender": "hehe", 
-                "time": 12342352,
-                "text": data
-            }
-            await websocket.send_json(message)
-        except:
-            message = {
-                "sender": "hehe", 
-                "time": 12342352,
-                "text": "Disconnecting"
-            }
-            await websocket.send_json(message)
-            websocket.close()
-            break
+# @app.websocket("/socket")
+# async def contact(websocket: WebSocket):
+#     # add connection
+#     await socketsManager.connect(websocket)
+
+#     try: 
+#         while True:
+#             data = await websocket.receive_json()
+#             await 
+#     while True:
+#         try:
+#             data = await websocket.receive_json()
+#             # sleep(1)
+#             print(data.get("text"))
+#             message = {
+#                 "sender": data.get("receiver"),
+#                 "receiver": data.get("sender"),
+#                 # "time": 12342352,
+#                 "text": data.get("text")
+#             }
+#             await websocket.send_json(message)
+#         except Exception as e:
+#             print(e)
+#             message = {
+#                 "text": "Disconnecting"
+#             }
+#             await websocket.send_json(message)
+#             await websocket.close()
+#             break
 
 
