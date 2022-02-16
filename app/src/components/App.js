@@ -15,10 +15,7 @@ import BookDetails from './common/BookDetails';
 import ChangePassword from './user/ChangePassword';
 import Report from './common/Report';
 import UserRegistrations from './admin/UserRegistrations';
-import Chat from './common/Chat';
-import ChatProvider from '../context/ChatContext';
 import ContactProvider from '../context/ContactContext';
-import ContactChat from './contact/ContactChat';
 import ContactRoute from './routes/ContactRoute';
 import SocketProvider from '../context/SocketContext';
 

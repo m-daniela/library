@@ -1,5 +1,7 @@
 import React, { useContext } from 'react';
+import { Navigate } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
+import { routes } from '../../utils/constants';
 import ContactChat from '../contact/ContactChat';
 import UserChat from '../user/UserChat';
 
@@ -10,7 +12,7 @@ import UserChat from '../user/UserChat';
  */
 const ContactRoute = () => {
     const {isLogged, user} = useContext(UserContext);
-    return isLogged && user.email === "contact@library.com" ? <ContactChat /> : <UserChat />;
+    return isLogged ? (user.email === "contact@library.com" ? <ContactChat /> : <UserChat />) : <Navigate to={routes.login}/>;
 };
 
 export default ContactRoute;

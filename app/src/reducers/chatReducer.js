@@ -25,7 +25,7 @@ export const initialState = {};
 
 export const reducer = (state, action) => {
     if (action.type == chatActions.addChat){
-        const currentState = state.slice();
+        const currentState = JSON.parse(JSON.stringify(state));
         currentState[action.payload.email] = [action.payload.message];
         return currentState;
     }
@@ -33,7 +33,7 @@ export const reducer = (state, action) => {
         console.log(action.payload);
         const email = action.payload.email;
         const message = action.payload.message;
-        const currentState = state.slice();
+        const currentState = JSON.parse(JSON.stringify(state));
         currentState[email].messages.push(message);
         return currentState;
     }

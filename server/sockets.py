@@ -9,7 +9,7 @@ socket_app = socketio.ASGIApp(sio)
 @sio.on("connect")
 async def connect(sid, environ, auth):
     # auth is the email of the user
-    print(f"User with socket id {sid} has connected")
+    print(f"User with socket id {sid} has connected {auth}")
     sio.enter_room(sid, room=auth)
     
 
