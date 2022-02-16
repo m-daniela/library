@@ -16,9 +16,6 @@ from sockets import socket_app
 
 app = FastAPI()
 
-
-
-
 connection.Base.metadata.create_all(bind=connection.engine)
 
 # get the database session

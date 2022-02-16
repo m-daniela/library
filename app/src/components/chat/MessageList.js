@@ -3,7 +3,8 @@ import Message from './Message';
 
 /**
  * Message list
- * Display the list of messages
+ * Display the list of messages given by 
+ * the parent component
  * @returns 
  */
 const MessageList = ({messages}) => {

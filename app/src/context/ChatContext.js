@@ -1,24 +1,17 @@
-import React, { createContext, useState } from 'react';
-
+import React, { createContext, useReducer } from 'react';
+import { reducer } from '../reducers/chatReducer';
 
 /**
- * Chat context
- * Hold the messages here, for now
+ * Contact context
+ * Holds the conversations for the context
  */
 export const ChatContext = createContext();
 
 const ChatProvider = ({children}) => {
-    // const [messages, setMessages] = useState([]);
-    const messages = [];
-
-    const addMessage = (message) =>{
-        console.log(messages);
-        messages.push(message);
-        // setMessages([...messages, message]);
-    };
+    const [chats, dispatch] = useReducer(reducer, {});
 
     return (
-        <ChatContext.Provider value={{messages, addMessage}}>
+        <ChatContext.Provider value={{chats, dispatch}}>
             {children}
         </ChatContext.Provider>
     );

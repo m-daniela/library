@@ -3,6 +3,11 @@ import { UserContext } from '../../context/UserContext';
 import { getUserReport } from '../../utils/serverCalls';
 import Registration from './Registration';
 
+/**
+ * Display the books the current user 
+ * has borrowed in the past week
+ * @returns 
+ */
 const Report = () => {
     const {user} = useContext(UserContext);
     const [report, setReport] = useState([]);

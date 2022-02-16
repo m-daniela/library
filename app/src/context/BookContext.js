@@ -3,6 +3,12 @@ import { actions, reducer } from '../reducers/bookReducer';
 import { getBooks, getRegistrations } from '../utils/serverCalls';
 import { UserContext } from './UserContext';
 
+
+/**
+ * Book context
+ * Holds the list of borrowed books and 
+ * the list of available books
+ */
 export const BookContext = createContext();
 
 

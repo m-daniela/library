@@ -1,39 +1,52 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { UserContext } from '../../context/UserContext';
 import { SocketContext } from '../../context/SocketContext';
 import MessageList from '../chat/MessageList';
 import MessageInput from '../chat/MessageInput';
+import { ChatContext } from '../../context/ChatContext';
+import { chatActions } from '../../reducers/chatReducer';
 
-
+/**
+ * User chat component
+ * Contains the components for the normal chat
+ * (MessageList, MessageInput) and sets the "on
+ * message" event handler for the normal users
+ * @returns 
+ */
 const UserChat = () => {
     const {user} = useContext(UserContext);
     const {socket} = useContext(SocketContext);
-    const [messages, setMessages] = useState([]);
+    const {chats, dispatch} = useContext(ChatContext);
 
     useEffect(() => {
-        socket.on("message", (data) => {
-            console.log(data, "from socket");
-            setMessages([...messages, data]);
-        });
+        if (socket){
+            socket.on("message", (data) => {
+                dispatch({type: chatActions.addMessage, payload: {email: "contact", message: data}});
+            });
+        }
     }, []);
 
     const sendMessage = (message) => {
-        const preparedMessage = {
-            text: message, 
-            // time: Date.now(),
-            sender: user.email,
-            receiver: "contact@library.com"
-        };
+        if (socket){
+            const preparedMessage = {
+                text: message, 
+                // time: Date.now(),
+                sender: user.email,
+                receiver: "contact@library.com"
+            };
 
-        console.log(preparedMessage, "client");
-        socket.emit("message", preparedMessage);
+            socket.emit("message", preparedMessage);
+            dispatch({type: chatActions.addMessage, payload: {email: "contact", message: preparedMessage}});
+
+        }
+        
     };
     
     return (
         <div className='homepage'>
             <h2>Chat</h2>
             <span>Welcome to the chat</span>
-            <MessageList messages={messages}/>
+            <MessageList messages={chats["contact"]}/>
             <MessageInput sendMessage={sendMessage} />
         </div>
     );

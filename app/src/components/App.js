@@ -15,7 +15,7 @@ import BookDetails from './common/BookDetails';
 import ChangePassword from './user/ChangePassword';
 import Report from './common/Report';
 import UserRegistrations from './admin/UserRegistrations';
-import ContactProvider from '../context/ContactContext';
+import ChatProvider from '../context/ChatContext';
 import ContactRoute from './routes/ContactRoute';
 import SocketProvider from '../context/SocketContext';
 
@@ -31,7 +31,7 @@ function App() {
                 <UserProvider>
                     <BookProvider>
                         <SocketProvider>
-                            <ContactProvider>
+                            <ChatProvider>
                                 <Header />
                 
                                 <Routes>
@@ -91,7 +91,7 @@ function App() {
                                     } />
 
                                 </Routes>
-                            </ContactProvider>
+                            </ChatProvider>
                         </SocketProvider>
                     </BookProvider>
                 </UserProvider>

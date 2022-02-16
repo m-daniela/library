@@ -1,6 +1,21 @@
 
+
+.contact-chat{
+    display: flex;
+    margin-top: 1.5em;
+}
+
+.side{
+    div{
+        padding: 1em;
+        margin: 1em;
+        border-bottom: 1px solid var(--highlight);
+    }
+}
+
 .chat{
     width: 100%;
+    width: 300px;
     height: 500px;
     overflow: scroll;
     border: 1px solid var(--highlight);

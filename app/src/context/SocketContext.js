@@ -1,29 +1,27 @@
-import React, { createContext, useContext, useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import {io} from "socket.io-client";
 import { socketUrl } from '../utils/constants';
 import { UserContext } from './UserContext';
 
-
-let socket;
-
+/**
+ * Socket context
+ * Creates the connection and initializes the 
+ * socket that will be used for the chat 
+ */
 export const SocketContext = createContext();
 
 const SocketProvider = ({children}) => {
     const {user} = useContext(UserContext);
+    const [socket, setSocket] = useState(null);
 
     useEffect(() => {
         if (user){
-            // initialize the socket if it isn't already
-            if (!socket){
-                socket = io(socketUrl, { path: "/socket/socket.io", transports: ['websocket', 'polling'], auth: user.email });
-            }
-            socket.on("connect", () => console.log("connected", socket.id)); 
-
+            const socketInit = io(socketUrl, { path: "/socket/socket.io", transports: ['websocket', 'polling'], auth: user.email });
+            socketInit.on("connect", () => console.log("connected", socketInit.id)); 
+            setSocket(socketInit);
         }
-        
-
-        
     }, [user]);
+
 
     return (
         <SocketContext.Provider value={{socket}}>

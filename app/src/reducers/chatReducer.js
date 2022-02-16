@@ -7,35 +7,43 @@
  * data:
  * 
  * chats = {
- *  email1: {
- *      messages: [{}, {}, {}]
- * }, 
- *  email2: {
- *      messages: [{}]
- * }, ...
+ *  email1: [{}, {}, {}], 
+ *  email2: [{}], ...
  * }
+ * 
+ * In case of normal users, the data
+ * format is the same, but the only 
+ * entry is "contact": [...]
  */
 
 export const chatActions = {
     addMessage: "add_message", 
-    addChat: "add_chat"
+    clear: "clear"
 };
 
 export const initialState = {};
 
-export const reducer = (state, action) => {
-    if (action.type == chatActions.addChat){
-        const currentState = JSON.parse(JSON.stringify(state));
-        currentState[action.payload.email] = [action.payload.message];
-        return currentState;
+const prepareMessage = (state, email, message) => {
+    // prepare the message
+    // if the chat isn't registered, add it and add the message
+    // otherwise, just append it to the list of existing messages
+    if (state[email]){
+        state[email].push(message);
     }
-    else if (action.type == chatActions.addMessage){
-        console.log(action.payload);
-        const email = action.payload.email;
-        const message = action.payload.message;
+    else{
+        state[email] = [message];
+    }
+    return state;
+};
+
+export const reducer = (state, action) => {
+    if (action.type == chatActions.addMessage){
         const currentState = JSON.parse(JSON.stringify(state));
-        currentState[email].messages.push(message);
-        return currentState;
+        const {email, message} = action.payload;
+        return prepareMessage(currentState, email, message);
+    }
+    else if(action.type == chatActions.clear){
+        return {};
     }
     else{
         return state;

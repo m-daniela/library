@@ -9,7 +9,7 @@ import React from 'react';
 const Sidebar = ({chats, selectChat}) => {
     
     return (
-        <div className='chat'>
+        <div className='side'>
             {chats?.map((email) => <div key={email} onClick={() => selectChat(email)}>{email}</div>)}
         </div>
     );

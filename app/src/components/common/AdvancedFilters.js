@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
 
+/**
+ * Advanced filters component
+ * Search, sort and filter the list of books based
+ * on the given criteria (orderBy, filters)
+ * @param {*} param0 
+ * @returns 
+ */
 const AdvancedFilters = ({filterBooks, orderBy, filters}) => {
     const [search, setSearch] = useState("");
     const [order, setOrder] = useState("");

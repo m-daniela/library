@@ -6,9 +6,12 @@ import ContactChat from '../contact/ContactChat';
 import UserChat from '../user/UserChat';
 
 /**
- * Restricted admin routes
- * If the user is not an admin and wants to access
- * a certain route, redirect to the homepage
+ * Restricted contact route
+ * If the user logs in with the contact email, 
+ * show a more advanced chat page, otherwise 
+ * show the normal user chat page
+ * The user is redirected to the homepage if 
+ * not logged in
  */
 const ContactRoute = () => {
     const {isLogged, user} = useContext(UserContext);

@@ -4,7 +4,7 @@ import React, { useState } from 'react';
  * Message input
  * Sends the message to the parent component
  * to handle the sending part
- * @param {*} param0 
+ * @param {*} sendMessage 
  * @returns 
  */
 const MessageInput = ({sendMessage}) => {

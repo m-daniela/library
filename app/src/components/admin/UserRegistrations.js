@@ -1,5 +1,4 @@
-import React, { useContext, useState } from 'react';
-import { UserContext } from '../../context/UserContext';
+import React, { useState } from 'react';
 import { deleteRegistration, getRegistrations } from '../../utils/serverCalls';
 import DetailedRegistration from '../common/DetailedRegistration';
 
@@ -11,8 +10,6 @@ import DetailedRegistration from '../common/DetailedRegistration';
  * @returns 
  */
 const UserRegistrations = () => {
-    const {user} = useContext(UserContext);
-
     const [email, setEmail] = useState("");
     const [registrations, setRegistrations] = useState([]);
 
@@ -46,7 +43,6 @@ const UserRegistrations = () => {
             })
             .catch(error => {
                 console.log(error);
-
             });
 
     };

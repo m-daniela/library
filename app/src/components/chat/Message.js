@@ -3,7 +3,7 @@ import React from "react";
 /**
  * Message component
  * Display the message data
- * @param {*} param0 
+ * @param {*} message 
  * @returns 
  */
 const Message = ({message}) => {
