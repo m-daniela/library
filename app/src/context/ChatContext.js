@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useReducer } from 'react';
 import { chatActions, initialState, reducer } from '../reducers/chatReducer';
-import { getChatMessages, getContactChats } from '../utils/serverCalls';
+import { getContactChats } from '../utils/serverCalls';
 import { UserContext } from './UserContext';
 
 /**

@@ -1,9 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { ChatContext } from '../../context/ChatContext';
 import { SocketContext } from '../../context/SocketContext';
-import { UserContext } from '../../context/UserContext';
 import { chatActions } from '../../reducers/chatReducer';
-import { addContactMessage, getChatMessages, getContactChats } from '../../utils/serverCalls';
+import { addContactMessage, getChatMessages } from '../../utils/serverCalls';
 import MessageInput from '../chat/MessageInput';
 import MessageList from '../chat/MessageList';
 import Sidebar from '../chat/Sidebar';
@@ -32,18 +31,22 @@ const ContactChat = () => {
 
     const retrieveMessages = (chat) => {
         setSelectedChat(chat);
-        if (!chats.messages[chat]){
-            getChatMessages(chat)
-                .then(data => {
-                    // console.log(data);
-                    if (data?.length){
-                        dispatch({type: chatActions.loadMessages, payload: {[chat]: data}});
-                    }
-                })
-                .catch(error => {
-                    console.log(error);
-                });
+        console.log(chats.messages[chat], chat, 124);
+        if (!chats.chats.find(elem => elem.room_name === chat)){
+            dispatch({type: chatActions.addChat, payload: chat});
         }
+        // if (!chats.messages[chat]){
+        getChatMessages(chat)
+            .then(data => {
+                // console.log(data);
+                if (data?.length){
+                    dispatch({type: chatActions.loadMessages, payload: {[chat]: data}});
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            });
+        // }
     };
 
     const sendMessage = (message) => {

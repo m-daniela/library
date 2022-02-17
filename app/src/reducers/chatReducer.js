@@ -21,7 +21,8 @@ export const chatActions = {
     addMessage: "add_message", 
     clear: "clear", 
     loadData: "load_data", 
-    loadMessages: "load_messages"
+    loadMessages: "load_messages",
+    addChat: "add_chat"
 };
 
 export const initialState = {
@@ -49,7 +50,12 @@ export const reducer = (state, action) => {
         const chats = action.payload;
         return {...state, chats};
     }
-    if (action.type == chatActions.loadMessages){
+    else if (action.type == chatActions.addChat){
+        let {chats} = state;
+        chats = [...chats, action.payload];
+        return {...state, chats};
+    }
+    else if (action.type == chatActions.loadMessages){
         let {messages} = state;
         messages = {...messages, ...action.payload};
         return {...state, messages};
