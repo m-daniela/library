@@ -3,7 +3,7 @@ import jwt_decode from "jwt-decode";
 import { addBookUrl, changePasswordUrl, 
     checkinUrl, checkoutUrl, getBooksUrl, 
     getFilteredBooksUrl, getFilteredRegistrationsUrl, 
-    getReport, getRegistrationsUrl, loginUrl, registerUrl, deleteRegistrationUrl, updateBookUrl, getChatsUrl, addMessageUrl } from "./constants";
+    getReport, getRegistrationsUrl, loginUrl, registerUrl, deleteRegistrationUrl, updateBookUrl, getChatsUrl, addMessageUrl, getMessagesUrl } from "./constants";
 
 /** 
  * authentication header with the bearer token 
@@ -256,7 +256,11 @@ export const deleteRegistration = async (email, bookId) => {
 };
 
 
-
+/**
+ * add message
+ * @param {*} message 
+ * @returns 
+ */
 export const addContactMessage = async (message) => {
     console.log(message);
     return axios.post(addMessageUrl, {text: message.text, sender: message.sender, receiver: message.receiver, room_name: message.room}, authHeaders())
@@ -270,10 +274,31 @@ export const addContactMessage = async (message) => {
         });
 };
 
-
+/**
+ * get chats with messages
+ * @param {*} token 
+ * @returns 
+ */
 export const getContactChats = async (token) => {
     console.log(token);
     return axios.get(getChatsUrl, authHeaders(token))
+        .then(response => {
+            console.log(response.data);
+            return response.data.data;
+        })
+        .catch(error => {
+            console.log(error);
+            // throw error.response.data;
+        });
+};
+
+/**
+ * get messages for a given room
+ * @param {*} room_name 
+ * @returns 
+ */
+export const getChatMessages = async (room_name) => {
+    return axios.post(getMessagesUrl, {room_name}, authHeaders())
         .then(response => {
             console.log(response.data);
             return response.data.data;

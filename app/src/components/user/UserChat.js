@@ -5,7 +5,7 @@ import MessageList from '../chat/MessageList';
 import MessageInput from '../chat/MessageInput';
 import { ChatContext } from '../../context/ChatContext';
 import { chatActions } from '../../reducers/chatReducer';
-import { addContactMessage } from '../../utils/serverCalls';
+import { addContactMessage, getChatMessages } from '../../utils/serverCalls';
 
 /**
  * User chat component
@@ -26,6 +26,17 @@ const UserChat = () => {
             });
         }
     }, []);
+
+    useEffect(() => {
+        getChatMessages(user.email)
+            .then(data => {
+                console.log(data);
+                dispatch({type: chatActions.load_data, payload: {"contact": data}});
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }, [user]);
 
     const sendMessage = (message) => {
         if (socket){

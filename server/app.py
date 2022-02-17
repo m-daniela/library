@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from jose import JWTError, jwt
 
 import connection, queries
-from schemas import MessageSchema, ResponseModelSchema, TokenDataSchema, UserLoginSchema, UserCreateSchema, BookUpdateSchema, BookSchema, RegistrationBaseSchema
+from schemas import MessageSchema, ResponseModelSchema, RoomSchema, TokenDataSchema, UserLoginSchema, UserCreateSchema, BookUpdateSchema, BookSchema, RegistrationBaseSchema
 from exception import CustomError, custom_unauthorized_exception
 from authentication import secret, algorithm, authenticate_user, create_access_token
 # from background_tasks.emails import return_book_email, send_email
@@ -296,11 +296,24 @@ def get_chats(db: Session = Depends(get_database)):
     """
     try:
         chats = queries.get_chats(db)
-        # return chats
         return ResponseModelSchema(data=chats)
     except CustomError as e:
         return ResponseModelSchema(message=str(e))
     
+
+@app.post("/messages", dependencies=[Depends(normal_user)])
+def get_chats(room_name: RoomSchema, db: Session = Depends(get_database)):
+    """
+    Get the chats and messages for the contact account
+    """
+    try:
+        print(room_name, room_name.room_name)
+        messages = queries.get_messages(db, room_name.room_name)
+
+        return ResponseModelSchema(data=messages)
+    except CustomError as e:
+        return ResponseModelSchema(message=str(e))
+
 
 @app.post("/message", dependencies=[Depends(normal_user)])
 def get_chats(message: MessageSchema, db: Session = Depends(get_database)):
@@ -308,9 +321,7 @@ def get_chats(message: MessageSchema, db: Session = Depends(get_database)):
     Add a message
     """
     try:
-        print(message)
         added_message = queries.add_message(db, message)
-        # print(message)
         return ResponseModelSchema(data=added_message)
     except CustomError as e:
         return ResponseModelSchema(message=str(e))

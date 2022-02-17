@@ -8,6 +8,7 @@ import Message from './Message';
  * @returns 
  */
 const MessageList = ({messages}) => {
+    console.log(messages);
     return (
         <div className='chat'>
             {messages?.map((message, index) => <Message key={index} message={message} />)}

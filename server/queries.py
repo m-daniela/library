@@ -252,6 +252,11 @@ def delete_registration(db: Session, email: str, book_id: int):
 # messages
 
 def get_room(db: Session, room: str):
+    """
+    Get the room with the given name
+    If it doesn't exist, add it to the 
+    database and return the result
+    """
     found_room = db.query(Room).filter(Room.room_name == room).first()
 
     if not found_room:
@@ -265,6 +270,9 @@ def get_room(db: Session, room: str):
 
 
 def add_message(db: Session, message: MessageSchema) -> MessageSchema:
+    """
+    Add a new message 
+    """
     room = get_room(db, message.room_name)
     new_message = Message(room_name=room.room_name, sender=message.sender, receiver=message.receiver, text=message.text)
     db.add(new_message)
@@ -276,9 +284,22 @@ def add_message(db: Session, message: MessageSchema) -> MessageSchema:
 
 
 def get_messages(db: Session, room: str):
-    return db.query(Message).filter(Message.room_name == room).all()
+    """
+    Get the messages from a specific room
+    """
+    result = db.query(Room).filter(Room.room_name == room).first()
+    if not result: 
+        return []
+    return result.messages
+    # return db.query(Room).join(Message).filter(Room.room_name == room).all()
+    # return db.query(Message).filter(Message.room_name == room).all()
 
 def get_chats(db: Session):
-    result = db.query(Room).all()
-    print(result)
+    """
+    Get all chats and the messages
+    """
+    result = db.query(Room).join(Message).all()
+    # print(r)
+    # result = db.query(Room).all()
+    # print(result)
     return result

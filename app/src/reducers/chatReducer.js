@@ -16,12 +16,19 @@
  * entry is "contact": [...]
  */
 
+import { actions } from "./bookReducer";
+
 export const chatActions = {
     addMessage: "add_message", 
-    clear: "clear"
+    clear: "clear", 
+    load_data: "load_data"
 };
 
 export const initialState = {};
+
+export const initialization = (chats) => {
+    return chats;
+};
 
 const prepareMessage = (state, email, message) => {
     // prepare the message
@@ -37,7 +44,10 @@ const prepareMessage = (state, email, message) => {
 };
 
 export const reducer = (state, action) => {
-    if (action.type == chatActions.addMessage){
+    if (action.type == actions.load_data){
+        return action.payload;
+    }
+    else if (action.type == chatActions.addMessage){
         const currentState = JSON.parse(JSON.stringify(state));
         const {email, message} = action.payload;
         return prepareMessage(currentState, email, message);
