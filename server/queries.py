@@ -298,7 +298,7 @@ def get_chats(db: Session):
     """
     Get all chats and the messages
     """
-    result = db.query(Room).join(Message).all()
+    result = db.query(Room.room_name).all()
     # print(r)
     # result = db.query(Room).all()
     # print(result)

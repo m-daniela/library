@@ -31,12 +31,14 @@ const UserChat = () => {
         getChatMessages(user.email)
             .then(data => {
                 console.log(data);
-                dispatch({type: chatActions.load_data, payload: {"contact": data}});
+                if (data?.length){
+                    dispatch({type: chatActions.loadMessages, payload: {"contact": data}});
+                }
             })
             .catch(error => {
                 console.log(error);
             });
-    }, [user]);
+    }, []);
 
     const sendMessage = (message) => {
         if (socket){
@@ -50,16 +52,14 @@ const UserChat = () => {
             addContactMessage(preparedMessage);
             socket.emit("message", preparedMessage);
             dispatch({type: chatActions.addMessage, payload: {email: "contact", message: preparedMessage}});
-
         }
-        
     };
     
     return (
         <div className='homepage'>
             <h2>Chat</h2>
             <span>Welcome to the chat</span>
-            <MessageList messages={chats["contact"]}/>
+            <MessageList messages={chats.messages["contact"]}/>
             <MessageInput sendMessage={sendMessage} />
         </div>
     );

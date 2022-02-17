@@ -3,7 +3,7 @@ import { ChatContext } from '../../context/ChatContext';
 import { SocketContext } from '../../context/SocketContext';
 import { UserContext } from '../../context/UserContext';
 import { chatActions } from '../../reducers/chatReducer';
-import { addContactMessage, getContactChats } from '../../utils/serverCalls';
+import { addContactMessage, getChatMessages, getContactChats } from '../../utils/serverCalls';
 import MessageInput from '../chat/MessageInput';
 import MessageList from '../chat/MessageList';
 import Sidebar from '../chat/Sidebar';
@@ -16,7 +16,6 @@ import Sidebar from '../chat/Sidebar';
  * @returns 
  */
 const ContactChat = () => {
-    const {user} = useContext(UserContext);
     const {chats, dispatch} = useContext(ChatContext);
     const {socket} = useContext(SocketContext);
     const [selectedChat, setSelectedChat] = useState("");
@@ -30,13 +29,22 @@ const ContactChat = () => {
         }
     }, []);
 
-    useEffect(() => {
-        if (user){
-            console.log(user.token, 111);
-            getContactChats(user.token);
+
+    const retrieveMessages = (chat) => {
+        setSelectedChat(chat);
+        if (!chats.messages[chat]){
+            getChatMessages(chat)
+                .then(data => {
+                    // console.log(data);
+                    if (data?.length){
+                        dispatch({type: chatActions.loadMessages, payload: {[chat]: data}});
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                });
         }
-        
-    }, [user]);
+    };
 
     const sendMessage = (message) => {
         if(socket){
@@ -62,10 +70,10 @@ const ContactChat = () => {
             <h2>Chat</h2>
             <span>Select a chat from the sidebar</span>
             <div className='contact-chat'>
-                <Sidebar chats={Object.keys(chats)} selectChat={setSelectedChat} />
+                <Sidebar chats={chats.chats} retrieveMessages={retrieveMessages} />
                 { selectedChat.length !== 0 && 
                 <div>
-                    <MessageList messages={chats[selectedChat]} />
+                    <MessageList messages={chats.messages[selectedChat]} />
                     <MessageInput sendMessage={sendMessage}/>
                 </div>
                 }
