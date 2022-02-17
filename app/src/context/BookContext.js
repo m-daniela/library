@@ -24,8 +24,9 @@ const BookProvider = ({children}) => {
                     if (data?.length){
                         dispatch({type: actions.load_data, payload: data});
                     }
-                    dispatch({type: actions.load_data, payload: []});
-
+                    else{
+                        dispatch({type: actions.load_data, payload: []});
+                    }
                 })
                 .catch(error => {
                     console.log(error);

@@ -1,3 +1,4 @@
+from optparse import Option
 from typing import List, Optional, Union
 from pydantic import BaseModel
 from datetime import datetime
@@ -49,10 +50,19 @@ class RegistrationSchema(RegistrationBaseSchema):
 # message
 
 class MessageSchema(BaseModel):
-    id: int
+    id: Optional[str] = None
+    text: str
     sender: str
     receiver: str
-    text: str
+    room_name: str
+
+    class Config:
+        orm_mode = True
+
+# room
+
+class RoomSchema(BaseModel):
+    room_name: str
 
     class Config:
         orm_mode = True
@@ -71,7 +81,7 @@ class TokenSchema(BaseModel):
 
 class ResponseModelSchema(BaseModel):
     message: Optional[str]
-    data: Optional[Union[dict, list, BookSchema, RegistrationSchema]]
+    data: Optional[Union[dict, list, BookSchema, RegistrationSchema, MessageSchema]]
 
 
 # filter builder

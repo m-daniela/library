@@ -17,7 +17,6 @@ const Report = () => {
             .then(data => {
                 if (data?.length){
                     setReport(data);
-                    setReport([]);
                 }
             })
             .catch(error => {

@@ -3,7 +3,7 @@ import jwt_decode from "jwt-decode";
 import { addBookUrl, changePasswordUrl, 
     checkinUrl, checkoutUrl, getBooksUrl, 
     getFilteredBooksUrl, getFilteredRegistrationsUrl, 
-    getReport, getRegistrationsUrl, loginUrl, registerUrl, deleteRegistrationUrl, updateBookUrl, getChatsUrl } from "./constants";
+    getReport, getRegistrationsUrl, loginUrl, registerUrl, deleteRegistrationUrl, updateBookUrl, getChatsUrl, addMessageUrl } from "./constants";
 
 /** 
  * authentication header with the bearer token 
@@ -121,7 +121,10 @@ export const updateBook = async (bookId, description, cover, stock) => {
  */
 export const getBooks = async () => {
     return axios.get(getBooksUrl, authHeaders())
-        .then(response => response.data.data)
+        .then(response => {
+            console.log(response.data.data);
+            return response.data.data;
+        })
         .catch(error => {
             throw error.response.data;
         });
@@ -135,7 +138,7 @@ export const getBooks = async () => {
 export const getFilteredBooks = async (query, order, sort, filter) => {
     return axios.get(getFilteredBooksUrl(query, order, sort, filter), authHeaders())
         .then(response => {
-            // console.log(response.data);
+            console.log(response.data);
             return response.data.data;
         })
         .catch(error => {
@@ -254,10 +257,23 @@ export const deleteRegistration = async (email, bookId) => {
 
 
 
+export const addContactMessage = async (message) => {
+    console.log(message);
+    return axios.post(addMessageUrl, {text: message.text, sender: message.sender, receiver: message.receiver, room_name: message.room}, authHeaders())
+        .then(response => {
+            console.log(response.data);
+            return response.data.data;
+        })
+        .catch(error => {
+            console.log(error);
+            // throw error.response.data;
+        });
+};
+
 
 export const getContactChats = async (token) => {
     console.log(token);
-    return axios.post(getChatsUrl, {}, authHeaders(token))
+    return axios.get(getChatsUrl, authHeaders(token))
         .then(response => {
             console.log(response.data);
             return response.data.data;

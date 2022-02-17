@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from jose import JWTError, jwt
 
 import connection, queries
-from schemas import ResponseModelSchema, TokenDataSchema, UserLoginSchema, UserCreateSchema, BookUpdateSchema, BookSchema, RegistrationBaseSchema
+from schemas import MessageSchema, ResponseModelSchema, TokenDataSchema, UserLoginSchema, UserCreateSchema, BookUpdateSchema, BookSchema, RegistrationBaseSchema
 from exception import CustomError, custom_unauthorized_exception
 from authentication import secret, algorithm, authenticate_user, create_access_token
 # from background_tasks.emails import return_book_email, send_email
@@ -231,6 +231,7 @@ def get_registrations(email: str = Body(..., embed=True), db: Session = Depends(
     
     try:
         registrations = queries.get_report(db, email)
+        print(registrations)
         return ResponseModelSchema(data=registrations)
     except CustomError as e:
         return ResponseModelSchema(message=str(e))
@@ -288,16 +289,29 @@ def delete_registration(*, registration: RegistrationBaseSchema, db: Session = D
         return ResponseModelSchema(message=str(e))
     
 
-@app.post("/chats", dependencies=[Depends(normal_user)])
+@app.get("/chats", dependencies=[Depends(normal_user)])
 def get_chats(db: Session = Depends(get_database)):
     """
-    Delete a registration
-    Only an admin is allowed to perform this operation
+    Get the chats and messages for the contact account
     """
     try:
-        registration = queries.get_chats(db)
+        chats = queries.get_chats(db)
+        # return chats
+        return ResponseModelSchema(data=chats)
+    except CustomError as e:
+        return ResponseModelSchema(message=str(e))
+    
 
-        return ResponseModelSchema(data=registration)
+@app.post("/message", dependencies=[Depends(normal_user)])
+def get_chats(message: MessageSchema, db: Session = Depends(get_database)):
+    """
+    Add a message
+    """
+    try:
+        print(message)
+        added_message = queries.add_message(db, message)
+        # print(message)
+        return ResponseModelSchema(data=added_message)
     except CustomError as e:
         return ResponseModelSchema(message=str(e))
     

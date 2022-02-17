@@ -3,7 +3,7 @@ import { ChatContext } from '../../context/ChatContext';
 import { SocketContext } from '../../context/SocketContext';
 import { UserContext } from '../../context/UserContext';
 import { chatActions } from '../../reducers/chatReducer';
-import { getContactChats } from '../../utils/serverCalls';
+import { addContactMessage, getContactChats } from '../../utils/serverCalls';
 import MessageInput from '../chat/MessageInput';
 import MessageList from '../chat/MessageList';
 import Sidebar from '../chat/Sidebar';
@@ -44,12 +44,14 @@ const ContactChat = () => {
                 text: message, 
                 // time: Date.now(),
                 sender: "contact@library.com", 
+                room: selectedChat,
                 receiver: selectedChat
             };
             // add the message to the list 
             dispatch({type: chatActions.addMessage, payload: {email: selectedChat, message: preparedMessage}});
 
             socket.emit("message", preparedMessage);
+            addContactMessage(preparedMessage);
         }
     };
 

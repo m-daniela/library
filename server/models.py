@@ -1,4 +1,5 @@
-from sqlalchemy import CheckConstraint, Column, ForeignKey, Integer, String, DateTime
+from operator import index
+from sqlalchemy import CheckConstraint, Column, ForeignKey, Integer, String, DateTime, null
 from sqlalchemy.orm import relationship
 import datetime
 import connection
@@ -24,6 +25,10 @@ class Registration(connection.Base):
         return f"{self.email}, {self.book_id}, {self.checkin}, {self.checkout}"
 
 
+
+
+
+
 class User(connection.Base):
     __tablename__ = "users"
 
@@ -38,10 +43,20 @@ class User(connection.Base):
         passive_deletes=True
     )
 
-    messages = relationship(
-        "Message", 
-        back_populates="user"
-    )
+   
+
+
+    # sent_messages = relationship(
+    #     "Message", 
+    #     back_populates="sender", 
+    #     foreign_keys=[Message.sender_email]
+    # )
+
+    # received_messages = relationship(
+    #     "Message", 
+    #     back_populates="receiver",
+    #     foreign_keys=[Message.receiver_email]
+    # )
 
     def __str__(self) -> str:
         return f"{self.email}, {self.role}"
@@ -65,21 +80,41 @@ class Book(connection.Base):
 
 
 
+class Room(connection.Base):
+    __tablename__ = "rooms"
+
+    room_name = Column(String, primary_key=True, index=True)
+
+    messages = relationship(
+        "Message", 
+        back_populates="room"
+    )
 
 class Message(connection.Base):
     __tablename__ = "messages"
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     text = Column(String, nullable=False)
-    
-    email = Column(String, ForeignKey("user.email"))
-    user = relationship("User", back_populates="messages", foreign_keys=[email])
+    room_name = Column(ForeignKey("rooms.room_name"))
+    # room = Column(String, nullable=False)
+    sender = Column(String, nullable=False)
+    receiver = Column(String, nullable=False)
 
-    # receiver_email = Column(String, ForeignKey("user.email"))
-    # receiver = relationship("User", foreign_keys=[receiver_email])
+    room = relationship("Room", back_populates="messages")
+
+
+    # email = Column(ForeignKey("users.email"))
+    # user = relationship("User", back_populates="messages")
+
+    # sender_email = Column(String, ForeignKey("users.email"))
+    # sender = relationship("User", foreign_keys=[sender_email], back_populates="sent_messages")
+
+    # receiver_email = Column(String, ForeignKey("users.email"))
+    # receiver = relationship("User", foreign_keys=[receiver_email], back_populates="received_messages")
 
 
     def __str__(self) -> str:
         return f"{self.id}, {self.text}, sent by {self.sender}"
+
 
 

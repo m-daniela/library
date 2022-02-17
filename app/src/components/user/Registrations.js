@@ -24,6 +24,7 @@ const Registrations = () => {
     const searchBooks = (query, sort, order, filter) => {
         getFilteredRegistrations(user.email, query, sort, order, filter)
             .then(data => {
+                console.log(data);
                 if (data?.length){
                     setFilteredRegistrations(data);
                 }

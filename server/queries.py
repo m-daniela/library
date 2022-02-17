@@ -1,10 +1,11 @@
 import datetime
+from hashlib import new
 from typing import Optional
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 
 from schemas import BookUpdateSchema, FilterBuilder, MessageSchema, UserCreateSchema, UserLoginSchema, BookSchema
-from models import Message, User, Registration, Book
+from models import Message, Room, User, Registration, Book
 from exception import CustomError, custom_not_found_exception
 from authentication import password_hash
 
@@ -175,6 +176,8 @@ def get_report(db: Session, email: str):
         .order_by(Registration.checkout.desc())\
         .all()
 
+    print(result)
+
     return result
 
 
@@ -248,18 +251,34 @@ def delete_registration(db: Session, email: str, book_id: int):
 
 # messages
 
-def add_message(db: Session, message: MessageSchema):
-    new_message = Message(sender=message.sender, receiver=message.receiver, text=message.text)
+def get_room(db: Session, room: str):
+    found_room = db.query(Room).filter(Room.room_name == room).first()
 
+    if not found_room:
+        new_room = Room(room_name=room)
+        db.add(new_room)
+        db.commit()
+        db.refresh(new_room)
+        found_room = new_room
+    
+    return found_room
+
+
+def add_message(db: Session, message: MessageSchema) -> MessageSchema:
+    room = get_room(db, message.room_name)
+    new_message = Message(room_name=room.room_name, sender=message.sender, receiver=message.receiver, text=message.text)
     db.add(new_message)
     db.commit()
     db.refresh(new_message)
+    print(new_message)
 
     return new_message
 
 
-def get_messages(db: Session, sender: str, receiver: str):
-    return db.query(Message).filter(Message.sender == sender, Message.receiver == receiver).all()
+def get_messages(db: Session, room: str):
+    return db.query(Message).filter(Message.room_name == room).all()
 
 def get_chats(db: Session):
-    return db.query(Message).all()
+    result = db.query(Room).all()
+    print(result)
+    return result

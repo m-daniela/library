@@ -5,6 +5,7 @@ import MessageList from '../chat/MessageList';
 import MessageInput from '../chat/MessageInput';
 import { ChatContext } from '../../context/ChatContext';
 import { chatActions } from '../../reducers/chatReducer';
+import { addContactMessage } from '../../utils/serverCalls';
 
 /**
  * User chat component
@@ -32,9 +33,10 @@ const UserChat = () => {
                 text: message, 
                 // time: Date.now(),
                 sender: user.email,
+                room: user.email, 
                 receiver: "contact@library.com"
             };
-
+            addContactMessage(preparedMessage);
             socket.emit("message", preparedMessage);
             dispatch({type: chatActions.addMessage, payload: {email: "contact", message: preparedMessage}});
 
