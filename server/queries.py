@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func
 
 from schemas import BookUpdateSchema, FilterBuilder, MessageSchema, UserCreateSchema, UserLoginSchema, BookSchema
-from models import Message, Room, User, Registration, Book
+from models import Message, Room, Tag, User, Registration, Book
 from exception import CustomError, custom_not_found_exception
 from authentication import password_hash
 
@@ -47,9 +47,16 @@ def add_book(db: Session, book: BookSchema):
     Add a new book
     """
     new_book = Book(cover=book.cover, title=book.title, description=book.description, stock=book.stock)
+
+    for tag in book.tags:
+        if len(tag) != 0:
+            current_tag = add_tag(db, tag)
+            new_book.tags.append(current_tag)
+
     db.add(new_book)
     db.commit()
     db.refresh(new_book)
+    
     return new_book
 
 
@@ -62,6 +69,11 @@ def update_book(db: Session, book_id: int, book: BookUpdateSchema):
     old_book.cover = book.cover
     old_book.description = book.description
     old_book.stock = book.stock
+
+    for tag in book.tags:
+        if len(tag) != 0:
+            current_tag = add_tag(db, tag)
+            old_book.tags.append(current_tag)
 
     db.commit()
     db.refresh(old_book)
@@ -122,14 +134,6 @@ def update_book_stock(db: Session, book: Book, stock: int):
 
 
 # registrations
-
-# def get_registrations(db: Session, email: str):
-#     """
-#     Get all registrations for a user
-#     """
-#     user = get_user(db, email)
-#     books = user.books
-#     return books
 
 
 def get_filtered_registrations(db: Session, email: str, query: Optional[str], order: Optional[str], sorting: Optional[str], filter: Optional[int]):
@@ -303,3 +307,36 @@ def get_chats(db: Session):
     # result = db.query(Room).all()
     # print(result)
     return result
+
+
+# tags
+
+def add_tag(db: Session, tag: str):
+    """
+    Search for the given tag and, if not found,
+    add it to the database
+    """
+    search_tag = db.query(Tag).filter(Tag.genre == tag).first()
+    if not search_tag:
+        new_tag = Tag(genre=tag)
+        db.add(new_tag)
+        db.commit()
+        db.refresh(new_tag)
+        return new_tag
+    return search_tag
+
+
+def search_tags(db: Session, search: str):
+    """
+    Search the tag based on the given string
+    """
+    # func.lower(Book.title).contains(query.lower())
+    tags = db.query(Tag).filter(func.lower(Tag.genre).startswith(search.lower())).all()
+    return tags
+
+
+# def add_book_tag(db: Session, book_id: int, tag_id: int):
+#     """
+    
+#     """
+#     result = 

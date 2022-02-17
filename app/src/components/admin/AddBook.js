@@ -10,6 +10,8 @@ const AddBook = () => {
     const [cover, setCover] = useState("");
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
+    const [tags, setTags] = useState([]);
+    const [tag, setTag] = useState("");
     const [stock, setStock] = useState(1);
     const [message, setMessage] = useState("");
 
@@ -19,7 +21,7 @@ const AddBook = () => {
             setMessage("The stock must be greater than 1");
         }
         else {
-            addBook(title, description, cover, stock)
+            addBook(title, description, cover, stock, tags)
                 .then(data => {
                     setMessage(data.message);
                     setTitle("");
@@ -31,6 +33,12 @@ const AddBook = () => {
                     setMessage(error.detail);
                 });
         }
+    };
+
+    const addTags = (e) => {
+        e.preventDefault();
+        setTags([...tags, tag]);
+        setTag("");
     };
 
     return <div className="homepage">
@@ -47,6 +55,11 @@ const AddBook = () => {
 
             <label htmlFor="cover" >Cover image</label>
             <input id="cover" onChange={e => setCover(e.target.value)} value={cover} placeholder="https://" />
+
+            <label htmlFor="tags" >Tags</label>
+            <span>{tags.map(tag => tag)}</span>
+            <input id="tags" onChange={e => setTag(e.target.value)} value={tag} />
+            <button onClick={addTags}>Add tag</button>
 
             <p>{message}</p>
             <button type="submit">Add book</button>

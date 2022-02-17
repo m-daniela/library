@@ -90,8 +90,8 @@ export const changePassword = async (email, password, newPassword) => {
  * @param {int} stock 
  * @returns 
  */
-export const addBook = async (title, description, cover, stock) => {
-    return axios.post(addBookUrl, {title, description, cover, stock }, authHeaders())
+export const addBook = async (title, description, cover, stock, tags) => {
+    return axios.post(addBookUrl, {title, description, cover, stock, tags }, authHeaders())
         .then(response => response.data)
         .catch(error => {
             throw error.response.data;
@@ -106,8 +106,13 @@ export const addBook = async (title, description, cover, stock) => {
  * @param {int} stock 
  * @returns 
  */
-export const updateBook = async (bookId, description, cover, stock) => {
-    return axios.put(updateBookUrl(bookId), { description, cover, stock }, authHeaders())
+export const updateBook = async (bookId, description, cover, stock, tags) => {
+    console.log(tags, stock, description, cover);
+    // const newTags = [];
+    // for (let tag in tags){
+    //     newTags.push(tag);
+    // }
+    return axios.put(updateBookUrl(bookId), { description, cover, stock, tags }, authHeaders())
         .then(response => response.data)
         .catch(error => {
             throw error.response.data;
@@ -122,7 +127,7 @@ export const updateBook = async (bookId, description, cover, stock) => {
 export const getBooks = async () => {
     return axios.get(getBooksUrl, authHeaders())
         .then(response => {
-            console.log(response.data.data);
+            console.log(response.data, "books");
             return response.data.data;
         })
         .catch(error => {

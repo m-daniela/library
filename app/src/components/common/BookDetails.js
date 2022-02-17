@@ -20,6 +20,8 @@ const BookDetails = () => {
     const [stock, setStock] = useState(book.stock);
     const [message, setMessage] = useState("");
     const [update, setUpdate] = useState(false);
+    const [tags, setTags] = useState(book.tags.map(tag => tag.genre));
+    const [tag, setTag] = useState("");
 
     const handleUpdateBook = (e) => {
         e.preventDefault();
@@ -27,7 +29,7 @@ const BookDetails = () => {
             setMessage("The stock must be greater than 1");
         }
         else {
-            updateBook(book.id, description, cover, stock)
+            updateBook(book.id, description, cover, stock, tags)
                 .then(data => {
                     setMessage(data.message);
                     setDescription("");
@@ -41,7 +43,12 @@ const BookDetails = () => {
         }
     };
 
-    
+
+    const addTags = (e) => {
+        e.preventDefault();
+        setTags([...tags, tag]);
+        setTag("");
+    };
 
     return (
         <div className='book-details homepage'>
@@ -60,6 +67,13 @@ const BookDetails = () => {
                         <input id="stock" onChange={e => setStock(e.target.value)} value={stock} />
                         <span>{message}</span>
                             
+                        <label htmlFor="tags" >Tags</label>
+                        {
+                            tags.map(tag => <span key={tag}>{tag}</span>)
+                        }
+                        <input id="tags" onChange={e => setTag(e.target.value)} value={tag} />
+                        <button onClick={addTags}>Add tag</button>
+
                         <button type="submit">Update book</button>
                     </form>
                     :

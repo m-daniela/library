@@ -1,5 +1,5 @@
 from optparse import Option
-from typing import List, Optional, Union
+from typing import Any, List, Optional, Union
 from pydantic import BaseModel
 from datetime import datetime
 
@@ -27,6 +27,7 @@ class BookUpdateSchema(BaseModel):
     cover: str
     description: str
     stock: int
+    tags: List[str]
 
 class BookSchema(BookUpdateSchema):
     title: str
@@ -43,6 +44,18 @@ class RegistrationBaseSchema(BaseModel):
 class RegistrationSchema(RegistrationBaseSchema):
     checkin: datetime
     checkout: Optional[datetime]
+
+    class Config:
+        orm_mode = True
+
+
+# tag
+
+class TagBaseSchema(BaseModel):
+    genre: str
+
+class TagSchema(TagBaseSchema):
+    id: int
 
     class Config:
         orm_mode = True
@@ -81,7 +94,8 @@ class TokenSchema(BaseModel):
 
 class ResponseModelSchema(BaseModel):
     message: Optional[str]
-    data: Optional[Union[dict, list, BookSchema, RegistrationSchema, MessageSchema]]
+    # data: Optional[Union[dict, list, BookSchema, RegistrationSchema, MessageSchema]]
+    data: Optional[Any]
 
 
 # filter builder

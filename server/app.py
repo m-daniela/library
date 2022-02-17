@@ -162,6 +162,7 @@ def get_books(q: Optional[str] = Query(None), order: Optional[str] = Query(None)
         books = queries.get_books(db, q, order, sorting, filter)
         return ResponseModelSchema(data=books)
     except Exception as e:
+        print(e)
         return ResponseModelSchema(message="An error occurred while fetching the books, try again later")
 
 
@@ -172,10 +173,12 @@ def add_book(book: BookSchema, db: Session = Depends(get_database)):
     Only an admin is allowed to perform this operation
     """
     try:
+        # print(book)
         added_book = queries.add_book(db, book)
         message =  f"Book with title {added_book.title} was added"
         return ResponseModelSchema(message=message, data=added_book)
     except Exception as e:
+        print(e)
         return ResponseModelSchema(message="An error occurred while adding the book, try again later")
         
 @app.put("/book/{book_id}", dependencies=[Security(admin_user, scopes=["book"])])

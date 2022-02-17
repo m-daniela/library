@@ -1,5 +1,4 @@
-from operator import index
-from sqlalchemy import CheckConstraint, Column, ForeignKey, Integer, String, DateTime, null
+from sqlalchemy import CheckConstraint, Column, ForeignKey, Integer, String, DateTime, Table, null
 from sqlalchemy.orm import relationship
 import datetime
 import connection
@@ -43,6 +42,17 @@ class User(connection.Base):
         return f"{self.email}, {self.role}"
 
 
+# associattion table for books and tags
+# no need to create a model since you'll 
+# only have the ids
+book_tags = Table(
+    "book_tags", 
+    connection.Base.metadata, 
+    Column("book_id", ForeignKey("books.id"), primary_key=True, nullable=True),
+    Column("tag_id", ForeignKey("tags.id"), primary_key=True, nullable=True)
+)
+
+
 class Book(connection.Base):
     __tablename__ = "books"
 
@@ -50,14 +60,40 @@ class Book(connection.Base):
     title = Column(String, nullable=False)
     description = Column(String, nullable=False)
     cover = Column(String)
-    stock = Column(Integer, CheckConstraint("stock > 0"), nullable=False)
+    stock = Column(Integer, CheckConstraint("stock >= 0"), nullable=False)
     users = relationship(
         "Registration", 
         back_populates="book",
     )
 
+    tags = relationship(
+        "Tag", 
+        back_populates="books",
+        secondary=book_tags,
+        lazy="subquery"
+    )
+
     def __repr__(self) -> str:
         return f"{self.id}, {self.title}, {self.description}, {self.cover}, {self.stock}"
+
+
+
+class Tag(connection.Base):
+    __tablename__ = "tags"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    genre = Column(String, nullable=False)
+    # book_id = Column(ForeignKey("books.id"))
+
+    books = relationship(
+        "Book", 
+        back_populates="tags", 
+        secondary=book_tags    
+    )
+
+    def __repr__(self) -> str:
+        return f"{self.id}, {self.genre}, {self.book_id}"
+
 
 
 

@@ -35,6 +35,8 @@ const Registration = ({registration}) => {
         <img src={book?.cover} alt="img" />
         <div className='details'>
             <h2>{book?.title}</h2>
+            <div className='tags'>{book?.tags.map(tag => <span key={tag.id}>{tag.genre}</span>)}</div>
+
             <div className='description'>{book?.description}</div>
             <Link to={detailsRoute(book.id)} state={{book}}>Show more details</Link>
             <p>Checked in at: {convertDate(registration.checkin)}</p>
