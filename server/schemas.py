@@ -52,7 +52,7 @@ class RegistrationSchema(RegistrationBaseSchema):
 # tag
 
 class TagBaseSchema(BaseModel):
-    genre: str
+    name: str
 
 class TagSchema(TagBaseSchema):
     id: int

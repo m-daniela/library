@@ -1,19 +1,22 @@
-import React, { useState } from 'react';
-import { addBook } from '../../utils/serverCalls';
+import React, { useState, createRef } from 'react';
+import ReactTags from 'react-tag-autocomplete';
+import { addBook, getSuggestedTags } from '../../utils/serverCalls';
 
 
 /**
  * Add a new book
- * Add the title, description stock and cover image
+ * Add the title, description stock, cover image
+ * and tags
  */
 const AddBook = () => {
     const [cover, setCover] = useState("");
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
-    const [tags, setTags] = useState([]);
-    const [tag, setTag] = useState("");
     const [stock, setStock] = useState(1);
+    const [tags, setTags] = useState([]);
+    const [suggestions, setSuggestions] = useState([]);
     const [message, setMessage] = useState("");
+    const reactTags = createRef();
 
     const handleAddBook = (e) => {
         e.preventDefault();
@@ -28,17 +31,36 @@ const AddBook = () => {
                     setDescription("");
                     setStock(1);
                     setCover("");
+                    setTags([]);
                 })
                 .catch(error => {
-                    setMessage(error.detail);
+                    console.log(error);
+                    // setMessage(error.detail);
                 });
         }
     };
 
-    const addTags = (e) => {
-        e.preventDefault();
+    
+
+    const onDelete = (i) => {
+        const newTags = tags.slice(0);
+        newTags.splice(i, 1);
+        setTags(newTags);
+    };
+
+    const onAddition = (tag) => {
+        console.log(tag);
         setTags([...tags, tag]);
-        setTag("");
+    };
+
+    const onInput = (query) => {
+        getSuggestedTags(query)
+            .then(data => {
+                console.log(data);
+                // const suggestionList = data.map(suggestion => ({id: suggestion.id, name: suggestion.genre}));
+                // console.log(suggestionList);
+                setSuggestions(data);
+            });
     };
 
     return <div className="homepage">
@@ -57,9 +79,14 @@ const AddBook = () => {
             <input id="cover" onChange={e => setCover(e.target.value)} value={cover} placeholder="https://" />
 
             <label htmlFor="tags" >Tags</label>
-            <span>{tags.map(tag => tag)}</span>
-            <input id="tags" onChange={e => setTag(e.target.value)} value={tag} />
-            <button onClick={addTags}>Add tag</button>
+            <ReactTags
+                ref={reactTags}
+                tags={tags}
+                suggestions={suggestions}
+                onDelete={onDelete}
+                onAddition={onAddition}
+                onInput={onInput}
+                allowNew={true} />
 
             <p>{message}</p>
             <button type="submit">Add book</button>

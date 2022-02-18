@@ -1,7 +1,9 @@
-import React, { useContext, useState } from 'react';
+import React, { createRef, useContext, useState } from 'react';
+import ReactTags from 'react-tag-autocomplete';
+
 import { useLocation } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
-import { updateBook } from '../../utils/serverCalls';
+import { getSuggestedTags, updateBook } from '../../utils/serverCalls';
 
 /**
  * Book details
@@ -18,10 +20,11 @@ const BookDetails = () => {
     const [cover, setCover] = useState(book.cover);
     const [description, setDescription] = useState(book.description);
     const [stock, setStock] = useState(book.stock);
-    const [message, setMessage] = useState("");
     const [update, setUpdate] = useState(false);
-    const [tags, setTags] = useState(book.tags.map(tag => tag.genre));
-    const [tag, setTag] = useState("");
+    const [tags, setTags] = useState(book.tags);
+    const [suggestions, setSuggestions] = useState([]);
+    const [message, setMessage] = useState("");
+    const reactTags = createRef();
 
     const handleUpdateBook = (e) => {
         e.preventDefault();
@@ -35,6 +38,8 @@ const BookDetails = () => {
                     setDescription("");
                     setStock(1);
                     setCover("");
+                    setTags([]);
+
                     setUpdate(false);
                 })
                 .catch(error => {
@@ -43,11 +48,25 @@ const BookDetails = () => {
         }
     };
 
+    const onDelete = (i) => {
+        const newTags = tags.slice(0);
+        newTags.splice(i, 1);
+        setTags(newTags);
+    };
 
-    const addTags = (e) => {
-        e.preventDefault();
+    const onAddition = (tag) => {
+        console.log(tag);
         setTags([...tags, tag]);
-        setTag("");
+    };
+
+    const onInput = (query) => {
+        getSuggestedTags(query)
+            .then(data => {
+                console.log(data);
+                // const suggestionList = data.map(suggestion => ({id: suggestion.id, name: suggestion.genre}));
+                // console.log(suggestionList);
+                setSuggestions(data);
+            });
     };
 
     return (
@@ -67,12 +86,14 @@ const BookDetails = () => {
                         <input id="stock" onChange={e => setStock(e.target.value)} value={stock} />
                         <span>{message}</span>
                             
-                        <label htmlFor="tags" >Tags</label>
-                        {
-                            tags.map(tag => <span key={tag}>{tag}</span>)
-                        }
-                        <input id="tags" onChange={e => setTag(e.target.value)} value={tag} />
-                        <button onClick={addTags}>Add tag</button>
+                        <ReactTags
+                            ref={reactTags}
+                            tags={tags}
+                            suggestions={suggestions}
+                            onDelete={onDelete}
+                            onAddition={onAddition}
+                            onInput={onInput}
+                            allowNew={true} />
 
                         <button type="submit">Update book</button>
                     </form>

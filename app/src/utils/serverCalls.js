@@ -3,7 +3,7 @@ import jwt_decode from "jwt-decode";
 import { addBookUrl, changePasswordUrl, 
     checkinUrl, checkoutUrl, getBooksUrl, 
     getFilteredBooksUrl, getFilteredRegistrationsUrl, 
-    getReport, getRegistrationsUrl, loginUrl, registerUrl, deleteRegistrationUrl, updateBookUrl, getChatsUrl, addMessageUrl, getMessagesUrl } from "./constants";
+    getReport, getRegistrationsUrl, loginUrl, registerUrl, deleteRegistrationUrl, updateBookUrl, getChatsUrl, addMessageUrl, getMessagesUrl, getTagsUrl } from "./constants";
 
 /** 
  * authentication header with the bearer token 
@@ -91,7 +91,9 @@ export const changePassword = async (email, password, newPassword) => {
  * @returns 
  */
 export const addBook = async (title, description, cover, stock, tags) => {
-    return axios.post(addBookUrl, {title, description, cover, stock, tags }, authHeaders())
+    
+    const tagList = tags.map(tag => tag.name);
+    return axios.post(addBookUrl, {title, description, cover, stock, tags: tagList }, authHeaders())
         .then(response => response.data)
         .catch(error => {
             throw error.response.data;
@@ -107,12 +109,9 @@ export const addBook = async (title, description, cover, stock, tags) => {
  * @returns 
  */
 export const updateBook = async (bookId, description, cover, stock, tags) => {
-    console.log(tags, stock, description, cover);
-    // const newTags = [];
-    // for (let tag in tags){
-    //     newTags.push(tag);
-    // }
-    return axios.put(updateBookUrl(bookId), { description, cover, stock, tags }, authHeaders())
+    const tagList = tags.map(tag => tag.name);
+
+    return axios.put(updateBookUrl(bookId), { description, cover, stock, tags: tagList }, authHeaders())
         .then(response => response.data)
         .catch(error => {
             throw error.response.data;
@@ -127,7 +126,7 @@ export const updateBook = async (bookId, description, cover, stock, tags) => {
 export const getBooks = async () => {
     return axios.get(getBooksUrl, authHeaders())
         .then(response => {
-            console.log(response.data, "books");
+            // console.log(response.data, "books");
             return response.data.data;
         })
         .catch(error => {
@@ -311,5 +310,19 @@ export const getChatMessages = async (room_name) => {
         .catch(error => {
             console.log(error);
             // throw error.response.data;
+        });
+};
+
+
+
+export const getSuggestedTags = async (search) => {
+    return axios.get(getTagsUrl(search), authHeaders())
+        .then(response => {
+            console.log(response.data);
+            return response.data.data;
+        })
+        .catch(error => {
+            console.log(error);
+        // throw error.response.data;
         });
 };

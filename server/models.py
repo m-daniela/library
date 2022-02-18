@@ -82,7 +82,7 @@ class Tag(connection.Base):
     __tablename__ = "tags"
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    genre = Column(String, nullable=False)
+    name = Column(String, nullable=False)
     # book_id = Column(ForeignKey("books.id"))
 
     books = relationship(
@@ -92,7 +92,7 @@ class Tag(connection.Base):
     )
 
     def __repr__(self) -> str:
-        return f"{self.id}, {self.genre}, {self.book_id}"
+        return f"{self.id}, {self.name}"
 
 
 

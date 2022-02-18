@@ -1,5 +1,6 @@
 import datetime
 from hashlib import new
+from os import remove
 from typing import Optional
 from sqlalchemy.orm import Session
 from sqlalchemy import func
@@ -63,6 +64,7 @@ def add_book(db: Session, book: BookSchema):
 def update_book(db: Session, book_id: int, book: BookUpdateSchema):
     """
     Update a book
+    TODO: delete tags that are not present anymore with parent.children.remove(child)
     """
     old_book = get_book(db, book_id)
 
@@ -70,10 +72,17 @@ def update_book(db: Session, book_id: int, book: BookUpdateSchema):
     old_book.description = book.description
     old_book.stock = book.stock
 
+    removed_tags = set(old_book.tags) - set(book.tags)
+    print(removed_tags)
+    for tag in removed_tags:
+        old_book.tags.remove(tag)
+
     for tag in book.tags:
         if len(tag) != 0:
             current_tag = add_tag(db, tag)
             old_book.tags.append(current_tag)
+
+    
 
     db.commit()
     db.refresh(old_book)
@@ -316,9 +325,9 @@ def add_tag(db: Session, tag: str):
     Search for the given tag and, if not found,
     add it to the database
     """
-    search_tag = db.query(Tag).filter(Tag.genre == tag).first()
+    search_tag = db.query(Tag).filter(Tag.name == tag).first()
     if not search_tag:
-        new_tag = Tag(genre=tag)
+        new_tag = Tag(name=tag)
         db.add(new_tag)
         db.commit()
         db.refresh(new_tag)
@@ -331,7 +340,7 @@ def search_tags(db: Session, search: str):
     Search the tag based on the given string
     """
     # func.lower(Book.title).contains(query.lower())
-    tags = db.query(Tag).filter(func.lower(Tag.genre).startswith(search.lower())).all()
+    tags = db.query(Tag).filter(func.lower(Tag.name).startswith(search.lower())).limit(3).all()
     return tags
 
 

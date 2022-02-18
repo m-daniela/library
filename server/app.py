@@ -1,3 +1,4 @@
+from pkgutil import get_data
 from time import sleep
 from typing import Optional
 from fastapi import BackgroundTasks, Depends, FastAPI, Body, HTTPException, Path, Query, Security, WebSocket
@@ -329,3 +330,12 @@ def get_chats(message: MessageSchema, db: Session = Depends(get_database)):
     except CustomError as e:
         return ResponseModelSchema(message=str(e))
     
+
+@app.get("/tags", dependencies=[Depends(normal_user)])
+def get_tags(search: str, db: Session = Depends(get_database)):
+    """
+    Search for the tags and return 
+    the top 3 that were found
+    """
+    results = queries.search_tags(db, search)
+    return ResponseModelSchema(data=results)

@@ -41,7 +41,7 @@ const Book = ({book}) => {
         <img src={book.cover} alt="img" />
         <div className='details'>
             <h2>{book.title}</h2>
-            <div className='tags'>{book.tags.map(tag => <span key={tag.id}>{tag.genre}</span>)}</div>
+            <div className='tags'>{book.tags.map(tag => <span key={tag.id}>{tag.name}</span>)}</div>
             <div className='description'>{book.description}</div>
             <p>In stock: {book.stock}</p>
             {message.length !== 0 && <span>{message}</span>}

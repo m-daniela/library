@@ -42,7 +42,7 @@ export const deleteRegistrationUrl = `${baseUrl}delete-registration`;
 export const getChatsUrl = `${baseUrl}chats`;
 export const getMessagesUrl = `${baseUrl}messages`;
 export const addMessageUrl = `${baseUrl}message`;
-
+export const getTagsUrl = (search) => `${baseUrl}tags?search=${search}`;
 
 
 export const convertDate = (timestamp) => {
