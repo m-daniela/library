@@ -16,7 +16,8 @@ import Registrations from "./registrations/Registrations";
 import AllBooks from "./books/AllBooks";
 import BookDetails from './books/BookDetails';
 import Report from "./registrations/Report";
-import ChangePassword from "./user/ChangePassword";
+import Profile from './user/Profile';
+import UserRegistrations from "./registrations/UserRegistrations";
 
 /**
  * Main component
@@ -33,63 +34,67 @@ function App() {
                             <ChatProvider>
                                 <Header />
                 
-                                <Routes>
-                                    <Route exact path={routes.login} element={<Home />} />
+                                <div className='homepage'>
 
-                                    <Route exact path={routes.addBook} element={
-                                        <AdminRoute>
-                                            <AddBook/>
-                                        </AdminRoute>
-                                    }/>
+                                
+                                    <Routes>
+                                        <Route exact path={routes.login} element={<Home />} />
 
-                                    <Route exact path={routes.register} element={
-                                        <AdminRoute>
-                                            <Register/>
-                                        </AdminRoute>
-                                    }/>
+                                        <Route exact path={routes.addBook} element={
+                                            <AdminRoute>
+                                                <AddBook/>
+                                            </AdminRoute>
+                                        }/>
 
-                                    <Route exact path={routes.userRegistrations} element={
-                                        <AdminRoute>
-                                            <userRegistrations/>
-                                        </AdminRoute>
-                                    }/>
+                                        <Route exact path={routes.register} element={
+                                            <AdminRoute>
+                                                <Register/>
+                                            </AdminRoute>
+                                        }/>
 
-                                    <Route exact path={routes.yourBooks} element={
-                                        <UserRoute>
-                                            <Registrations />
-                                        </UserRoute>
-                                    } />
+                                        <Route exact path={routes.userRegistrations} element={
+                                            <AdminRoute>
+                                                <UserRegistrations/>
+                                            </AdminRoute>
+                                        }/>
 
-                                    <Route exact path={routes.allBooks} element={
-                                        <UserRoute>
-                                            <AllBooks />
-                                        </UserRoute>
-                                    } />
+                                        <Route exact path={routes.yourBooks} element={
+                                            <UserRoute>
+                                                <Registrations />
+                                            </UserRoute>
+                                        } />
 
-                                    <Route exact path={routes.details} element={
-                                        <UserRoute>
-                                            <BookDetails />
-                                        </UserRoute>
-                                    } />
+                                        <Route exact path={routes.allBooks} element={
+                                            <UserRoute>
+                                                <AllBooks />
+                                            </UserRoute>
+                                        } />
 
-                                    <Route exact path={routes.report} element={
-                                        <UserRoute>
-                                            <Report />
-                                        </UserRoute>
-                                    } />
+                                        <Route exact path={routes.details} element={
+                                            <UserRoute>
+                                                <BookDetails />
+                                            </UserRoute>
+                                        } />
 
-                                    <Route exact path={routes.changePassword} element={
-                                        <UserRoute>
-                                            <ChangePassword />
-                                        </UserRoute>
-                                    } />
+                                        <Route exact path={routes.report} element={
+                                            <UserRoute>
+                                                <Report />
+                                            </UserRoute>
+                                        } />
+
+                                        <Route exact path={routes.profile} element={
+                                            <UserRoute>
+                                                <Profile />
+                                            </UserRoute>
+                                        } />
 
 
-                                    <Route exact path={routes.chat} element={
-                                        <ChatRoute />
-                                    } />
+                                        <Route exact path={routes.chat} element={
+                                            <ChatRoute />
+                                        } />
 
-                                </Routes>
+                                    </Routes>
+                                </div>
                             </ChatProvider>
                         </SocketProvider>
                     </BookProvider>

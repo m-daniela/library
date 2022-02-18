@@ -3,7 +3,7 @@
 export const routes = {
     login: "/", 
     chat: "/chat", 
-    changePassword: "/change-password",
+    profile: "/profile",
 
     register: "/register", 
     addBook: "/add",

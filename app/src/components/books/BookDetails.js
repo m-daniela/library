@@ -4,6 +4,9 @@ import ReactTags from 'react-tag-autocomplete';
 import { useLocation } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
 import { getSuggestedTags, updateBook } from '../../utils/serverCalls';
+import { Badge, Button, ButtonGroup, Col, Row } from 'react-bootstrap';
+import Form from 'react-bootstrap/Form';
+
 
 /**
  * Book details
@@ -70,20 +73,20 @@ const BookDetails = () => {
     };
 
     return (
-        <div className='book-details homepage'>
+        <div className='book-details'>
             <h2>{book.title}</h2>
 
             {
                 update ? 
-                    <form onSubmit={handleUpdateBook}>
-                        <label htmlFor="cover" >Cover image</label>
-                        <input id="cover" onChange={e => setCover(e.target.value)} value={cover} placeholder="https://" />
+                    <Form onSubmit={handleUpdateBook}>
+                        <Form.Label htmlFor="cover" >Cover image</Form.Label>
+                        <Form.Control id="cover" onChange={e => setCover(e.target.value)} value={cover} placeholder="https://" />
 
-                        <label htmlFor="description" >Description</label>
-                        <textarea id="description" onChange={e => setDescription(e.target.value)} value={description} rows="4" cols="50"/>
+                        <Form.Label htmlFor="description" >Description</Form.Label>
+                        <Form.Control as="textarea" id="description" onChange={e => setDescription(e.target.value)} value={description} rows="4" cols="50"/>
 
-                        <label htmlFor="stock" >Stock</label>
-                        <input id="stock" onChange={e => setStock(e.target.value)} value={stock} />
+                        <Form.Label htmlFor="stock" >Stock</Form.Label>
+                        <Form.Control id="stock" onChange={e => setStock(e.target.value)} value={stock} />
                         <span>{message}</span>
                             
                         <ReactTags
@@ -95,15 +98,27 @@ const BookDetails = () => {
                             onInput={onInput}
                             allowNew={true} />
 
-                        <button type="submit">Update book</button>
-                    </form>
+                        <ButtonGroup>
+                            <Button type="submit">Update book</Button>
+                            <Button onClick={() => setUpdate(!update)} variant="secondary">{update ? "Close" : "Update"}</Button>
+                        </ButtonGroup>
+                       
+
+                    </Form>
                     :
-                    <>
-                        <img src={book.cover} alt="img"/>
-                        <div className='description'>{book.description}</div>
-                    </>
+                    <Row>
+                        <Col xs="auto">
+                            <img src={book.cover} alt="img"/>
+                        </Col>
+                        <Col className='details'>
+                            <div className='tags'>{book.tags.map(tag => <Badge key={tag.id}>{tag.name}</Badge>)}</div>
+                            <div className='description'>{book.description}</div>
+                            <span>In stock: {book.stock}</span>
+                            {message.length !== 0 && <span>{message}</span>}
+                            {user.role == "admin" && <Button onClick={() => setUpdate(!update)}>{update ? "Close" : "Update"}</Button>}
+                        </Col>
+                    </Row>
             }
-            {user.role == "admin" && <button onClick={() => setUpdate(!update)}>{update ? "Close" : "Update"}</button>}
         </div>
     );
 };

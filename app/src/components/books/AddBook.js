@@ -1,6 +1,8 @@
 import React, { useState, createRef } from 'react';
 import ReactTags from 'react-tag-autocomplete';
 import { addBook, getSuggestedTags } from '../../utils/serverCalls';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 
 
 /**
@@ -63,22 +65,53 @@ const AddBook = () => {
             });
     };
 
-    return <div className="homepage">
-        <h2>Add a new book</h2>
-        <form onSubmit={handleAddBook}>
-            <label htmlFor="title" >Title</label>
-            <input id="title" onChange={e => setTitle(e.target.value)} value={title} />
+    // return <>
+    //     <h2>Add a new book</h2>
+    //     <form onSubmit={handleAddBook}>
+    //         <label htmlFor="title" >Title</label>
+    //         <input id="title" onChange={e => setTitle(e.target.value)} value={title} />
             
-            <label htmlFor="description" >Description</label>
-            <textarea id="description" onChange={e => setDescription(e.target.value)} value={description} rows="4" cols="50"/>
+    //         <label htmlFor="description" >Description</label>
+    //         <textarea id="description" onChange={e => setDescription(e.target.value)} value={description} rows="4" cols="50"/>
 
-            <label htmlFor="stock" >Stock</label>
-            <input id="stock" onChange={e => setStock(e.target.value)} value={stock} />
+    //         <label htmlFor="stock" >Stock</label>
+    //         <input id="stock" onChange={e => setStock(e.target.value)} value={stock} />
 
-            <label htmlFor="cover" >Cover image</label>
-            <input id="cover" onChange={e => setCover(e.target.value)} value={cover} placeholder="https://" />
+    //         <label htmlFor="cover" >Cover image</label>
+    //         <input id="cover" onChange={e => setCover(e.target.value)} value={cover} placeholder="https://" />
 
-            <label htmlFor="tags" >Tags</label>
+    //         <label htmlFor="tags" >Tags</label>
+    //         <ReactTags
+    //             ref={reactTags}
+    //             tags={tags}
+    //             suggestions={suggestions}
+    //             onDelete={onDelete}
+    //             onAddition={onAddition}
+    //             onInput={onInput}
+    //             allowNew={true} />
+
+    //         <p>{message}</p>
+    //         <button type="submit">Add book</button>
+    //     </form>
+    // </>;
+
+
+    return <Form>
+        <h2>Add a new book</h2>
+        <Form.Group onSubmit={handleAddBook}>
+            <Form.Label htmlFor="title" >Title</Form.Label>
+            <Form.Control id="title" onChange={e => setTitle(e.target.value)} value={title} />
+            
+            <Form.Label htmlFor="description" >Description</Form.Label>
+            <Form.Control as="textarea" id="description" onChange={e => setDescription(e.target.value)} value={description} rows="4" cols="50"/>
+
+            <Form.Label htmlFor="stock" >Stock</Form.Label>
+            <Form.Control id="stock" onChange={e => setStock(e.target.value)} value={stock} />
+
+            <Form.Label htmlFor="cover" >Cover image</Form.Label>
+            <Form.Control id="cover" onChange={e => setCover(e.target.value)} value={cover} placeholder="https://" />
+
+            <Form.Label htmlFor="tags" >Tags</Form.Label>
             <ReactTags
                 ref={reactTags}
                 tags={tags}
@@ -89,9 +122,9 @@ const AddBook = () => {
                 allowNew={true} />
 
             <p>{message}</p>
-            <button type="submit">Add book</button>
-        </form>
-    </div>;
+            <Button type="submit">Add book</Button>
+        </Form.Group>
+    </Form>;
 };
 
 export default AddBook;

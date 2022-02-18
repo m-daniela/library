@@ -42,10 +42,9 @@ const Registrations = () => {
     };
 
 
-    return <div className="homepage">
+    return <>
         <h2>Your books</h2>
-        <AdvancedFilters filterBooks={searchBooks} orderBy={orderBy} filters={filters} setIsFiltered={setIsFiltered}/>
-        <button onClick={removeFilters}>Display all books</button>
+        <AdvancedFilters filterBooks={searchBooks} orderBy={orderBy} filters={filters} setIsFiltered={setIsFiltered} removeFilters={removeFilters}/>
 
         <div className="registrations">
             {
@@ -55,7 +54,7 @@ const Registrations = () => {
                     <>{myBooks?.map(registration => <Registration key={registration.book_id} registration={registration}/>)}</>
             }
         </div>
-    </div>;
+    </>;
 };
 
 export default Registrations;

@@ -48,10 +48,9 @@ const AllBooks = () => {
     };
 
 
-    return <div className="homepage">
+    return <>
         <h2>Available books</h2>
-        <AdvancedFilters filterBooks={searchBooks} orderBy={orderBy} filters={filters}/>
-        <button onClick={removeFilters}>Display all books</button>
+        <AdvancedFilters filterBooks={searchBooks} orderBy={orderBy} filters={filters} removeFilters={removeFilters}/>
         <div className="all-books">
             {
                 isFiltered? 
@@ -60,7 +59,7 @@ const AllBooks = () => {
                     <>{books?.map(book => <Book key={book.id} book={book}/>)}</>
             }
         </div>
-    </div>;
+    </>;
 };
 
 export default AllBooks;

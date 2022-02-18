@@ -11,8 +11,9 @@ import UserHomepage from '../user/UserHomepage';
  */
 const AdminHomepage = () => {
     return <UserHomepage>
-        <Link to={routes.register}>Add new user</Link>
-        <Link to={routes.addBook}>Add new book</Link>
+        <h2>General</h2>
+        <Link to={routes.register}>Register user</Link>
+        <Link to={routes.addBook}>Add book</Link>
         <Link to={routes.userRegistrations}>Search for a user</Link>
     </UserHomepage>;
 };

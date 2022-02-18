@@ -28,17 +28,16 @@ const ChangePassword = () => {
     };
 
 
-    return <div className="homepage">
-        <form onSubmit={changePasswordHandler} className="login">
-            <h2>Change password</h2>
-            <label htmlFor="old-password" >Old password</label>
-            <input type="password" id="old-password" onChange={e => setoldPassword(e.target.value)} value={oldPassword} />
-            <label htmlFor="password">Password</label>
-            <input type="password" id="password" onChange={e => setPassword(e.target.value)} value={password} />
-            <span>{message}</span>
-            <button type="submit">Change it</button>
-        </form>
-    </div>;
+    return <form onSubmit={changePasswordHandler} className="login">
+        <h2>Change password</h2>
+        <label htmlFor="old-password" >Old password</label>
+        <input type="password" id="old-password" onChange={e => setoldPassword(e.target.value)} value={oldPassword} />
+        <label htmlFor="password">Password</label>
+        <input type="password" id="password" onChange={e => setPassword(e.target.value)} value={password} />
+        <span>{message}</span>
+        <button type="submit">Change it</button>
+    </form>;
+
 };
 
 export default ChangePassword;

@@ -12,9 +12,10 @@ const UserHomepage = ({children}) => {
 
     return <>
         {children}
+        <h2>Books</h2>
         <Link to={routes.yourBooks}>Your books</Link>
-        <Link to={routes.allBooks}>Get another book</Link>
-        <Link to={routes.report}>Get the borrowings report</Link>
+        <Link to={routes.allBooks}>Display all book</Link>
+        <Link to={routes.report}>Get your borrowings report</Link>
     </>;
 };
 

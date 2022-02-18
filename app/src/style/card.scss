@@ -1,28 +1,62 @@
 
-.card{
-    width: fit-content;
-    display: flex;
-    margin: 1em .5em;
-    flex-basis: 45%;
+// .card{
+//     width: fit-content;
+//     display: flex;
+//     margin: 1em .5em;
+//     flex-basis: 45%;
     
+//     h2, a{
+//         align-self: start;
+//         margin-left: 0;
+//         padding-left: 0;
+//     }
+//     button{
+//         width: fit-content;
+//     }
+
+//     .details{
+//         margin: 0 1em;
+//         @include display-column;
+//         h2{
+//             margin-top: 0;
+//         }
+
+//         .description{
+//             max-height: 5em;
+//             overflow: hidden;
+//             text-overflow: ellipsis;
+//         }
+//     }
+// }
+
+.book{
+    margin: .8em;
+}
+
+.details{
+    @include display-column;
+    margin: 0 1em;
+    h2{
+        margin-top: 0;
+    }
+    button{
+        width: fit-content;
+    }
+
     h2, a{
         align-self: start;
         margin-left: 0;
         padding-left: 0;
     }
 
-    .details{
-        margin: 0 1em;
-        @include display-column;
-        h2{
-            margin-top: 0;
-        }
+    .tags .badge{
+        margin-right: 1em;
+        padding: .7em;
+    }
 
-        .description{
-            max-height: 6em;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        
+    .description{
+        max-height: 6em;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }

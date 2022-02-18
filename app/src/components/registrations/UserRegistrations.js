@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { deleteRegistration, getRegistrations } from '../../utils/serverCalls';
-import DetailedRegistration from '../common/DetailedRegistration';
-
+import DetailedRegistration from './DetailedRegistration';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+import { Col, Row } from 'react-bootstrap';
 
 /**
  * User registrations
@@ -49,12 +51,19 @@ const UserRegistrations = () => {
 
     return (
         <div className='homepage'>
-            <form onSubmit={handleSearch}>
-                <label htmlFor='email'>
-                    <input id="email" value={email} onChange={e => setEmail(e.target.value)}/>
-                    <button type='submit'>Search</button>
-                </label>
-            </form>
+            <Form onSubmit={handleSearch}>
+                <h2>Search for a user</h2>
+                <Row className="align-items-center">
+                    <Col>
+                        <Form.Control id="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Search..."/>
+                    </Col>
+                    <Col>
+                        <Button type='submit'>Search</Button>
+                    </Col>
+                </Row>
+                
+
+            </Form>
             <div className='selected-registrations'>
                 {registrations?.map(registration => <DetailedRegistration key={registration.book_id} registration={registration} handleDelete={handleDelete}/>)}
             </div>

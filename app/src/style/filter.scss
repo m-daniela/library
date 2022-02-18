@@ -1,27 +1,17 @@
 
 .filter{
     @include display-column;
-    width: 100%;
-    align-items: center;
+    width: 50%;
     justify-content: center;
-    & > *{
-        margin: 1em 0;
-    }
+    padding: 2em;
 
-    input, select{
-        margin: 0 .7em;
-    }
-
-    input[type="radio"]{
-        margin: 0 .5em;
+    label, button{
+        margin-top: 1em;
+        margin-bottom: .5em;
     }
     
-    .buttons{
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        button{
-            margin: 0 1em;
-        }
+    @media (max-width: 500px) {
+        width: 90%;
+        
     }
 }
