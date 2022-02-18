@@ -1,6 +1,6 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400&display=swap');
-@import "~bootstrap/scss/bootstrap";
+
 
 :root{
     --primary-background: #FBF8F1;
@@ -23,3 +23,9 @@
     flex-direction: column;
 }
 
+
+// $theme-colors: (
+//     "primary": green
+// );
+
+@import "~bootstrap/scss/bootstrap";

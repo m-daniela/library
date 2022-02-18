@@ -27,13 +27,13 @@ const AdvancedFilters = ({filterBooks, orderBy, filters, removeFilters}) => {
 
     return (
         <>
-            <Form className='filter' onSubmit={handleSearch}>
+            <Form className='filter container col-md-7 col-sm-12' onSubmit={handleSearch}>
 
                 <Form.Label htmlFor="search">Search books</Form.Label>
                 <Form.Control id="search" onChange={e => setSearch(e.target.value)} value={search} />
 
                 <Form.Label htmlFor='order'>Order the results by</Form.Label>
-                <Row id="order">
+                <Row id="order" className="align-items-center">
                     <Col>
                         <Form.Select onChange={e => setOrder(e.target.value)} value={order}>
                             <option value="">select</option>
@@ -42,12 +42,12 @@ const AdvancedFilters = ({filterBooks, orderBy, filters, removeFilters}) => {
                     </Col>
                     
 
-                    <Col>
-                        <Form.Check inline type="radio" id="asc" value="ASC" onChange={e => setSorting(e.target.value)} checked={sorting === "ASC"} label="ascending"/>
+                    <Col >
+                        <Form.Check className="d-flex align-items-center" type="radio" id="asc" value="ASC" onChange={e => setSorting(e.target.value)} checked={sorting === "ASC"} label="asc"/>
                     
                     </Col>
                     <Col>
-                        <Form.Check inline type="radio" id="desc" value="DESC" onChange={e => setSorting(e.target.value)} checked={sorting === "DESC"} label="descending"/>
+                        <Form.Check className="d-flex align-items-center" type="radio" id="desc" value="DESC" onChange={e => setSorting(e.target.value)} checked={sorting === "DESC"} label="desc"/>
                     
                     </Col>
 
@@ -65,13 +65,13 @@ const AdvancedFilters = ({filterBooks, orderBy, filters, removeFilters}) => {
                     
 
                     <Col>
-                        <Form.Check inline type="radio" id="yes" value={1} onChange={e => setFilterOption(+e.target.value)} checked={filterOption === 1} label="yes"/>
+                        <Form.Check className="d-flex align-items-center" type="radio" id="yes" value={1} onChange={e => setFilterOption(+e.target.value)} checked={filterOption === 1} label="yes"/>
                     </Col>
                     <Col>
-                        <Form.Check inline type="radio" id="no" value={0} onChange={e => setFilterOption(+e.target.value)} checked={filterOption === 0}label="no"/>
+                        <Form.Check className="d-flex align-items-center" type="radio" id="no" value={0} onChange={e => setFilterOption(+e.target.value)} checked={filterOption === 0} label="no"/>
                     </Col>
                     <Col>
-                        <Form.Check inline type="radio" id="all" value={2} onChange={e => setFilterOption(+e.target.value)} checked={filterOption === 2} label="all"/>
+                        <Form.Check className="d-flex align-items-center" type="radio" id="all" value={2} onChange={e => setFilterOption(+e.target.value)} checked={filterOption === 2} label="all"/>
                     </Col>
 
                 </Row>

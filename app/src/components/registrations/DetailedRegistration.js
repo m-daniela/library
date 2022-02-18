@@ -15,7 +15,7 @@ const DetailedRegistration = ({registration, handleDelete}) => {
         </Col>
         <Col className='details'>
             <h2>{book?.title}</h2>
-            <div className='tags'>{book?.tags.map(tag => <Badge key={tag.id}>{tag.name}</Badge>)}</div>
+            <div className='tags'>{book?.tags.map(tag => <Badge key={tag.id} bg="danger">{tag.name}</Badge>)}</div>
 
             <div className='description'>{book?.description}</div>
             <Link to={detailsRoute(book.id)} state={{book}}>Show more details</Link>

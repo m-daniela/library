@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 
 /**
  * Message input
@@ -17,10 +19,10 @@ const MessageInput = ({sendMessage}) => {
     };
 
     return (
-        <form onSubmit={handleMessage}>
-            <input required value={message} onChange={e => setMessage(e.target.value)}/>
-            <button type='submit'>Send</button>
-        </form>
+        <Form onSubmit={handleMessage}>
+            <Form.Control required value={message} onChange={e => setMessage(e.target.value)}/>
+            <Button type='submit'>Send</Button>
+        </Form>
     );
 };
 

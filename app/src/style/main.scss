@@ -1,6 +1,6 @@
 @import "./general.scss";
 @import "./card.scss";
-@import "./filter.scss";
+@import "./forms.scss";
 @import "./chat.scss";
 @import "./tags.scss";
 
@@ -60,8 +60,8 @@ button, input, textarea{
     padding: .7em;
     border: none;
     border-radius: 3px;
-    color: var(--font-color);
-    background-color: var(--highlight);
+    // color: var(--font-color);
+    // background-color: var(--highlight);
 }
 
 button {
@@ -88,6 +88,14 @@ form {
     label{
         margin-top: .5em;
     }
+}
+
+.form-control{
+    background-color: green;
+}
+
+.form-check-label{
+    margin: .5em;
 }
 
 .homepage{

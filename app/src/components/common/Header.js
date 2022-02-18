@@ -17,14 +17,6 @@ const Header = () => {
         logout();
     };
     
-    // return <nav>
-    //     <Link to={routes.login}>Library</Link>
-    //     {user && <>
-    //         <Link to={routes.profile}>Profile</Link>
-    //         <Link to={routes.chat}>Chat</Link>
-    //         <Link to={routes.login} onClick={handleLogout}>Logout</Link>
-    //     </>}
-    // </nav>;
 
 
     return <Navbar collapseOnSelect expand="lg">
@@ -32,10 +24,10 @@ const Header = () => {
             <Link to={routes.login}>Library</Link>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             
-            <Navbar.Collapse id="responsive-navbar-nav">
+            <Navbar.Collapse id="responsive-navbar-nav" className='justify-content-end'>
                 {user && <>
-                    <Link to={routes.profile}>Profile</Link>
                     <Link to={routes.chat}>Chat</Link>
+                    <Link to={routes.profile}>{user.email}</Link>
                     <Link to={routes.login} onClick={handleLogout}>Logout</Link>
                 </>}
             </Navbar.Collapse>

@@ -6,6 +6,8 @@ import { UserContext } from '../../context/UserContext';
 import { getSuggestedTags, updateBook } from '../../utils/serverCalls';
 import { Badge, Button, ButtonGroup, Col, Row } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
+import Tag from '../common/Tag';
+import Suggestion from '../common/Suggestion';
 
 
 /**
@@ -90,13 +92,18 @@ const BookDetails = () => {
                         <span>{message}</span>
                             
                         <ReactTags
+                            classNames={
+                                {root: "form-control"}
+                            }
                             ref={reactTags}
                             tags={tags}
                             suggestions={suggestions}
                             onDelete={onDelete}
                             onAddition={onAddition}
                             onInput={onInput}
-                            allowNew={true} />
+                            allowNew={true}
+                            tagComponent={Tag}
+                            suggeestionComponent={Suggestion} />
 
                         <ButtonGroup>
                             <Button type="submit">Update book</Button>
@@ -111,7 +118,7 @@ const BookDetails = () => {
                             <img src={book.cover} alt="img"/>
                         </Col>
                         <Col className='details'>
-                            <div className='tags'>{book.tags.map(tag => <Badge key={tag.id}>{tag.name}</Badge>)}</div>
+                            <div className='tags'>{book.tags.map(tag => <Badge key={tag.id} bg="danger">{tag.name}</Badge>)}</div>
                             <div className='description'>{book.description}</div>
                             <span>In stock: {book.stock}</span>
                             {message.length !== 0 && <span>{message}</span>}

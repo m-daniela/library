@@ -1,5 +1,8 @@
 import React, { useContext, useState } from 'react';
 import { UserContext } from '../../context/UserContext';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+
 
 /**
  * Login form
@@ -24,15 +27,15 @@ const Login = () => {
     };
 
 
-    return <form onSubmit={loginHandler} className="login">
+    return <Form onSubmit={loginHandler} className="login">
         <h2>Login</h2>
-        <label htmlFor="email" >Email</label>
-        <input type="email" id="email" onChange={e => setEmail(e.target.value)} value={email} />
-        <label htmlFor="password">Password</label>
-        <input type="password" id="password" onChange={e => setPassword(e.target.value)} value={password} />
+        <Form.Label htmlFor="email" >Email</Form.Label>
+        <Form.Control type="email" id="email" onChange={e => setEmail(e.target.value)} value={email} />
+        <Form.Label htmlFor="password">Password</Form.Label>
+        <Form.Control type="password" id="password" onChange={e => setPassword(e.target.value)} value={password} />
         <span>{message}</span>
-        <button type="submit">Login</button>
-    </form>;
+        <Button type="submit">Login</Button>
+    </Form>;
 };
 
 export default Login;
