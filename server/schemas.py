@@ -1,5 +1,4 @@
-from optparse import Option
-from typing import Any, List, Optional, Union
+from typing import Any, List, Optional
 from pydantic import BaseModel
 from datetime import datetime
 

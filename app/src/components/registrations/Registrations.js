@@ -3,7 +3,7 @@ import { BookContext } from '../../context/BookContext';
 import { UserContext } from '../../context/UserContext';
 import { getFilteredRegistrations } from '../../utils/serverCalls';
 import AdvancedFilters from '../common/AdvancedFilters';
-import Registration from '../common/Registration';
+import Registration from './Registration';
 
 /**
  * List all the books borrowed by a user

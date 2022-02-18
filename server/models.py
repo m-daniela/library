@@ -1,7 +1,7 @@
 from sqlalchemy import CheckConstraint, Column, ForeignKey, Integer, String, DateTime, Table, null
 from sqlalchemy.orm import relationship
 import datetime
-import connection
+import connection as connection
 
 # added eager** loading so that the list of books
 # for a user is retrieved when asking for registrations

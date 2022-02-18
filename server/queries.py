@@ -1,6 +1,4 @@
 import datetime
-from hashlib import new
-from os import remove
 from typing import Optional
 from sqlalchemy.orm import Session
 from sqlalchemy import func

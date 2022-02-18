@@ -1,8 +1,8 @@
 import React, { useContext, useEffect } from 'react';
 import { UserContext } from '../../context/UserContext';
 import { SocketContext } from '../../context/SocketContext';
-import MessageList from '../chat/MessageList';
-import MessageInput from '../chat/MessageInput';
+import MessageList from './MessageList';
+import MessageInput from './MessageInput';
 import { ChatContext } from '../../context/ChatContext';
 import { chatActions } from '../../reducers/chatReducer';
 import { addContactMessage, getChatMessages } from '../../utils/serverCalls';

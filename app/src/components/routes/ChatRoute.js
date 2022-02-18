@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
 import { routes } from '../../utils/constants';
 import ContactChat from '../contact/ContactChat';
-import UserChat from '../user/UserChat';
+import UserChat from '../chat/UserChat';
 
 /**
  * Restricted contact route

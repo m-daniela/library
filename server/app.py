@@ -1,7 +1,5 @@
-from pkgutil import get_data
-from time import sleep
 from typing import Optional
-from fastapi import BackgroundTasks, Depends, FastAPI, Body, HTTPException, Path, Query, Security, WebSocket
+from fastapi import Depends, FastAPI, Body, HTTPException, Path, Query, Security
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm, SecurityScopes
 from fastapi.middleware.cors import CORSMiddleware
@@ -11,7 +9,6 @@ import connection, queries
 from schemas import MessageSchema, ResponseModelSchema, RoomSchema, TokenDataSchema, UserLoginSchema, UserCreateSchema, BookUpdateSchema, BookSchema, RegistrationBaseSchema
 from exception import CustomError, custom_unauthorized_exception
 from authentication import secret, algorithm, authenticate_user, create_access_token
-# from background_tasks.emails import return_book_email, send_email
 from tasks import deleted_registration, send_email, return_book_email
 from sockets import socket_app
 

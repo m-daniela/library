@@ -2,7 +2,7 @@ from datetime import datetime, timedelta, timezone
 from passlib.context import CryptContext
 from jose import jwt
 
-import queries
+import queries as queries
 from schemas import UserLoginSchema
 from settings import settings
 

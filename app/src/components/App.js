@@ -3,21 +3,20 @@ import UserProvider from '../context/UserContext';
 import Home from './Home';
 import {BrowserRouter, Routes, Route } from "react-router-dom";
 import { routes } from '../utils/constants';
-import Register from './admin/Register';
-import Registrations from './user/Registrations';
-import AddBook from './admin/AddBook';
-import Header from './common/Header';
 import BookProvider from '../context/BookContext';
-import AllBooks from './user/AllBooks';
-import AdminRoute from './routes/AdminRoute';
-import UserRoute from './routes/UserRoute';
-import BookDetails from './common/BookDetails';
-import ChangePassword from './user/ChangePassword';
-import Report from './common/Report';
-import UserRegistrations from './admin/UserRegistrations';
-import ChatProvider from '../context/ChatContext';
-import ChatRoute from './routes/ContactRoute';
 import SocketProvider from '../context/SocketContext';
+import ChatProvider from '../context/ChatContext';
+import Header from "./common/Header";
+import AdminRoute from "./routes/AdminRoute";
+import UserRoute from "./routes/UserRoute";
+import ChatRoute from "./routes/ChatRoute";
+import AddBook from './books/AddBook';
+import Register from "./admin/Register";
+import Registrations from "./registrations/Registrations";
+import AllBooks from "./books/AllBooks";
+import BookDetails from './books/BookDetails';
+import Report from "./registrations/Report";
+import ChangePassword from "./user/ChangePassword";
 
 /**
  * Main component
@@ -51,7 +50,7 @@ function App() {
 
                                     <Route exact path={routes.userRegistrations} element={
                                         <AdminRoute>
-                                            <UserRegistrations/>
+                                            <userRegistrations/>
                                         </AdminRoute>
                                     }/>
 

@@ -3,7 +3,7 @@ import { BookContext } from '../../context/BookContext';
 import { UserContext } from '../../context/UserContext';
 import { getFilteredBooks } from '../../utils/serverCalls';
 import AdvancedFilters from '../common/AdvancedFilters';
-import Book from '../common/Book';
+import Book from './Book';
 
 /**
  * List all the books
