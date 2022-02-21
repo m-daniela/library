@@ -62,7 +62,6 @@ def add_book(db: Session, book: BookSchema):
 def update_book(db: Session, book_id: int, book: BookUpdateSchema):
     """
     Update a book
-    TODO: delete tags that are not present anymore with parent.children.remove(child)
     """
     old_book = get_book(db, book_id)
 
@@ -79,8 +78,6 @@ def update_book(db: Session, book_id: int, book: BookUpdateSchema):
         if len(tag) != 0:
             current_tag = add_tag(db, tag)
             old_book.tags.append(current_tag)
-
-    
 
     db.commit()
     db.refresh(old_book)
@@ -187,8 +184,6 @@ def get_report(db: Session, email: str):
         .filter(Registration.email == email, Registration.checkin >= week_ago)\
         .order_by(Registration.checkout.desc())\
         .all()
-
-    print(result)
 
     return result
 
@@ -304,17 +299,13 @@ def get_messages(db: Session, room: str):
     if not result: 
         return []
     return result.messages
-    # return db.query(Room).join(Message).filter(Room.room_name == room).all()
-    # return db.query(Message).filter(Message.room_name == room).all()
+
 
 def get_chats(db: Session):
     """
     Get all chats and the messages
     """
     result = db.query(Room.room_name).all()
-    # print(r)
-    # result = db.query(Room).all()
-    # print(result)
     return result
 
 
@@ -339,13 +330,6 @@ def search_tags(db: Session, search: str):
     """
     Search the tag based on the given string
     """
-    # func.lower(Book.title).contains(query.lower())
     tags = db.query(Tag).filter(func.lower(Tag.name).startswith(search.lower())).limit(3).all()
     return tags
 
-
-# def add_book_tag(db: Session, book_id: int, tag_id: int):
-#     """
-    
-#     """
-#     result = 

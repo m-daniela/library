@@ -14,7 +14,9 @@ from sockets import socket_app
 
 app = FastAPI()
 
-connection.Base.metadata.create_all(bind=connection.engine)
+@app.on_event("startup")
+def startup_event():
+    connection.Base.metadata.create_all(bind=connection.engine)
 
 # get the database session
 def get_database():
@@ -33,7 +35,8 @@ auth_scheme = OAuth2PasswordBearer(
     tokenUrl="token", 
     scopes={"register": "Add a new user", 
     "book": "Add a new book", 
-    "delete": "Delete a registration"}
+    "delete": "Delete a registration", 
+    "contact": "Access to all chats"}
 )
 
 
@@ -96,6 +99,10 @@ def admin_user(user: UserLoginSchema = Security(current_user, scopes=["register"
 def normal_user(user: UserLoginSchema = Security(current_user)):
     return
 
+# contact scope for contact user
+def contact_user(user: UserLoginSchema = Security(current_user, scopes=["contact"])):
+    return
+
 
 @app.post("/token")
 def login(db: Session = Depends(get_database), form_data: OAuth2PasswordRequestForm = Depends()):
@@ -119,6 +126,8 @@ def login(db: Session = Depends(get_database), form_data: OAuth2PasswordRequestF
             # the corresponding scopes
             if user.role == "admin":
                 data.update({"scopes": ["register", "book", "delete"]})
+            elif user.role == "contact":
+                data.update({"scopes": ["contact"]})
 
             access_token = create_access_token(data=data)
 
@@ -143,6 +152,8 @@ def change_password(user: UserLoginSchema, new_password: str = Body(..., embed=T
         # the corresponding scopes
         if user.role == "admin":
             data.update({"scopes": ["register", "book", "delete"]})
+        elif user.role == "contact":
+            data.update({"scopes": ["contact"]})
 
         access_token = create_access_token(data=data)
 
@@ -290,7 +301,7 @@ def delete_registration(*, registration: RegistrationBaseSchema, db: Session = D
         return ResponseModelSchema(message=str(e))
     
 
-@app.get("/chats", dependencies=[Depends(normal_user)])
+@app.get("/chats", dependencies=[Depends(contact_user)])
 def get_chats(db: Session = Depends(get_database)):
     """
     Get the chats and messages for the contact account

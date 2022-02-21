@@ -93,7 +93,6 @@ class TokenSchema(BaseModel):
 
 class ResponseModelSchema(BaseModel):
     message: Optional[str]
-    # data: Optional[Union[dict, list, BookSchema, RegistrationSchema, MessageSchema]]
     data: Optional[Any]
 
 
