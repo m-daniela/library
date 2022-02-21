@@ -5,7 +5,7 @@ import { authorRoute } from '../../utils/constants';
 
 const Author = ({author}) => {
     return (
-        <Col className="author col-3">
+        <Col className="author">
             <Link to={authorRoute(author.id)} state={{author}}>{author.name}</Link>
         </Col>
     );

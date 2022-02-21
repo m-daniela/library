@@ -373,12 +373,12 @@ def add_author(author: AuthorSchema, db: Session = Depends(get_database)):
 
 
 @app.get("/authors", dependencies=[Depends(normal_user)])
-def get_authors(q: Optional[str] = Query(None), db: Session = Depends(get_database)):
+def get_authors(q: Optional[str] = Query(None), order: Optional[str] = Query(None), sorting: Optional[str] = Query(None), db: Session = Depends(get_database)):
     """
     
     """
     try:
-        authors = queries.get_authors(db, q)
+        authors = queries.get_authors(db, q, order, sorting)
         print(authors)
         return ResponseModelSchema(data=authors)
     except Exception as e:

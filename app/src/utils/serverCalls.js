@@ -352,12 +352,12 @@ export const addAuthor = async (name, dateOfBirth) => {
 };
 
 
-export const getAuthors = async (query = "") => {
+export const getAuthors = async (query, order, sort, filter) => {
     
-    return axios.get(getAuthorsUrl(query), authHeaders())
+    return axios.get(getAuthorsUrl(query, order, sort), authHeaders())
         .then(response => {
             console.log(response.data);
-            return response.data;
+            return response.data.data;
         })
         .catch(error => {
             throw error.response;

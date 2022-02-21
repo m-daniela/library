@@ -113,7 +113,9 @@ def get_books(db: Session, query: Optional[str], order: Optional[str], sorting: 
 
     start_page = (page - 1) * offset 
 
-    return book_query.get_query().offset(start_page).limit(offset).all()
+    book_query.paginate(start_page, offset)
+
+    return book_query.get_results()
 
 
 
@@ -171,7 +173,7 @@ def get_filtered_registrations(db: Session, email: str, query: Optional[str], or
     else:
         registrations_query.add_order(Registration.checkin, sorting)
 
-    return registrations_query.get_query().all()
+    return registrations_query.get_results()
 
 
 def get_report(db: Session, email: str):
@@ -351,7 +353,7 @@ def add_author(db: Session, author: AuthorSchema):
     return new_author
 
 
-def get_authors(db: Session, query: Optional[str]):
+def get_authors(db: Session, query: Optional[str], order: Optional[str], sorting: Optional[str]):
     """
     Get all authors with the name containing the 
     given query
@@ -362,7 +364,12 @@ def get_authors(db: Session, query: Optional[str]):
     if query:
         author_query.add_filter(func.lower(Author.name).contains(query.lower()))
     
-    return author_query.get_query().all()
+    print(order)
+    if order == "name":
+        author_query.add_order(Author.name, sorting)
+
+
+    return author_query.get_results()
 
 
 def update_author(db: Session, author_id: int, author: AuthorSchema):

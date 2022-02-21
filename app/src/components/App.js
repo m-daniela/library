@@ -19,8 +19,8 @@ import Report from "./registrations/Report";
 import Profile from './user/Profile';
 import UserRegistrations from "./registrations/UserRegistrations";
 import AddAuthor from './authors/AddAuthor';
-import Authors from './authors/Authors';
 import AuthorDetails from './authors/AuthorDetails';
+import DisplayAuthors from './authors/DisplayAuthors';
 
 /**
  * Main component
@@ -37,7 +37,7 @@ function App() {
                             <ChatProvider>
                                 <Header />
                 
-                                <div className='homepage col-xl-12'>
+                                <div className='homepage col-lg-8'>
 
                                 
                                     <Routes>
@@ -110,7 +110,7 @@ function App() {
 
                                         <Route exact path={routes.authors} element={
                                             <UserRoute>
-                                                <Authors/>
+                                                <DisplayAuthors/>
                                             </UserRoute>
                                         }/>
 

@@ -139,5 +139,12 @@ class FilterBuilder:
     def get_query(self):
         return self.__query
 
+    def paginate(self, page, limit):
+        query = self.__query.offset(page).limit(page + limit)
+        self.set_query(query)
+
+    def get_results(self):
+        return self.__query.all()
+
     def __repr__(self):
         return str(self.__query)

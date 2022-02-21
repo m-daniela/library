@@ -57,7 +57,7 @@ export const addMessageUrl = `${baseUrl}message`;
 
 
 export const addAuthorUrl = `${baseUrl}author`;
-export const getAuthorsUrl = (query="") => `${baseUrl}authors?q=${query}`;
+export const getAuthorsUrl = (query="", order="", sort="asc", filter="") => `${baseUrl}authors?q=${query}&order=${order}&sorting=${sort}&filter=${filter}`;
 export const updateAuthorUrl = (id) => `${addAuthorUrl}/${id}`;
 
 
