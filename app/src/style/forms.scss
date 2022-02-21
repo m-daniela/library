@@ -1,0 +1,21 @@
+
+form{
+    label {
+        margin-top: .5em;
+    }
+}
+
+.form-control, .form-select, .form-check-input, .react-tags__search-input{
+    background-color: var(--highlight);
+    border: none;
+    &:focus{
+        background-color: var(--secondary-background);
+    }
+}
+
+.form-check-input{
+    margin: 0 .5em;
+}
+// .form-check-label{
+//     margin: .5em 0;
+// }

@@ -3,6 +3,8 @@ import ReactTags from 'react-tag-autocomplete';
 import { addBook, getSuggestedTags } from '../../utils/serverCalls';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import Tag from '../common/Tag';
+import Suggestion from '../common/Suggestion';
 
 
 /**
@@ -112,14 +114,20 @@ const AddBook = () => {
             <Form.Control id="cover" onChange={e => setCover(e.target.value)} value={cover} placeholder="https://" />
 
             <Form.Label htmlFor="tags" >Tags</Form.Label>
+
             <ReactTags
+                classNames={
+                    {root: "form-control"}
+                }
                 ref={reactTags}
                 tags={tags}
                 suggestions={suggestions}
                 onDelete={onDelete}
                 onAddition={onAddition}
                 onInput={onInput}
-                allowNew={true} />
+                allowNew={true}
+                tagComponent={Tag}
+                suggeestionComponent={Suggestion} />
 
             <p>{message}</p>
             <Button type="submit">Add book</Button>

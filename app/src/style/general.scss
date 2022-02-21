@@ -24,8 +24,10 @@
 }
 
 
-// $theme-colors: (
-//     "primary": green
-// );
+$theme-colors: (
+    "primary": #E9DAC1, 
+    "secondary": #F7ECDE, 
+    "danger": #5089C6
+);
 
 @import "~bootstrap/scss/bootstrap";

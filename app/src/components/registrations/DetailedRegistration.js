@@ -9,7 +9,7 @@ const DetailedRegistration = ({registration, handleDelete}) => {
     const book = registration.book;
 
     return <Row className="book">
-        <Col xs="auto">
+        <Col xs="auto" className='mx-auto'>
             <img src={book?.cover} alt="img" />
 
         </Col>

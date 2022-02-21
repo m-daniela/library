@@ -91,6 +91,8 @@ const BookDetails = () => {
                         <Form.Control id="stock" onChange={e => setStock(e.target.value)} value={stock} />
                         <span>{message}</span>
                             
+                        <Form.Label htmlFor="tags" >Tags</Form.Label>
+                        
                         <ReactTags
                             classNames={
                                 {root: "form-control"}
@@ -105,7 +107,7 @@ const BookDetails = () => {
                             tagComponent={Tag}
                             suggeestionComponent={Suggestion} />
 
-                        <ButtonGroup>
+                        <ButtonGroup className="my-4">
                             <Button type="submit">Update book</Button>
                             <Button onClick={() => setUpdate(!update)} variant="secondary">{update ? "Close" : "Update"}</Button>
                         </ButtonGroup>
@@ -113,8 +115,8 @@ const BookDetails = () => {
 
                     </Form>
                     :
-                    <Row>
-                        <Col xs="auto">
+                    <Row className='mx-auto'>
+                        <Col xs="auto" className='mx-auto'>
                             <img src={book.cover} alt="img"/>
                         </Col>
                         <Col className='details'>

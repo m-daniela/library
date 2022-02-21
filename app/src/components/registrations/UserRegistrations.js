@@ -54,10 +54,10 @@ const UserRegistrations = () => {
             <Form onSubmit={handleSearch}>
                 <h2>Search for a user</h2>
                 <Row className="align-items-center">
-                    <Col>
+                    <Col className="col-8">
                         <Form.Control id="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Search..."/>
                     </Col>
-                    <Col>
+                    <Col className="col-1">
                         <Button type='submit'>Search</Button>
                     </Col>
                 </Row>
