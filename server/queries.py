@@ -3,8 +3,8 @@ from typing import Optional
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 
-from schemas import BookUpdateSchema, FilterBuilder, MessageSchema, UserCreateSchema, UserLoginSchema, BookSchema
-from models import Message, Room, Tag, User, Registration, Book
+from schemas import AuthorSchema, BookUpdateSchema, FilterBuilder, MessageSchema, UserCreateSchema, UserLoginSchema, BookSchema
+from models import Author, Message, Room, Tag, User, Registration, Book
 from exception import CustomError, custom_not_found_exception
 from authentication import password_hash
 
@@ -86,7 +86,7 @@ def update_book(db: Session, book_id: int, book: BookUpdateSchema):
 
 
 
-def get_books(db: Session, query: Optional[str], order: Optional[str], sorting: Optional[str], filter: Optional[int], page: int, offset: int = 2):
+def get_books(db: Session, query: Optional[str], order: Optional[str], sorting: Optional[str], filter: Optional[int], page: int, offset: int = 10):
     """
     Get the books based on the given criteria
     The query is built step by step, based on 
@@ -334,4 +334,20 @@ def search_tags(db: Session, search: str):
     """
     tags = db.query(Tag).filter(func.lower(Tag.name).startswith(search.lower())).limit(3).all()
     return tags
+
+
+# authors
+
+def add_author(db: Session, author: AuthorSchema):
+    """
+    Add a new author
+    """
+    print(author, 23)
+    new_author = Author(name=author.name, date_of_birth=author.date_of_birth)
+    db.add(new_author)
+    db.commit()
+    db.refresh(new_author)
+    
+    return new_author
+
 

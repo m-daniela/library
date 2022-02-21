@@ -33,6 +33,26 @@ class BookSchema(BookUpdateSchema):
     class Config:
         orm_mode = True
 
+# author
+
+class AuthorSchema(BaseModel):
+    name: str
+    date_of_birth: Optional[datetime]
+
+    class Config:
+        orm_mode = True
+
+# writing
+
+class WritingSchema(BaseModel):
+    author_id: int
+    book_id: int
+    published_in: int
+
+    class Config:
+        orm_mode = True
+
+
 
 # registration 
 

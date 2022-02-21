@@ -18,6 +18,7 @@ import BookDetails from './books/BookDetails';
 import Report from "./registrations/Report";
 import Profile from './user/Profile';
 import UserRegistrations from "./registrations/UserRegistrations";
+import AddAuthor from './authors/AddAuthor';
 
 /**
  * Main component
@@ -43,6 +44,12 @@ function App() {
                                         <Route exact path={routes.addBook} element={
                                             <AdminRoute>
                                                 <AddBook/>
+                                            </AdminRoute>
+                                        }/>
+
+                                        <Route exact path={routes.addAuthor} element={
+                                            <AdminRoute>
+                                                <AddAuthor/>
                                             </AdminRoute>
                                         }/>
 

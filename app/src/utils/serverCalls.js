@@ -3,7 +3,7 @@ import jwt_decode from "jwt-decode";
 import { addBookUrl, changePasswordUrl, 
     checkinUrl, checkoutUrl, getBooksUrl, 
     getFilteredBooksUrl, getFilteredRegistrationsUrl, 
-    getReport, getRegistrationsUrl, loginUrl, registerUrl, deleteRegistrationUrl, updateBookUrl, getChatsUrl, addMessageUrl, getMessagesUrl, getTagsUrl } from "./constants";
+    getReport, getRegistrationsUrl, loginUrl, registerUrl, deleteRegistrationUrl, updateBookUrl, getChatsUrl, addMessageUrl, getMessagesUrl, getTagsUrl, addAuthorUrl } from "./constants";
 
 /** 
  * authentication header with the bearer token 
@@ -327,5 +327,21 @@ export const getSuggestedTags = async (search) => {
         .catch(error => {
             console.log(error);
         // throw error.response.data;
+        });
+};
+
+
+
+export const addAuthor = async (name, dateOfBirth) => {
+    const date_of_birth = Date.parse(new Date(dateOfBirth));
+    console.log(dateOfBirth, date_of_birth);
+    
+    return axios.post(addAuthorUrl, {name, date_of_birth}, authHeaders())
+        .then(response => {
+            console.log(response.data);
+            return response.data;
+        })
+        .catch(error => {
+            throw error.response;
         });
 };

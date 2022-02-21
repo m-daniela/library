@@ -52,6 +52,16 @@ book_tags = Table(
     Column("tag_id", ForeignKey("tags.id"), primary_key=True, nullable=True)
 )
 
+class Writing(connection.Base):
+    __tablename__ = "writings"
+
+    author_id = Column(ForeignKey("authors.id", ondelete="cascade"), primary_key=True)
+    book_id = Column(ForeignKey("books.id", ondelete="cascade"), primary_key=True)
+    published_in = Column(Integer, nullable=False)
+
+    author = relationship("Author", back_populates="books")
+    book = relationship("Book", back_populates="authors", lazy="subquery")
+
 
 class Book(connection.Base):
     __tablename__ = "books"
@@ -61,6 +71,14 @@ class Book(connection.Base):
     description = Column(String, nullable=False)
     cover = Column(String)
     stock = Column(Integer, CheckConstraint("stock >= 0"), nullable=False)
+
+    authors = relationship(
+        "Writing", 
+        back_populates="book",
+        cascade="all, delete",
+        passive_deletes=True
+    )
+
     users = relationship(
         "Registration", 
         back_populates="book",
@@ -75,6 +93,22 @@ class Book(connection.Base):
 
     def __repr__(self) -> str:
         return f"{self.id}, {self.title}, {self.description}, {self.cover}, {self.stock}"
+
+
+class Author(connection.Base):
+    __tablename__ = "authors"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    name = Column(String, nullable=False)
+    date_of_birth = Column(DateTime, default=None, nullable=True)
+
+    books = relationship(
+        "Writing", 
+        back_populates="author",
+        cascade="all, delete",
+        passive_deletes=True
+    )
+    
 
 
 

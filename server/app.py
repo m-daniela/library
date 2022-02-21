@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from jose import JWTError, jwt
 
 import connection, queries
-from schemas import MessageSchema, ResponseModelSchema, RoomSchema, TokenDataSchema, UserLoginSchema, UserCreateSchema, BookUpdateSchema, BookSchema, RegistrationBaseSchema
+from schemas import AuthorSchema, MessageSchema, ResponseModelSchema, RoomSchema, TokenDataSchema, UserLoginSchema, UserCreateSchema, BookUpdateSchema, BookSchema, RegistrationBaseSchema
 from exception import CustomError, custom_unauthorized_exception
 from authentication import secret, algorithm, authenticate_user, create_access_token
 from tasks import deleted_registration, send_email, return_book_email
@@ -36,8 +36,13 @@ auth_scheme = OAuth2PasswordBearer(
     scopes={"register": "Add a new user", 
     "book": "Add a new book", 
     "delete": "Delete a registration", 
+    "author": "Add a new author",
     "contact": "Access to all chats"}
 )
+
+# will move these
+admin_scopes = ["book", "delete", "register", "author"]
+contact_scopes = ["contact"]
 
 
 origins = [
@@ -92,7 +97,7 @@ def current_user(scopes: SecurityScopes, db: Session = Depends(get_database), to
     return user
 
 # add the scopes as security dependencies for admin users
-def admin_user(user: UserLoginSchema = Security(current_user, scopes=["register", "book", "delete"])):
+def admin_user(user: UserLoginSchema = Security(current_user, scopes=admin_scopes)):
     return
 
 # no scopes needed for normal users
@@ -100,7 +105,7 @@ def normal_user(user: UserLoginSchema = Security(current_user)):
     return
 
 # contact scope for contact user
-def contact_user(user: UserLoginSchema = Security(current_user, scopes=["contact"])):
+def contact_user(user: UserLoginSchema = Security(current_user, scopes=contact_scopes)):
     return
 
 
@@ -125,9 +130,9 @@ def login(db: Session = Depends(get_database), form_data: OAuth2PasswordRequestF
             # check if the user is an admin and give 
             # the corresponding scopes
             if user.role == "admin":
-                data.update({"scopes": ["register", "book", "delete"]})
+                data.update({"scopes": admin_scopes})
             elif user.role == "contact":
-                data.update({"scopes": ["contact"]})
+                data.update({"scopes": contact_scopes})
 
             access_token = create_access_token(data=data)
 
@@ -151,9 +156,9 @@ def change_password(user: UserLoginSchema, new_password: str = Body(..., embed=T
         # check if the user is an admin and give 
         # the corresponding scopes
         if user.role == "admin":
-            data.update({"scopes": ["register", "book", "delete"]})
+            data.update({"scopes": admin_scopes})
         elif user.role == "contact":
-            data.update({"scopes": ["contact"]})
+            data.update({"scopes": contact_scopes})
 
         access_token = create_access_token(data=data)
 
@@ -347,3 +352,21 @@ def get_tags(search: str, db: Session = Depends(get_database)):
     """
     results = queries.search_tags(db, search)
     return ResponseModelSchema(data=results)
+
+
+# authors
+
+@app.post("/author", dependencies=[Security(admin_user, scopes=["author"])])
+def add_author(author: AuthorSchema, db: Session = Depends(get_database)):
+    """
+    Add a new author
+    Only an admin is allowed to perform this operation
+    """
+    try:
+        # print(book)
+        added_author = queries.add_author(db, author)
+        message =  f"Author {added_author.name} was added"
+        return ResponseModelSchema(message=message, data=added_author)
+    except Exception as e:
+        print(e)
+        return ResponseModelSchema(message="An error occurred while adding the author, try again later")
