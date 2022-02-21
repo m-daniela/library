@@ -28,8 +28,8 @@ export const socketUrl = `ws://${host}:${port}`;
 
 export const loginUrl = `${baseUrl}token`;
 export const registerUrl = `${baseUrl}register`;
-export const getBooksUrl = `${baseUrl}books`;
-export const getFilteredBooksUrl = (query="", order="", sort="asc", filter="") => `${baseUrl}books?q=${query}&order=${order}&sorting=${sort}&filter=${filter}`;
+export const getBooksUrl = (page=1) => `${baseUrl}books?page=${page}`;
+export const getFilteredBooksUrl = (query="", order="", sort="asc", filter="", page=1) => `${baseUrl}books?q=${query}&order=${order}&sorting=${sort}&filter=${filter}&page=${page}`;
 export const addBookUrl = `${baseUrl}book`;
 export const updateBookUrl = (bookId) => `${baseUrl}book/${bookId}`;
 export const checkinUrl = `${baseUrl}checkin`;

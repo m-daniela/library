@@ -35,8 +35,8 @@ const BookProvider = ({children}) => {
         }
     }, [user]);
 
-    const retrieveBooks = async () => {
-        return getBooks()
+    const retrieveBooks = async (page=1) => {
+        return getBooks(page)
             .then(data => {
                 setBooks(data);
             })

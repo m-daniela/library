@@ -107,3 +107,12 @@ a{
 button{
     line-height: 1.4;
 }
+
+.page-item{
+    .page-link{
+        color: var(--font-color);
+        background-color: var(--secondary-background);
+        border: none;
+    }
+    
+}

@@ -5,6 +5,7 @@ import { getFilteredBooks } from '../../utils/serverCalls';
 import AdvancedFilters from '../common/AdvancedFilters';
 import Book from './Book';
 import Spinner from 'react-bootstrap/Spinner';
+import Pagination from 'react-bootstrap/Pagination';
 
 /**
  * List all the books
@@ -19,22 +20,31 @@ const AllBooks = () => {
     const filters = ["availability"];
     const [isFiltered, setIsFiltered] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
 
     useEffect(() => {
-        if (isLogged){
+        if (isLogged && !isFiltered){
             setIsLoading(true);
-            retrieveBooks()
+            retrieveBooks(currentPage)
                 .then(() => setIsLoading(false));
         }
-    }, [isLogged]);
+    }, [isLogged, currentPage]);
+
+
+    const changePage = (page) => {
+        if (!(page == -1 && currentPage == 1)){
+            setCurrentPage(currentPage + page);
+        }
+    };
 
     const removeFilters = () =>{
         setIsFiltered(false);
+        setCurrentPage(1);
     };
 
-    const searchBooks = (query, sort, order, filter) => {
+    const searchBooks = (query, sort, order, filter, page) => {
         setIsLoading(true);
-        getFilteredBooks(query, sort, order, filter)
+        getFilteredBooks(query, sort, order, filter, page)
             .then(data => {
                 if (data?.length){
                     setFilteredBooks(data);
@@ -71,6 +81,11 @@ const AllBooks = () => {
                                 :
                                 <>{books?.map(book => <Book key={book.id} book={book}/>)}</>
                         }
+                        <Pagination className='mx-auto d-flex justify-content-center'>
+                            <Pagination.Prev onClick={() => changePage(-1)}/>
+                            <Pagination.Item>{currentPage}</Pagination.Item>
+                            <Pagination.Next onClick={() => changePage(1)}/>
+                        </Pagination>
                     </>
             }
             

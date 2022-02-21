@@ -123,8 +123,8 @@ export const updateBook = async (bookId, description, cover, stock, tags) => {
  * get books
  * @returns 
  */
-export const getBooks = async () => {
-    return axios.get(getBooksUrl, authHeaders())
+export const getBooks = async (page) => {
+    return axios.get(getBooksUrl(page), authHeaders())
         .then(response => {
             // console.log(response.data, "books");
             return response.data.data;
@@ -139,8 +139,8 @@ export const getBooks = async () => {
  * @param {string} query 
  * @returns 
  */
-export const getFilteredBooks = async (query, order, sort, filter) => {
-    return axios.get(getFilteredBooksUrl(query, order, sort, filter), authHeaders())
+export const getFilteredBooks = async (query, order, sort, filter, page) => {
+    return axios.get(getFilteredBooksUrl(query, order, sort, filter, page), authHeaders())
         .then(response => {
             console.log(response.data);
             return response.data.data;

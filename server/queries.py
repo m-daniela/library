@@ -86,7 +86,7 @@ def update_book(db: Session, book_id: int, book: BookUpdateSchema):
 
 
 
-def get_books(db: Session, query: Optional[str], order: Optional[str], sorting: Optional[str], filter: Optional[int]):
+def get_books(db: Session, query: Optional[str], order: Optional[str], sorting: Optional[str], filter: Optional[int], page: int, offset: int = 2):
     """
     Get the books based on the given criteria
     The query is built step by step, based on 
@@ -110,7 +110,9 @@ def get_books(db: Session, query: Optional[str], order: Optional[str], sorting: 
     elif order == "title":
         book_query.add_order(Book.title, sorting)
 
-    return book_query.get_query().all()
+    start_page = (page - 1) * offset 
+
+    return book_query.get_query().offset(start_page).limit(offset).all()
 
 
 

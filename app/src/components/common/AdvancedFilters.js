@@ -81,10 +81,6 @@ const AdvancedFilters = ({filterBooks, orderBy, filters, removeFilters}) => {
                     <Button type="submit">Apply filters</Button>
                 </ButtonGroup>
 
-                
-                
-                
-
             </Form>
         
         </>
