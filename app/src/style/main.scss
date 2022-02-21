@@ -104,15 +104,6 @@ a{
     text-align: justify;
 }
 
-@media (max-width: 411px) {
-    .details{
-        display: flex;
-        align-items: center;
-        & > *, h2{
-            align-self: center;
-        }
-        h2{
-            margin-top: .5em;
-        }
-    }
+button{
+    line-height: 1.4;
 }

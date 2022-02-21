@@ -14,8 +14,12 @@ form{
 }
 
 .form-check-input{
-    margin: 0 .5em;
+    margin: .5em;
+    &:checked{
+        background-color: var(--highlight2);
+        border-color: var(--highlight2);
+    }
 }
-// .form-check-label{
-//     margin: .5em 0;
-// }
+.form-check-label{
+    margin: .5em 0;
+}

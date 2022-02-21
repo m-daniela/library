@@ -19,7 +19,7 @@ const DetailedRegistration = ({registration, handleDelete}) => {
 
             <div className='description'>{book?.description}</div>
             <Link to={detailsRoute(book.id)} state={{book}}>Show more details</Link>
-            <p>Checked in at: {convertDate(registration.checkin)}</p>
+            <span>Checked in at: {convertDate(registration.checkin)}</span>
             
             {
                 registration.checkout &&

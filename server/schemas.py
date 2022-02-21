@@ -120,3 +120,5 @@ class FilterBuilder:
     def get_query(self):
         return self.__query
 
+    def __repr__(self):
+        return str(self.__query)

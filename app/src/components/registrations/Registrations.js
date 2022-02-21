@@ -4,6 +4,8 @@ import { UserContext } from '../../context/UserContext';
 import { getFilteredRegistrations } from '../../utils/serverCalls';
 import AdvancedFilters from '../common/AdvancedFilters';
 import Registration from './Registration';
+import Spinner from 'react-bootstrap/Spinner';
+
 
 /**
  * List all the books borrowed by a user
@@ -16,12 +18,14 @@ const Registrations = () => {
     const [isFiltered, setIsFiltered] = useState(false);
     const orderBy = ["checkin", "checkout", "title"];
     const filters = ["checkedout"];
+    const [isLoading, setIsLoading] = useState(false);
 
     const removeFilters = () =>{
         setIsFiltered(false);
     };
 
     const searchBooks = (query, sort, order, filter) => {
+        setIsLoading(true);
         getFilteredRegistrations(user.email, query, sort, order, filter)
             .then(data => {
                 console.log(data);
@@ -38,6 +42,7 @@ const Registrations = () => {
             })
             .finally(() => {
                 setIsFiltered(true);
+                setIsLoading(false);
             });
     };
 
@@ -48,11 +53,19 @@ const Registrations = () => {
 
         <div className="registrations">
             {
-                isFiltered ? 
-                    <>{filteredRegistrations?.map(registration => <Registration key={registration.book_id} registration={registration}/>)}</>
+                isLoading ?
+                    <Spinner animation="grow" />
                     :
-                    <>{myBooks?.map(registration => <Registration key={registration.book_id} registration={registration}/>)}</>
+                    <>
+                        {
+                            isFiltered ? 
+                                <>{filteredRegistrations?.map(registration => <Registration key={registration.book_id} registration={registration}/>)}</>
+                                :
+                                <>{myBooks?.map(registration => <Registration key={registration.book_id} registration={registration}/>)}</>
+                        }
+                    </>
             }
+            
         </div>
     </>;
 };

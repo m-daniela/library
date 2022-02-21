@@ -34,7 +34,7 @@ const AdvancedFilters = ({filterBooks, orderBy, filters, removeFilters}) => {
 
                 <Form.Label htmlFor='order'>Order the results by</Form.Label>
                 <Row id="order" className="align-items-center">
-                    <Col className="col-3">
+                    <Col className="col-6">
                         <Form.Select onChange={e => setOrder(e.target.value)} value={order}>
                             <option value="">select</option>
                             {orderBy.map(filter => <option key={filter} value={filter}>{filter}</option>)}
@@ -42,11 +42,11 @@ const AdvancedFilters = ({filterBooks, orderBy, filters, removeFilters}) => {
                     </Col>
                     
 
-                    <Col className="col-2">
+                    <Col>
                         <Form.Check className="d-flex align-items-center" type="radio" id="asc" value="ASC" onChange={e => setSorting(e.target.value)} checked={sorting === "ASC"} label="asc"/>
                     
                     </Col>
-                    <Col className="col-2">
+                    <Col>
                         <Form.Check className="d-flex align-items-center" type="radio" id="desc" value="DESC" onChange={e => setSorting(e.target.value)} checked={sorting === "DESC"} label="desc"/>
                     
                     </Col>
@@ -56,7 +56,7 @@ const AdvancedFilters = ({filterBooks, orderBy, filters, removeFilters}) => {
                 <Form.Label htmlFor="filter">Filter the results by</Form.Label>
 
                 <Row id="filter">
-                    <Col className="col-0">
+                    <Col className="col-6">
                         <Form.Select onChange={e => setFilter(e.target.value)} value={filter}>
                             {/* <option value="">select</option> */}
                             {filters.map(filter => <option key={filter} value={filter}>{filter}</option>)}

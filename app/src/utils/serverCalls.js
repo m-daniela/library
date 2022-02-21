@@ -182,7 +182,7 @@ export const getRegistrations = async (email, token) => {
 export const getFilteredRegistrations = async (email, query, order, sort, filter) => {
     return axios.post(getFilteredRegistrationsUrl(query, order, sort, filter), {email}, authHeaders())
         .then(response => {
-            // console.log(response);
+            console.log(response);
             return response.data.data;
         })
         .catch(error => {
@@ -232,7 +232,10 @@ export const checkinBook = async (email, bookId) => {
  */
 export const checkoutBook = async (email, bookId) => {
     return axios.put(checkoutUrl, {email, book_id: bookId}, authHeaders())
-        .then(response => response.data)
+        .then(response => {
+            console.log(response.data);
+            return response.data;
+        })
         .catch(error => {
             throw error.response.data;
         });

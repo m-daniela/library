@@ -31,16 +31,26 @@
 
 .book{
     margin: .8em;
+    img{
+        margin-bottom: 1em;
+    }
+}
+
+.book-details{
+    .details .description{
+        max-height: unset;
+    }
 }
 
 .details{
     @include display-column;
     margin: 0 1em;
     h2{
-        margin-top: 0;
+        margin: 0;
     }
     button{
         width: fit-content;
+        margin: .5em 0;
     }
 
     h2, a{
@@ -48,13 +58,27 @@
         margin-left: 0;
         padding-left: 0;
     }
+    
 
     .description{
         max-height: 6em;
         overflow: hidden;
         text-overflow: ellipsis;
     }
+    @media (max-width: 411px) {
+        align-items: center;
+        h2{
+            // margin-top: .5em;
+            align-self: center;
+        }
+        span{
+            align-self: flex-start;
+        }
+       
+    }
+    
 }
+
 
 
 .badge{

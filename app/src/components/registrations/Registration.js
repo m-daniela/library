@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BookContext } from '../../context/BookContext';
 import { UserContext } from '../../context/UserContext';
-import { actions } from '../../reducers/bookReducer';
+import { bookActions } from '../../reducers/bookReducer';
 import { convertDate, detailsRoute } from '../../utils/constants';
 import { checkoutBook } from '../../utils/serverCalls';
 import { Badge, Button, Col, Row } from 'react-bootstrap';
@@ -24,7 +24,7 @@ const Registration = ({registration}) => {
         checkoutBook(user.email, book.id)
             .then(data => {
                 setMessage(data.message);
-                dispatch({type: actions.checkout, payload: data.data});
+                dispatch({type: bookActions.checkout, payload: data.data});
 
             })
             .catch(error => {
@@ -44,7 +44,7 @@ const Registration = ({registration}) => {
 
             <div className='description'>{book?.description}</div>
             <Link to={detailsRoute(book.id)} state={{book}}>Show more details</Link>
-            <p >Checked in at: {convertDate(registration.checkin)}</p>
+            <span>Checked in at: {convertDate(registration.checkin)}</span>
             {message.length !== 0 && <span>{message}</span>}
             
             {

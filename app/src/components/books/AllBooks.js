@@ -4,6 +4,7 @@ import { UserContext } from '../../context/UserContext';
 import { getFilteredBooks } from '../../utils/serverCalls';
 import AdvancedFilters from '../common/AdvancedFilters';
 import Book from './Book';
+import Spinner from 'react-bootstrap/Spinner';
 
 /**
  * List all the books
@@ -17,10 +18,13 @@ const AllBooks = () => {
     const orderBy = ["title", "stock"];
     const filters = ["availability"];
     const [isFiltered, setIsFiltered] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         if (isLogged){
-            retrieveBooks();
+            setIsLoading(true);
+            retrieveBooks()
+                .then(() => setIsLoading(false));
         }
     }, [isLogged]);
 
@@ -29,6 +33,7 @@ const AllBooks = () => {
     };
 
     const searchBooks = (query, sort, order, filter) => {
+        setIsLoading(true);
         getFilteredBooks(query, sort, order, filter)
             .then(data => {
                 if (data?.length){
@@ -44,6 +49,7 @@ const AllBooks = () => {
             })
             .finally(() => {
                 setIsFiltered(true);
+                setIsLoading(false);
             });
     };
 
@@ -53,11 +59,21 @@ const AllBooks = () => {
         <AdvancedFilters filterBooks={searchBooks} orderBy={orderBy} filters={filters} removeFilters={removeFilters}/>
         <div className="all-books">
             {
-                isFiltered? 
-                    <>{filteredBooks?.map(book => <Book key={book.id} book={book}/>)}</>
+                isLoading ?
+                    <Spinner animation="grow" />
                     :
-                    <>{books?.map(book => <Book key={book.id} book={book}/>)}</>
+                    <>
+                        {
+                            isFiltered? 
+
+                                <>{filteredBooks?.map(book => <Book key={book.id} book={book}/>)}</>
+
+                                :
+                                <>{books?.map(book => <Book key={book.id} book={book}/>)}</>
+                        }
+                    </>
             }
+            
         </div>
     </>;
 };

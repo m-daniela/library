@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useReducer, useState } from 'react';
-import { actions, reducer } from '../reducers/bookReducer';
+import { bookActions, initialState, reducer } from '../reducers/bookReducer';
 import { getBooks, getRegistrations } from '../utils/serverCalls';
 import { UserContext } from './UserContext';
 
@@ -14,7 +14,7 @@ export const BookContext = createContext();
 
 const BookProvider = ({children}) => {
     const [books, setBooks] = useState([]);
-    const [myBooks, dispatch] = useReducer(reducer, []);
+    const [myBooks, dispatch] = useReducer(reducer, initialState);
     const {user} = useContext(UserContext);
 
     useEffect(() => {
@@ -22,21 +22,21 @@ const BookProvider = ({children}) => {
             getRegistrations(user.email, user.token)
                 .then(data => {
                     if (data?.length){
-                        dispatch({type: actions.load_data, payload: data});
+                        dispatch({type: bookActions.loadData, payload: data});
                     }
                     else{
-                        dispatch({type: actions.load_data, payload: []});
+                        dispatch({type: bookActions.loadData, payload: []});
                     }
                 })
                 .catch(error => {
                     console.log(error);
-                    dispatch({type: actions.load_data, payload: []});
+                    dispatch({type: bookActions.loadData, payload: []});
                 });
         }
     }, [user]);
 
-    const retrieveBooks = () => {
-        getBooks()
+    const retrieveBooks = async () => {
+        return getBooks()
             .then(data => {
                 setBooks(data);
             })

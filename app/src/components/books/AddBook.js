@@ -98,40 +98,38 @@ const AddBook = () => {
     // </>;
 
 
-    return <Form>
+    return <Form onSubmit={handleAddBook}>
         <h2>Add a new book</h2>
-        <Form.Group onSubmit={handleAddBook}>
-            <Form.Label htmlFor="title" >Title</Form.Label>
-            <Form.Control id="title" onChange={e => setTitle(e.target.value)} value={title} />
+        <Form.Label htmlFor="title" >Title</Form.Label>
+        <Form.Control id="title" onChange={e => setTitle(e.target.value)} value={title} />
             
-            <Form.Label htmlFor="description" >Description</Form.Label>
-            <Form.Control as="textarea" id="description" onChange={e => setDescription(e.target.value)} value={description} rows="4" cols="50"/>
+        <Form.Label htmlFor="description" >Description</Form.Label>
+        <Form.Control as="textarea" id="description" onChange={e => setDescription(e.target.value)} value={description} rows="4" cols="50"/>
 
-            <Form.Label htmlFor="stock" >Stock</Form.Label>
-            <Form.Control id="stock" onChange={e => setStock(e.target.value)} value={stock} />
+        <Form.Label htmlFor="stock" >Stock</Form.Label>
+        <Form.Control id="stock" onChange={e => setStock(e.target.value)} value={stock} />
 
-            <Form.Label htmlFor="cover" >Cover image</Form.Label>
-            <Form.Control id="cover" onChange={e => setCover(e.target.value)} value={cover} placeholder="https://" />
+        <Form.Label htmlFor="cover" >Cover image</Form.Label>
+        <Form.Control id="cover" onChange={e => setCover(e.target.value)} value={cover} placeholder="https://" />
 
-            <Form.Label htmlFor="tags" >Tags</Form.Label>
+        <Form.Label htmlFor="tags" >Tags</Form.Label>
 
-            <ReactTags
-                classNames={
-                    {root: "form-control"}
-                }
-                ref={reactTags}
-                tags={tags}
-                suggestions={suggestions}
-                onDelete={onDelete}
-                onAddition={onAddition}
-                onInput={onInput}
-                allowNew={true}
-                tagComponent={Tag}
-                suggeestionComponent={Suggestion} />
+        <ReactTags
+            classNames={
+                {root: "form-control"}
+            }
+            ref={reactTags}
+            tags={tags}
+            suggestions={suggestions}
+            onDelete={onDelete}
+            onAddition={onAddition}
+            onInput={onInput}
+            allowNew={true}
+            tagComponent={Tag}
+            suggeestionComponent={Suggestion} />
 
-            <p>{message}</p>
-            <Button type="submit">Add book</Button>
-        </Form.Group>
+        <p>{message}</p>
+        <Button type="submit">Add book</Button>
     </Form>;
 };
 

@@ -34,7 +34,7 @@ function App() {
                             <ChatProvider>
                                 <Header />
                 
-                                <div className='homepage'>
+                                <div className='homepage col-xl-12'>
 
                                 
                                     <Routes>

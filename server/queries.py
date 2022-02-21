@@ -148,6 +148,7 @@ def get_filtered_registrations(db: Session, email: str, query: Optional[str], or
     Filter the registrations for a user based on
     the given criteria
     """
+
     initial_query = db.query(Registration)\
         .join(Book)\
         .filter(Registration.email == email)
@@ -231,6 +232,7 @@ def checkout(db: Session, email: str, book_id: int):
         update_book_stock(db, book, 1)
         registration.checkout = datetime.datetime.now(tz=datetime.timezone.utc)
         db.commit()
+        db.refresh(registration)
         return registration
     else:
         raise CustomError("You have already checked out this book")

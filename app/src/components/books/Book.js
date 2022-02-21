@@ -3,7 +3,7 @@ import { Badge, Button, Col, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { BookContext } from '../../context/BookContext';
 import { UserContext } from '../../context/UserContext';
-import { actions } from '../../reducers/bookReducer';
+import { bookActions } from '../../reducers/bookReducer';
 import { detailsRoute } from '../../utils/constants';
 import { checkinBook } from '../../utils/serverCalls';
 
@@ -29,7 +29,7 @@ const Book = ({book}) => {
                         ...registration, 
                         book: book
                     };
-                    dispatch({type: actions.checkin, payload});
+                    dispatch({type: bookActions.checkin, payload});
                 }
             })
             .catch(error => {
