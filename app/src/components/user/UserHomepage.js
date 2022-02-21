@@ -15,6 +15,8 @@ const UserHomepage = ({children}) => {
         <h2>Books</h2>
         <Link to={routes.yourBooks}>Your books</Link>
         <Link to={routes.allBooks}>Display all book</Link>
+        <Link to={routes.authors}>Display all authors</Link>
+
         <Link to={routes.report}>Get your borrowings report</Link>
     </>;
 };

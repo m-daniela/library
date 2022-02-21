@@ -19,6 +19,8 @@ import Report from "./registrations/Report";
 import Profile from './user/Profile';
 import UserRegistrations from "./registrations/UserRegistrations";
 import AddAuthor from './authors/AddAuthor';
+import Authors from './authors/Authors';
+import AuthorDetails from './authors/AuthorDetails';
 
 /**
  * Main component
@@ -83,6 +85,12 @@ function App() {
                                             </UserRoute>
                                         } />
 
+                                        <Route exact path={routes.authorDetails} element={
+                                            <UserRoute>
+                                                <AuthorDetails />
+                                            </UserRoute>
+                                        } />
+
                                         <Route exact path={routes.report} element={
                                             <UserRoute>
                                                 <Report />
@@ -99,6 +107,12 @@ function App() {
                                         <Route exact path={routes.chat} element={
                                             <ChatRoute />
                                         } />
+
+                                        <Route exact path={routes.authors} element={
+                                            <UserRoute>
+                                                <Authors/>
+                                            </UserRoute>
+                                        }/>
 
                                     </Routes>
                                 </div>

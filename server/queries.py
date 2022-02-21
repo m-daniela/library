@@ -1,4 +1,5 @@
 import datetime
+from tracemalloc import Filter
 from typing import Optional
 from sqlalchemy.orm import Session
 from sqlalchemy import func
@@ -342,7 +343,6 @@ def add_author(db: Session, author: AuthorSchema):
     """
     Add a new author
     """
-    print(author, 23)
     new_author = Author(name=author.name, date_of_birth=author.date_of_birth)
     db.add(new_author)
     db.commit()
@@ -351,3 +351,33 @@ def add_author(db: Session, author: AuthorSchema):
     return new_author
 
 
+def get_authors(db: Session, query: Optional[str]):
+    """
+    Get all authors with the name containing the 
+    given query
+    """
+
+    author_query = FilterBuilder(db.query(Author))
+
+    if query:
+        author_query.add_filter(func.lower(Author.name).contains(query.lower()))
+    
+    return author_query.get_query().all()
+
+
+def update_author(db: Session, author_id: int, author: AuthorSchema):
+    """
+    Update an author
+    """
+    new_author = db.query(Author).get(author_id)
+
+    if new_author:
+        new_author.name = author.name
+        new_author.date_of_birth = author.date_of_birth
+
+        db.commit()
+        db.refresh(new_author)
+        
+        return new_author
+    else:
+        raise custom_not_found_exception("The author was not found")

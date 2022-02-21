@@ -35,7 +35,7 @@ const AddAuthor = () => {
         <Form.Control id="name" onChange={e => setName(e.target.value)} value={name}/>
 
         <Form.Label htmlFor="dob" >Date of birth</Form.Label>
-        <Form.Control onChange={e => setName(e.target.value)} value={dateOfBirth}/>
+        <Form.Control disabled value={dateOfBirth}/>
 
         <Calendar id="dob" onChange={setDateOfBirth} value={dateOfBirth} />
 

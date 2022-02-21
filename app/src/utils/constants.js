@@ -15,9 +15,12 @@ export const routes = {
     report: "/report",
 
     addAuthor: "/author",
+    authors: "/authors", 
+    authorDetails: "/author/:id"
 };
 
 export const detailsRoute = (id) => `/details/${id}`;
+export const authorRoute = (id) => `/author/${id}`;
 
 
 const host = "localhost";
@@ -54,7 +57,8 @@ export const addMessageUrl = `${baseUrl}message`;
 
 
 export const addAuthorUrl = `${baseUrl}author`;
-
+export const getAuthorsUrl = (query="") => `${baseUrl}authors?q=${query}`;
+export const updateAuthorUrl = (id) => `${addAuthorUrl}/${id}`;
 
 
 export const convertDate = (timestamp) => {
