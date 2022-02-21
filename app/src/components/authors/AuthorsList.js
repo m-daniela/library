@@ -1,8 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Row, Spinner } from 'react-bootstrap';
-import { getAuthors } from '../../utils/serverCalls';
 import Author from './Author';
 
+/**
+ * Authors list
+ * Map each author to the Author component
+ * @param {*} param0 
+ * @returns 
+ */
 const AuthorsList = ({authors, isLoading}) => {
     
     return (

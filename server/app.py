@@ -372,6 +372,16 @@ def add_author(author: AuthorSchema, db: Session = Depends(get_database)):
         return ResponseModelSchema(message="An error occurred while adding the author, try again later")
 
 
+@app.get("/author/{author_id}", dependencies=[Depends(normal_user)])
+def add_author(author_id: int, db: Session = Depends(get_database)):
+    """
+    Add a new author
+    Only an admin is allowed to perform this operation
+    """
+    author = queries.get_author_books(db, author_id)
+    return ResponseModelSchema(data=author)
+
+
 @app.get("/authors", dependencies=[Depends(normal_user)])
 def get_authors(q: Optional[str] = Query(None), order: Optional[str] = Query(None), sorting: Optional[str] = Query(None), db: Session = Depends(get_database)):
     """

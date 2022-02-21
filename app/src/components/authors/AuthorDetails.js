@@ -1,11 +1,16 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Button, ButtonGroup, Form } from 'react-bootstrap';
 import { useLocation } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
 import Calendar from 'react-calendar';
-import { updateAuthor } from '../../utils/serverCalls';
+import { getAuthor, updateAuthor } from '../../utils/serverCalls';
 
-
+/**
+ * Author details
+ * Contains all details about the author
+ * (including the books)
+ * @returns 
+ */
 const AuthorDetails = () => {
     const {user} = useContext(UserContext);
     const {state} = useLocation();
@@ -13,6 +18,10 @@ const AuthorDetails = () => {
     const [update, setUpdate] = useState(false);
     const [name, setName] = useState(author.name);
     const [dateOfBirth, setDateOfBirth] = useState(new Date(author.date_of_birth));
+
+    useEffect(() => {
+        getAuthor(author.id);
+    }, []);
 
     const handleUpdateAuthor = (e) => {
         e.preventDefault();

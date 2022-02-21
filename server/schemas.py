@@ -27,6 +27,7 @@ class BookUpdateSchema(BaseModel):
     description: str
     stock: int
     tags: List[str]
+    authors: List[Any]
 
 class BookSchema(BookUpdateSchema):
     title: str

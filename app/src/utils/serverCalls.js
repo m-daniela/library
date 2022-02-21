@@ -90,10 +90,11 @@ export const changePassword = async (email, password, newPassword) => {
  * @param {int} stock 
  * @returns 
  */
-export const addBook = async (title, description, cover, stock, tags) => {
+export const addBook = async (title, description, cover, stock, tags, authors) => {
     
     const tagList = tags.map(tag => tag.name);
-    return axios.post(addBookUrl, {title, description, cover, stock, tags: tagList }, authHeaders())
+    // const authorsList = authors.map(author => author.name);
+    return axios.post(addBookUrl, {title, description, cover, stock, tags: tagList, authors }, authHeaders())
         .then(response => response.data)
         .catch(error => {
             throw error.response.data;
@@ -352,7 +353,7 @@ export const addAuthor = async (name, dateOfBirth) => {
 };
 
 
-export const getAuthors = async (query, order, sort, filter) => {
+export const getAuthors = async (query, order, sort) => {
     
     return axios.get(getAuthorsUrl(query, order, sort), authHeaders())
         .then(response => {
@@ -364,6 +365,17 @@ export const getAuthors = async (query, order, sort, filter) => {
         });
 };
 
+export const getAuthor = async (author_id) => {
+    
+    return axios.get(updateAuthorUrl(author_id), authHeaders())
+        .then(response => {
+            console.log(response.data);
+            return response.data.data;
+        })
+        .catch(error => {
+            throw error.response;
+        });
+};
 
 export const updateAuthor = async (author_id, name, dateOfBirth) => {
     const date_of_birth = Date.parse(new Date(dateOfBirth));

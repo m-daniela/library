@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func
 
 from schemas import AuthorSchema, BookUpdateSchema, FilterBuilder, MessageSchema, UserCreateSchema, UserLoginSchema, BookSchema
-from models import Author, Message, Room, Tag, User, Registration, Book
+from models import Author, Message, Room, Tag, User, Registration, Book, Writing
 from exception import CustomError, custom_not_found_exception
 from authentication import password_hash
 
@@ -52,6 +52,17 @@ def add_book(db: Session, book: BookSchema):
         if len(tag) != 0:
             current_tag = add_tag(db, tag)
             new_book.tags.append(current_tag)
+
+    # for author in book.authors:
+    #     # this needs to be after the book is added and the id is
+    #     # obtaiened, since you need to add the things in the 
+    #     # Writing association table
+    #     # will also add the publication year
+    #     current_author = get_author(db, author.get("id"))
+    #     writing = Writing(author_id=current_author.id, book_id=new_book.id)
+    #     db.add(writing)
+    #     db.commit()
+    #     db.refresh()
 
     db.add(new_book)
     db.commit()
@@ -353,6 +364,15 @@ def add_author(db: Session, author: AuthorSchema):
     return new_author
 
 
+def get_author(db: Session, author_id):
+
+    author = db.query(Author).get(author_id)
+
+    if not author:
+        raise custom_not_found_exception("The author was not found")
+
+    return author
+
 def get_authors(db: Session, query: Optional[str], order: Optional[str], sorting: Optional[str]):
     """
     Get all authors with the name containing the 
@@ -376,15 +396,15 @@ def update_author(db: Session, author_id: int, author: AuthorSchema):
     """
     Update an author
     """
-    new_author = db.query(Author).get(author_id)
+    new_author = get_author(db, author_id)
 
-    if new_author:
-        new_author.name = author.name
-        new_author.date_of_birth = author.date_of_birth
+    new_author.name = author.name
+    new_author.date_of_birth = author.date_of_birth
 
-        db.commit()
-        db.refresh(new_author)
-        
-        return new_author
-    else:
-        raise custom_not_found_exception("The author was not found")
+    db.commit()
+    db.refresh(new_author)
+    
+    return new_author
+
+def get_author_books(db: Session, author_id: int):
+    return get_author(db, author_id).books

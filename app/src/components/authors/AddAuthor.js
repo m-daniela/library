@@ -6,6 +6,10 @@ import { addAuthor } from '../../utils/serverCalls';
 // import "react-day-picker/lib/style.css";
 import Calendar from 'react-calendar';
 
+/**
+ * Add author form
+ * @returns 
+ */
 const AddAuthor = () => {
     const [name, setName] = useState("");
     const [dateOfBirth, setDateOfBirth] = useState(new Date());
