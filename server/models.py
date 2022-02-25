@@ -44,7 +44,7 @@ class Registration(connection.Base):
 
     email = Column(ForeignKey("users.email"), primary_key=True)
     book_id = Column(ForeignKey("books.id"), primary_key=True)
-    checkin = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
+    checkin = Column(DateTime, default=datetime.datetime.now, nullable=False)
     checkout = Column(DateTime, default=None, nullable=True)
 
     user = relationship("User", back_populates="books")

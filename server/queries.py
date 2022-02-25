@@ -69,7 +69,7 @@ def get_book(book_id: int):
     """
     book = Book.query.filter_by(id=book_id).first()
     if not book:
-        raise CustomError("The book does not exist")
+        CustomNotFoundError("The book does not exist")
     return book
 
 def update_book_stock(book: Book, stock: int):
@@ -115,7 +115,7 @@ def checkout(book_id: int, email: str):
 
     if not registration.checkout:
         update_book_stock(book, 1)
-        registration.checkout = datetime.datetime.utcnow()
+        registration.checkout = datetime.datetime.now()
 
         db.commit()
 
