@@ -15,17 +15,24 @@ connection.Base.metadata.create_all(bind=connection.engine)
 # and password are correct
 @app.route("/login", methods=["POST"])
 def login():
-    try: 
+
+    data = request.get_json()
+    user = UserSchema().dump(data)
+    found_user = queries.login_user(user)
+    return jsonify(user=found_user, message="Successful login")
+
+
+# add a new user
+@app.route("/register", methods=["POST"])
+def register_user():
+    try:
         data = request.get_json()
-        user_schema = UserSchema()
-        user = user_schema.dump(data)
-        found_user = queries.login_user(user)
-        if found_user is not None:
-            return jsonify(user=found_user, message="Successful login")
-        else:
-            return jsonify(message="The username or password is incorrect")
+        user = UserSchema().dump(data)
+        queries.create_user(user)
+        return jsonify(message="User created successfully")
     except Exception as e:
-        return jsonify(message="An error occurred, try again later")
+        return jsonify(message="This user already exists")
+
 
 
 # get the list of books
@@ -55,19 +62,6 @@ def add_book():
         return jsonify(message="An error occurred while adding the book, try again later")
 
 
-# add a new user
-@app.route("/register", methods=["POST"])
-def register_user():
-    try:
-        data = request.get_json()
-
-        user_schema = UserSchema()
-        user = user_schema.dump(data)
-        queries.create_user(user)
-
-        return jsonify(message="User created successfully")
-    except Exception:
-        return jsonify(message="This user already exists")
 
 
 # Get the list of registrations
@@ -133,3 +127,6 @@ def checkout():
 def shutdown_session(exception=None):
     connection.db.remove()
 
+
+if __name__ == "__main__":
+    app.run(debug=1)

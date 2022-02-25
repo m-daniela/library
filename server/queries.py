@@ -2,7 +2,7 @@ import datetime
 from connection import db
 from models import User, Book, Registration
 from schemas import BookSchema, UserSchema
-from exception import CustomError
+from exception import CustomError, CustomNotFoundError
 
 def get_user(email: str):
     """
@@ -10,24 +10,27 @@ def get_user(email: str):
     """
     user = User.query.filter_by(email=email).first()
     if not user:
-        raise CustomError("The user does not exist")
+        CustomNotFoundError("The user does not exist")
     return user
 
 
-def login_user(user: UserSchema):
+def login_user(user: UserSchema) -> UserSchema:
     """
-    Login the user and return the 
+    Login the user and return the username and permissions
     """
-    found_user = User.query.filter_by(email=user["email"], password=user["password"]).first()
-    if found_user:
-        found_user = {
-            "email": found_user.email, 
-            "role": found_user.role
-        }
-    return found_user
+    found_user = get_user(user.get("email"))
+    found_user = User.query.filter_by(email=user.get("email"), password=user.get("password")).first()
+
+    if not user:
+        CustomNotFoundError("The user does not exist")
+
+    return {
+        "email": found_user.email, 
+        "role": found_user.role
+    }
 
 
-def create_user(user: UserSchema):
+def create_user(user: UserSchema) -> User:
     """
     Add a new user if not already in the database
     """

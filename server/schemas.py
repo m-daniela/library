@@ -1,5 +1,6 @@
 from marshmallow_sqlalchemy import SQLAlchemySchema, auto_field, fields
 from models import User, Book, Registration
+from connection import db
 
 class BookSchema(SQLAlchemySchema):
     class Meta:
@@ -32,14 +33,12 @@ class UserSchema(SQLAlchemySchema):
     class Meta:
         model=User
         load_instance=True
+        sqla_session=db
 
     email = auto_field()
     password = auto_field()
     role = auto_field()
     books = fields.Nested(RegistrationSchema, many=True, only=("checkin", "checkout", "book"))
-
-
-
 
 
 
