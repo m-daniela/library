@@ -35,7 +35,8 @@ def change_password(db: Session, user: UserLoginSchema, new_password: str):
     """
     Change the password of the given user
     """
-    user.password = password_hash(new_password)
+    found_user = get_user(db, user.email)
+    found_user.password = password_hash(new_password)
     db.commit()
 
         
