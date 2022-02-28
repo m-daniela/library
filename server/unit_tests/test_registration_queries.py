@@ -1,3 +1,4 @@
+from importlib.resources import path
 from matplotlib.pyplot import connect
 from werkzeug.exceptions import HTTPException
 import pytest
@@ -24,22 +25,6 @@ def test_checkin_user_book_exist(mock):
 def test_checkin_user_book_dont_exist(book_id, email):
     with pytest.raises(HTTPException):
         queries.checkin(book_id, email)
-
-
-
-# tested the update_book_stock function which
-# is called inside this one
-# skip for now 
-# @patch("queries.get_user")
-# @patch("queries.get_book")
-# def test_checkin_book_no_stock(mock_user, mock_book):
-#     # mocked the update_book_stock function here
-#     # so the side effect could've been added
-#     queries.update_book_stock = Mock()
-#     queries.update_book_stock.side_effect = CustomError
-
-#     with pytest.raises(CustomError):
-#         queries.checkin(t_constants.t_book_id, t_constants.t_email)
 
 
 @patch("queries.get_user")
@@ -82,11 +67,14 @@ def test_checkout_registration_checked_out():
 
 
 
+@patch("queries.get_registrations_for_user")
+def test_get_registrations_for_user(mock):
+    mock()
+    mock.assert_called_once()
 
 
-
-def test_get_registrations_for_user():
-    pass
-
-def test_get_registrations_user_doesnt_exist():
-    pass
+@patch("queries.get_user")
+def test_get_registrations_user_doesnt_exist(mock):
+    mock.side_effect = HTTPException
+    with pytest.raises(HTTPException):
+        queries.get_registrations_for_user(t_constants.t_wrong_email)
